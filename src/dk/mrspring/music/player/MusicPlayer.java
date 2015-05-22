@@ -1,8 +1,10 @@
 package dk.mrspring.music.player;
 
 import com.sun.istack.internal.NotNull;
+import dk.mrspring.music.LiteModMusicPlayer;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.io.File;
 
@@ -14,22 +16,24 @@ import static dk.mrspring.music.player.PlayerState.*;
 public class MusicPlayer extends Thread
 {
     private PlayerState currentState = LOADING;
-    private Media playing;
+    public final Music playing;
     private MediaPlayer player;
 
-    public MusicPlayer(@NotNull File file)
+    public MusicPlayer(@NotNull Music music, final Runnable finishedCallback)
     {
-        this.playing = new Media(file.toURI().toASCIIString());
+        this.playing = music;
+        Media media = playing.asMedia();
         currentState = LOADING;
         try
         {
-            player = new MediaPlayer(playing);
+            player = new MediaPlayer(media);
             player.setOnEndOfMedia(new Runnable()
             {
                 @Override
                 public void run()
                 {
                     currentState = FINISHED;
+                    finishedCallback.run();
                 }
             });
             player.setOnHalted(new Runnable()
@@ -80,6 +84,7 @@ public class MusicPlayer extends Thread
 
     public MusicPlayer pauseMusic()
     {
+        System.out.println(currentState);
         if (this.currentState == PLAYING)
         {
             this.currentState = PAUSED;
@@ -93,6 +98,8 @@ public class MusicPlayer extends Thread
         if (this.currentState == PAUSED)
         {
             this.currentState = PLAYING;
+            Duration current = player.getCurrentTime();
+            this.player.seek(current.subtract(new Duration(LiteModMusicPlayer.config.resume_time_millis)));
             this.player.play();
         }
         return this;
@@ -109,8 +116,8 @@ public class MusicPlayer extends Thread
         return currentState;
     }
 
-    public File getPlaying()
+    public Music getPlaying()
     {
-        return new File(playing.getSource());
+        return playing;
     }
 }

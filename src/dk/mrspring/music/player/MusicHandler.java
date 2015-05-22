@@ -13,33 +13,34 @@ import java.util.List;
  */
 public class MusicHandler
 {
-    List<Music> allMusic = new ArrayList<>();
+    public Queue queue;
+    List<Music> allMusic = new ArrayList<Music>();
     MusicPlayer player;
 
     public MusicHandler()
     {
-
+        queue = new Queue(new ArrayList<Music>());
     }
 
-    public MusicHandler(File... baseFiles)
+    public MusicHandler(boolean autoPlay, File... baseFiles)
     {
         this();
         for (File folder : baseFiles)
             loadMusicFrom(folder);
-        try
-        {
-            player = new MusicPlayer(allMusic.get(0).getMusicFile());
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        if (player != null)
-            player.start();
+        createDefaultQueue();
+        if (autoPlay)
+            play(queue.getCurrent());
+    }
+
+    public void createDefaultQueue()
+    {
+        List<Music> newQueue = new ArrayList<Music>(allMusic);
+        queue.updateQueue(newQueue);
     }
 
     public void loadMusicFrom(File folder)
     {
-        List<File> foundFiles = new ArrayList<>();
+        List<File> foundFiles = new ArrayList<File>();
         LiteModMusicPlayer.core.getFileLoader().addFilesToList(folder, foundFiles, false, FileFilterUtils.suffixFileFilter(".mp3", IOCase.INSENSITIVE));
         for (File file : foundFiles)
         {
@@ -48,14 +49,47 @@ public class MusicHandler
         }
     }
 
+    public Music getCurrentlyPlaying()
+    {
+        return queue.getCurrent();
+    }
+
+    public Music getNextUp()
+    {
+        return queue.getNext();
+    }
+
+    public void stopCurrentPlayer()
+    {
+        if (player != null)
+            player.stopMusic();
+    }
+
+    public void play(Music music)
+    {
+        stopCurrentPlayer();
+        player = new MusicPlayer(music, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                playNext();
+            }
+        });
+        player.start();
+    }
+
+    public void playNext()
+    {
+        play(queue.cycle());
+    }
+
     public void toggle()
     {
         if (player != null)
-        {
             if (player.isPaused())
                 player.resumeMusic();
             else player.pauseMusic();
-//            player.togglePaused();
-        }
+        else play(getCurrentlyPlaying());
     }
 }

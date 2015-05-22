@@ -1,5 +1,7 @@
 package dk.mrspring.music.player;
 
+import javafx.scene.media.Media;
+import javafx.util.Duration;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -11,10 +13,10 @@ import java.io.File;
  */
 public class Music
 {
-    String name, album, artist;
     final File musicFile;
+    MusicAttribute name, album, artist;
 
-    public Music(File file)
+    protected Music(File file)
     {
         this.musicFile = file;
     }
@@ -26,23 +28,34 @@ public class Music
 
     public String getName()
     {
+        return getNameAttribute().getValue();
+    }
+
+    public Music setName(String newName)
+    {
+        getNameAttribute().setValue(newName);
+        return this;
+    }
+
+    private MusicAttribute getNameAttribute()
+    {
         if (name == null)
-            name = getKey(FieldKey.TITLE);
+            name = new MusicAttribute("title", getKey(FieldKey.TITLE));
         return name;
     }
 
     public String getAlbum()
     {
         if (album == null)
-            album = getKey(FieldKey.ALBUM);
-        return album;
+            album = new MusicAttribute("album", getKey(FieldKey.ALBUM));
+        return album.getValue();
     }
 
     public String getArtist()
     {
         if (artist == null)
-            artist = getKey(FieldKey.ARTIST);
-        return artist;
+            artist = new MusicAttribute("artist", getKey(FieldKey.ARTIST));
+        return artist.getValue();
     }
 
     private String getKey(FieldKey key)
@@ -58,5 +71,58 @@ public class Music
             e.printStackTrace();
         }
         return value;
+    }
+
+    public Media asMedia()
+    {
+        return new Media(getMusicFile().toURI().toASCIIString());
+    }
+
+    public Duration getLength()
+    {
+        return asMedia().getDuration();
+    }
+
+    public void bindCover()
+    {
+
+    }
+
+    public static class MusicAttribute
+    {
+        final String name, originalValue;
+        String value;
+
+        MusicAttribute(String name, String value)
+        {
+            this.name = name;
+            this.value = value;
+            this.originalValue = value;
+        }
+
+        public boolean isValueOverriden()
+        {
+            return this.value.equals(originalValue);
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+
+        public String getOriginalValue()
+        {
+            return originalValue;
+        }
+
+        public String getValue()
+        {
+            return value;
+        }
+
+        public void setValue(String newValue)
+        {
+            this.value = newValue;
+        }
     }
 }

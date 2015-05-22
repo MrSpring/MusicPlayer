@@ -1,73 +1,71 @@
 package dk.mrspring.music;
 
 import com.mumfrey.liteloader.Tickable;
-import dk.mrspring.llcore.Color;
-import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.LLCore;
-import dk.mrspring.llcore.Quad;
+import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.util.AnyTimeKeyBind;
 import dk.mrspring.music.util.FileUtils;
 import dk.mrspring.music.util.JsonUtils;
-import dk.mrspring.music.util.Miscellaneous;
+import javafx.embed.swing.JFXPanel;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
+import javax.swing.*;
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Konrad on 26-04-2015.
  */
 public class LiteModMusicPlayer implements Tickable
 {
-    public static final float MAX_WIDTH = 200F, HEIGHT = 50F;
-
     public static MusicHandler musicHandler;
 
     public static LLCore core;
     public static File configFile;
     public static Config config;
-
-//    boolean reloaded = false;
-//    boolean toggledExpanded = false;
-//    boolean toggledShowNext = false;
+    public static Overlay overlay;
 
     AnyTimeKeyBind reloadConfig = new AnyTimeKeyBind(Keyboard.KEY_F5);
-    AnyTimeKeyBind expandMiniplayer = new AnyTimeKeyBind(Keyboard.KEY_P);
+    AnyTimeKeyBind expandMiniPlayer = new AnyTimeKeyBind(Keyboard.KEY_P);
     AnyTimeKeyBind showNextUp = new AnyTimeKeyBind(Keyboard.KEY_O);
-    AnyTimeKeyBind togglePlaying = new AnyTimeKeyBind(Keyboard.KEY_I);
+    AnyTimeKeyBind togglePlaying = new AnyTimeKeyBind(Keyboard.KEY_K);
 
-    float width = 0F;
-    float nextHeight = 0F;
-
-    boolean size, showNext;
+    public static void initializeToolkit()
+    {
+        final CountDownLatch latch = new CountDownLatch(1);
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                new JFXPanel();
+                latch.countDown();
+            }
+        });
+        try
+        {
+            latch.await();
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock)
     {
-        width = Miscellaneous.smoothDamp(size ? MAX_WIDTH : HEIGHT, width);
-        nextHeight = Miscellaneous.smoothDamp(showNext ? 13 : 0, nextHeight);
-
-        DrawingHelper helper = core.getDrawingHelper();
-
-        helper.drawButtonThingy(new Quad(5, 5, width, HEIGHT), 0.5F, true, config.overlay_start_color, 0.25F, config.overlay_end_color, 0.5F);
-        helper.drawShape(new Quad(5 + 3, 5 + 3, 50 - 6, 50 - 6).setColor(Color.GREEN));
-
-        if (nextHeight > 0.1F)
-        {
-            helper.drawShape(new Quad(5, 5 + HEIGHT - 1, 1, nextHeight).setColor(Color.BLACK).setAlpha(0.25F)).drawShape(new Quad(5 + 30 + 1, 5 + HEIGHT, 1, Math.max(nextHeight - 1, 0)).setColor(Color.BLACK).setAlpha(0.25F));
-            helper.drawShape(new Quad(5 + 1, 5 + HEIGHT, 30, nextHeight).setColor(Color.BLACK).setAlpha(0.25F));
-            helper.drawShape(new Quad(5 + 1, 5 + HEIGHT - 1, 1, nextHeight)).drawShape(new Quad(5 + 30, 5 + HEIGHT - 1, 1, nextHeight).setColor(Color.LT_GREY)).drawShape(new Quad(5 + 1, 5 + HEIGHT + nextHeight - 2, 30, 1).setColor(Color.LT_GREY));
-        }
-
         if (reloadConfig.isClicked())
             loadConfigFile();
-        if (expandMiniplayer.isClicked())
-            size = !size;
+        if (expandMiniPlayer.isClicked())
+            overlay.toggleExpanded();
         if (showNextUp.isClicked())
-            showNext = !showNext;
+            overlay.showNext();
         if (togglePlaying.isClicked())
             musicHandler.toggle();
+
+        overlay.draw(musicHandler, minecraft);
     }
 
     @Override
@@ -97,7 +95,9 @@ public class LiteModMusicPlayer implements Tickable
         core = new LLCore("music_player");
         configFile = new File(configPath, "musicplayer.json");
         loadConfigFile();
-        musicHandler = new MusicHandler(new File("D:\\Music"));
+        initializeToolkit();
+        musicHandler = new MusicHandler(config.auto_play, new File("C:\\Users\\Konrad\\Music"));
+        overlay = new Overlay();
     }
 
     @Override
