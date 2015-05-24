@@ -26,6 +26,7 @@ public class LiteModMusicPlayer implements Tickable
     public static File configFile;
     public static Config config;
     public static Overlay overlay;
+    public static File coverLocation;
 
     AnyTimeKeyBind reloadConfig = new AnyTimeKeyBind(Keyboard.KEY_F5);
     AnyTimeKeyBind expandMiniPlayer = new AnyTimeKeyBind(Keyboard.KEY_P);
@@ -102,6 +103,9 @@ public class LiteModMusicPlayer implements Tickable
     {
         core = new LLCore("music_player");
         configFile = new File(configPath, "musicplayer.json");
+        coverLocation = new File(configPath.getParent(), "musiccovers");
+        if (!coverLocation.exists())
+            coverLocation.mkdir();
         loadConfigFile();
         initializeToolkit();
         musicHandler = new MusicHandler(config.auto_play, new File("C:\\Users\\Konrad\\Music"));

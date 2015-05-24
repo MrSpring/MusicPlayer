@@ -21,6 +21,7 @@ public class Music
     final File musicFile;
     MusicAttribute name, album, artist;
     Media media;
+    Cover cover;
 
     protected Music(File file)
     {
@@ -93,7 +94,11 @@ public class Music
 
     public void bindCover()
     {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(UNKNOWN);
+        if (cover == null)
+        {
+            this.cover = new Cover();
+            this.cover.loadFrom(this);
+        } else cover.bindCover(this);
     }
 
     public static class MusicAttribute
