@@ -7,6 +7,8 @@ public class OverlayPosition
 {
     public Preset preset = Preset.TOP_LEFT;
     public int x = 0, y = 0;
+    boolean center_x = false;
+    boolean center_y = false;
     CoverAlignment cover_alignment = CoverAlignment.TOP_LEFT;
 
     public CoverAlignment getAlignment()
@@ -30,7 +32,7 @@ public class OverlayPosition
             case TOP_CENTER:
                 return (screenWidth / 2) - (size / 2);
             default:
-                return this.x;
+                return this.center_x ? (screenWidth / 2) - (size / 2) : this.x;
         }
     }
 
@@ -50,7 +52,7 @@ public class OverlayPosition
             case RIGHT_CENTER:
                 return (screenHeight / 2) - (size / 2);
             default:
-                return this.y;
+                return this.center_y ? (screenHeight / 2) - (size / 2) : this.y;
         }
     }
 

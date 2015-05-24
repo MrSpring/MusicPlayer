@@ -44,6 +44,7 @@ public class Overlay
 
         doPlayingText(musicHandler.getCurrentlyPlaying(), minecraft.fontRendererObj);
         doNextUpText(musicHandler.getNextUp(), minecraft.fontRendererObj);
+        showNext = showNextTil > System.currentTimeMillis();
 
         double easing = config.overlay_size_easing_speed;
         this.sizeProgress = Miscellaneous.smoothDamp(expanded ? 1D : 0D, sizeProgress, easing);
@@ -68,7 +69,7 @@ public class Overlay
         int heightOverlapTarget = 0;
         int widthOverlapTarget = 0;
 
-        switch (_alignment)
+        switch (_alignment) // TODO: Rewrite again?
         {
             case TOP_LEFT:
                 heightOverlapTarget = Math.max(0, textHeight + 10 - _coverSize);
@@ -131,6 +132,8 @@ public class Overlay
         overlayY = Math.min(_screenHeight - _paddingY - overlayHeight, overlayY);
 
         drawTheFreakingThing(overlayX, overlayY, overlayWidth, overlayHeight, sizeProgress > 0.98);
+        if (nextUpProgress > 0.01)
+            drawNextUpBox(overlayX, overlayY, overlayWidth, overlayHeight);
 
 
 
@@ -511,10 +514,54 @@ public class Overlay
 
     public void drawNextUpBox(int x, int y, int width, int height)
     {
-        int nextUpHeight = nextUpText.getTotalHeight() + 10;
-        int nextUpWidth = nextUpText.getLongestLine() + 10;
+        int nextUpHeightTarget = nextUpText.getTotalHeight() + 10, nextUpWidthTarget = nextUpText.getLongestLine() + 10;
 
-        int nextUpX = 0;
+        int nextUpHeight = (int) (nextUpProgress * nextUpHeightTarget);
+        int nextUpWidth = (int) (nextUpProgress * nextUpWidthTarget);
+
+        int nextUpX = x, nextUpY = y;
+        switch (_alignment)
+        {
+            case TOP_CENTER:
+            case BOTTOM_CENTER:
+                nextUpX = x + (width / 2) - (nextUpWidth / 2);
+                break;
+            case TOP_RIGHT:
+            case CENTER_RIGHT:
+            case BOTTOM_RIGHT:
+                nextUpX = x + width - nextUpWidth;
+                break;
+        }
+        switch (_alignment)
+        {
+            case TOP_LEFT:
+            case TOP_CENTER:
+            case TOP_RIGHT:
+            case CENTER_LEFT:
+            case CENTER_RIGHT:
+            {
+                int result = nextUpY + height + 5;
+                nextUpY = result + nextUpHeightTarget > _screenHeight - _paddingY ? y - nextUpHeight - 5 : result;
+                break;
+            }
+            case BOTTOM_LEFT:
+            case BOTTOM_CENTER:
+            case BOTTOM_RIGHT:
+            {
+                int result = nextUpY - nextUpHeightTarget - 5;
+                nextUpY = result < _paddingY ? y + height + 5 : nextUpY - nextUpHeight - 5;
+                break;
+            }
+        }
+
+        nextUpX = Math.max(_paddingX, nextUpX);
+        nextUpY = Math.max(_paddingY, nextUpY);
+        nextUpX = Math.min(_screenWidth - _paddingX - nextUpWidth, nextUpX);
+        nextUpY = Math.min(_screenHeight - _paddingY - nextUpHeight, nextUpY);
+
+        LiteModMusicPlayer.core.getDrawingHelper().drawButtonThingy(new Quad(nextUpX, nextUpY, nextUpWidth, nextUpHeight), 0, true);
+        if (nextUpProgress > 0.98)
+            nextUpText.render(LiteModMusicPlayer.core.getDrawingHelper(), nextUpX + 5, nextUpY + 5, 0xFFFFFF, true, VerticalTextAlignment.LEFT, HorizontalTextAlignment.TOP);
 
         /*Config config = LiteModMusicPlayer.config;
         OverlayPosition.NextUpAlignment heightAlignment = config.overlay_position.next_up_alignment;
