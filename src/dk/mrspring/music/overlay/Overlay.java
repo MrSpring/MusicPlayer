@@ -131,9 +131,9 @@ public class Overlay
         overlayX = Math.min(_screenWidth - _paddingX - overlayWidth, overlayX);
         overlayY = Math.min(_screenHeight - _paddingY - overlayHeight, overlayY);
 
-        drawTheFreakingThing(overlayX, overlayY, overlayWidth, overlayHeight, sizeProgress > 0.98);
         if (nextUpProgress > 0.01)
             drawNextUpBox(overlayX, overlayY, overlayWidth, overlayHeight);
+        drawTheFreakingThing(overlayX, overlayY, overlayWidth, overlayHeight, sizeProgress > 0.98);
 
 
 
@@ -374,11 +374,11 @@ public class Overlay
             case BOTTOM_RIGHT:
                 coverY += height - _coverSize;
         }
+        if (drawText)
+            currentlyPlayingText.render(helper, textX, textY, 0xFFFFFF, true, vertical, horizontal);
 
         LiteModMusicPlayer.musicHandler.getCurrentlyPlaying().bindCover();
         helper.drawTexturedShape(new Quad(coverX + 3, coverY + 3, s, s));
-        if (drawText)
-            currentlyPlayingText.render(helper, textX, textY, 0xFFFFFF, true, vertical, horizontal);
 
         /*switch (_alignment)
         {
