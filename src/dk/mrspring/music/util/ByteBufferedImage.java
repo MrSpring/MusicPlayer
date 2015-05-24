@@ -1,4 +1,4 @@
-package dk.mrspring.music.player;
+package dk.mrspring.music.util;
 
 import java.nio.ByteBuffer;
 

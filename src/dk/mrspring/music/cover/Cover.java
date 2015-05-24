@@ -1,21 +1,13 @@
-package dk.mrspring.music.player;
+package dk.mrspring.music.cover;
 
 import dk.mrspring.music.LiteModMusicPlayer;
+import dk.mrspring.music.util.ByteBufferedImage;
+import dk.mrspring.music.player.Music;
 import dk.mrspring.music.util.TextureLoader;
 import net.minecraft.client.Minecraft;
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.TagField;
-import org.jaudiotagger.tag.datatype.DataTypes;
-import org.jaudiotagger.tag.id3.ID3v23Frame;
-import org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.nio.ByteBuffer;
 
 /**
  * Created by Konrad on 24-05-2015.

@@ -1,8 +1,8 @@
 package dk.mrspring.music.player;
 
+import dk.mrspring.music.cover.Cover;
 import javafx.scene.media.Media;
 import javafx.util.Duration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;

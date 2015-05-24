@@ -1,7 +1,5 @@
 package dk.mrspring.music.util;
 
-import dk.mrspring.music.player.ByteBufferedImage;
-import dk.mrspring.music.player.Cover;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;

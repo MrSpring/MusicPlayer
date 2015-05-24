@@ -1,11 +1,9 @@
-package dk.mrspring.music.player;
+package dk.mrspring.music.cover;
 
+import dk.mrspring.music.player.Music;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL12;
 
 import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 

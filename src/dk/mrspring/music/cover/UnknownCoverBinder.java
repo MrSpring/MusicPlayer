@@ -1,5 +1,6 @@
-package dk.mrspring.music.player;
+package dk.mrspring.music.cover;
 
+import dk.mrspring.music.player.Music;
 import net.minecraft.client.Minecraft;
 
 /**
