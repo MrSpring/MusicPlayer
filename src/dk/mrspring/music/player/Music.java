@@ -2,6 +2,8 @@ package dk.mrspring.music.player;
 
 import javafx.scene.media.Media;
 import javafx.util.Duration;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -13,8 +15,12 @@ import java.io.File;
  */
 public class Music
 {
+    public static final ResourceLocation UNKNOWN = new ResourceLocation("musicplayer:unknown.png");
+    public static final ResourceLocation LOADING = new ResourceLocation("musicplayer:loading.png");
+
     final File musicFile;
     MusicAttribute name, album, artist;
+    Media media;
 
     protected Music(File file)
     {
@@ -75,7 +81,9 @@ public class Music
 
     public Media asMedia()
     {
-        return new Media(getMusicFile().toURI().toASCIIString());
+        if (this.media == null)
+            this.media = new Media(getMusicFile().toURI().toASCIIString());
+        return this.media;
     }
 
     public Duration getLength()
@@ -85,7 +93,7 @@ public class Music
 
     public void bindCover()
     {
-
+        Minecraft.getMinecraft().getTextureManager().bindTexture(UNKNOWN);
     }
 
     public static class MusicAttribute

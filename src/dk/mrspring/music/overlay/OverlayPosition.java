@@ -7,18 +7,14 @@ public class OverlayPosition
 {
     public Preset preset = Preset.TOP_LEFT;
     public int x = 0, y = 0;
-    public Alignment alignment = Alignment.LEFT;
-    public NextUpAlignment next_up_alignment = NextUpAlignment.BOTTOM;
-    public boolean center_text = false;
+    CoverAlignment cover_alignment = CoverAlignment.TOP_LEFT;
 
-    public Alignment getAlignment()
+    public CoverAlignment getAlignment()
     {
-        if (preset == Preset.CUSTOM)
-            return this.alignment;
-        else return preset.alignment;
+        return this.preset == Preset.CUSTOM ? this.cover_alignment : preset.coverAlignment;
     }
 
-    public int getX(int screenWidth, int fullWidth)
+    public int getX(int screenWidth, int size)
     {
         switch (preset)
         {
@@ -29,16 +25,16 @@ public class OverlayPosition
             case TOP_RIGHT:
             case BOTTOM_RIGHT:
             case RIGHT_CENTER:
-                return screenWidth/* - fullWidth*/;
+                return screenWidth;
             case BOTTOM_CENTER:
             case TOP_CENTER:
-                return (screenWidth / 2) - (fullWidth / 2);
+                return (screenWidth / 2) - (size / 2);
             default:
                 return this.x;
         }
     }
 
-    public int getY(int screenHeight, int height)
+    public int getY(int screenHeight, int size)
     {
         switch (preset)
         {
@@ -49,55 +45,44 @@ public class OverlayPosition
             case BOTTOM_LEFT:
             case BOTTOM_RIGHT:
             case BOTTOM_CENTER:
-                return screenHeight - height;
+                return screenHeight;
             case LEFT_CENTER:
             case RIGHT_CENTER:
-                return (screenHeight / 2) - (height / 2);
+                return (screenHeight / 2) - (size / 2);
             default:
                 return this.y;
         }
     }
 
-    public boolean getCenterText()
-    {
-        if (preset == Preset.CUSTOM)
-            return this.center_text;
-        else return preset.centerText;
-    }
-
     public enum Preset
     {
-        TOP_LEFT(Alignment.LEFT, NextUpAlignment.BOTTOM, false),
-        TOP_RIGHT(Alignment.RIGHT, NextUpAlignment.BOTTOM, false),
-        TOP_CENTER(Alignment.LEFT, NextUpAlignment.BOTTOM, true),
-        BOTTOM_LEFT(Alignment.LEFT, NextUpAlignment.TOP, false),
-        BOTTOM_RIGHT(Alignment.RIGHT, NextUpAlignment.TOP, false),
-        BOTTOM_CENTER(Alignment.LEFT, NextUpAlignment.TOP, true),
-        LEFT_CENTER(Alignment.LEFT, NextUpAlignment.BOTTOM, false),
-        RIGHT_CENTER(Alignment.RIGHT, NextUpAlignment.BOTTOM, false),
-        CUSTOM(Alignment.LEFT, NextUpAlignment.BOTTOM, false);
+        TOP_LEFT(CoverAlignment.TOP_LEFT),
+        TOP_RIGHT(CoverAlignment.TOP_RIGHT),
+        TOP_CENTER(CoverAlignment.TOP_CENTER),
+        BOTTOM_LEFT(CoverAlignment.BOTTOM_LEFT),
+        BOTTOM_RIGHT(CoverAlignment.BOTTOM_RIGHT),
+        BOTTOM_CENTER(CoverAlignment.BOTTOM_CENTER),
+        LEFT_CENTER(CoverAlignment.CENTER_LEFT),
+        RIGHT_CENTER(CoverAlignment.CENTER_RIGHT),
+        CUSTOM(CoverAlignment.TOP_LEFT);
 
-        public final Alignment alignment;
-        public final NextUpAlignment nextUpAlignment;
-        public final boolean centerText;
+        public final CoverAlignment coverAlignment;
 
-        Preset(Alignment alignment, NextUpAlignment nextUpAlignment, boolean center)
+        Preset(CoverAlignment cover)
         {
-            this.alignment = alignment;
-            this.nextUpAlignment = nextUpAlignment;
-            this.centerText = center;
+            this.coverAlignment = cover;
         }
     }
 
-    public enum Alignment
+    public enum CoverAlignment
     {
-        LEFT,
-        RIGHT
-    }
-
-    public enum NextUpAlignment
-    {
-        TOP,
-        BOTTOM
+        TOP_LEFT,
+        TOP_CENTER,
+        TOP_RIGHT,
+        CENTER_LEFT,
+        CENTER_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_CENTER,
+        BOTTOM_RIGHT
     }
 }

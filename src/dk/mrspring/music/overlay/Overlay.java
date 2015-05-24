@@ -1,6 +1,5 @@
 package dk.mrspring.music.overlay;
 
-import dk.mrspring.llcore.Color;
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.Config;
@@ -8,23 +7,21 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.util.Miscellaneous;
-
-import static dk.mrspring.music.overlay.OverlayPosition.NextUpAlignment.*;
-import static dk.mrspring.music.overlay.OverlayPosition.Alignment.*;
-import static dk.mrspring.music.overlay.OverlayPosition.Alignment;
-import static dk.mrspring.music.LiteModMusicPlayer.config;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.StatCollector;
+
+import static dk.mrspring.music.overlay.OverlayPosition.CoverAlignment;
+import static dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment;
+import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment;
 
 /**
  * Created by Konrad on 27-04-2015.
  */
 public class Overlay
 {
-    double nextUpProgress = 0F, widthProgress = 0F;
+    double nextUpProgress = 0F, sizeProgress = 0F;
 
     boolean expanded = false;
     boolean showNext = false;
@@ -34,9 +31,151 @@ public class Overlay
 
     long showNextTil = 0;
 
+    private int _screenWidth = 0;
+    private int _screenHeight = 0;
+    private int _paddingX = 0;
+    private int _paddingY = 0;
+    private int _coverSize = 0;
+    private CoverAlignment _alignment;
+
     public void draw(MusicHandler musicHandler, Minecraft minecraft)
     {
-        showNext = showNextTil > System.currentTimeMillis();
+        Config config = LiteModMusicPlayer.config;
+
+        doPlayingText(musicHandler.getCurrentlyPlaying(), minecraft.fontRendererObj);
+        doNextUpText(musicHandler.getNextUp(), minecraft.fontRendererObj);
+
+        double easing = config.overlay_size_easing_speed;
+        this.sizeProgress = Miscellaneous.smoothDamp(expanded ? 1D : 0D, sizeProgress, easing);
+
+        easing = config.overlay_next_up_easing_speed;
+        this.nextUpProgress = Miscellaneous.smoothDamp(showNext ? 1D : 0D, nextUpProgress, easing);
+
+        OverlayPosition position = config.overlay_position;
+
+        ScaledResolution resolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
+        _screenWidth = resolution.getScaledWidth();
+        _screenHeight = resolution.getScaledHeight();
+        _paddingX = config.overlay_x_screen_padding;
+        _paddingY = config.overlay_y_screen_padding;
+        _coverSize = config.cover_size;
+        _alignment = position.getAlignment();
+
+        int textHeight = currentlyPlayingText.getTotalHeight(), textWidth = currentlyPlayingText.getLongestLine();
+
+        int yOverlapTarget = 0;
+        int xOverlapTarget = 0;
+        int heightOverlapTarget = 0;
+        int widthOverlapTarget = 0;
+
+        switch (_alignment)
+        {
+            case TOP_LEFT:
+                heightOverlapTarget = Math.max(0, textHeight + 10 - _coverSize);
+                widthOverlapTarget = textWidth + 5;
+                break;
+            case TOP_CENTER:
+            {
+                int overlap = Math.max(0, (textWidth + 10) / 2 - (_coverSize / 2));
+                xOverlapTarget = overlap;
+                widthOverlapTarget = overlap;
+                heightOverlapTarget = textHeight + 5;
+                break;
+            }
+            case TOP_RIGHT:
+                heightOverlapTarget = Math.max(0, textHeight + 10 - _coverSize);
+                xOverlapTarget = textWidth + 5;
+                break;
+            case CENTER_LEFT:
+            {
+                int overlap = Math.max(0, (textHeight + 10) / 2 - (_coverSize / 2));
+                yOverlapTarget = overlap;
+                heightOverlapTarget = overlap;
+                widthOverlapTarget = textWidth + 5;
+                break;
+            }
+            case CENTER_RIGHT:
+            {
+                int overlap = Math.max(0, (textHeight + 10) / 2 - (_coverSize / 2));
+                yOverlapTarget = overlap;
+                heightOverlapTarget = overlap;
+                xOverlapTarget = textWidth + 5;
+                break;
+            }
+            case BOTTOM_LEFT:
+                yOverlapTarget = Math.max(0, textHeight + 10 - _coverSize);
+                widthOverlapTarget = textWidth + 5;
+                break;
+            case BOTTOM_CENTER:
+            {
+                int overlap = Math.max(0, (textWidth + 10) / 2 - (_coverSize / 2));
+                xOverlapTarget = overlap;
+                widthOverlapTarget = overlap;
+                yOverlapTarget = textHeight + 5;
+                break;
+            }
+            case BOTTOM_RIGHT:
+                yOverlapTarget = Math.max(0, textHeight + 10 - _coverSize);
+                xOverlapTarget = textWidth + 5;
+                break;
+        }
+
+        int overlayWidth = _coverSize + (int) (sizeProgress * widthOverlapTarget) + (int) (sizeProgress * xOverlapTarget); // TODO: Add min/max to x, y
+        int overlayHeight = _coverSize + (int) (sizeProgress * heightOverlapTarget) + (int) (sizeProgress * yOverlapTarget);
+        int overlayX = position.getX(_screenWidth, _coverSize) - (int) (sizeProgress * xOverlapTarget);
+        int overlayY = position.getY(_screenHeight, _coverSize) - (int) (sizeProgress * yOverlapTarget);
+
+        overlayX = Math.max(_paddingX, overlayX);
+        overlayY = Math.max(_paddingY, overlayY);
+        overlayX = Math.min(_screenWidth - _paddingX - overlayWidth, overlayX);
+        overlayY = Math.min(_screenHeight - _paddingY - overlayHeight, overlayY);
+
+        drawTheFreakingThing(overlayX, overlayY, overlayWidth, overlayHeight, true);
+
+
+
+
+
+        /*showNext = showNextTil > System.currentTimeMillis();
+        Config config = LiteModMusicPlayer.config;
+        OverlayPosition position = config.overlay_position;
+
+        double easing = config.overlay_size_easing_speed;
+        this.sizeProgress = Miscellaneous.smoothDamp(expanded ? 1D : 0D, sizeProgress, easing);
+
+        easing = config.overlay_next_up_easing_speed;
+        this.nextUpProgress = Miscellaneous.smoothDamp(showNext ? 1D : 0D, nextUpProgress, easing);
+
+        ScaledResolution resolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
+        final int SCREEN_WIDTH = resolution.getScaledWidth(), SCREEN_HEIGHT = resolution.getScaledHeight();
+        final int PADDING_X = config.overlay_x_screen_padding, PADDING_Y = config.overlay_y_screen_padding;
+        int coverSize = config.cover_size;
+//        boolean centerY = true;
+        config.overlay_position.
+
+        int overlapXTarget = currentlyPlayingText.getLongestLine() + 5;
+        int overlapYTarget = (currentlyPlayingText.getLines() * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT) + 10 - coverSize;
+        int overlapX = Math.max(0, (int) (overlapXTarget * sizeProgress));
+        int overlapY = Math.max(0, (int) (overlapYTarget * sizeProgress));
+
+        int overlayWidth = coverSize + overlapX, overlayHeight = coverSize + overlapY;
+
+        int
+                overlayX = position.getX(SCREEN_WIDTH, overlayWidth),
+                overlayY = position.getY(SCREEN_HEIGHT, overlayHeight) - (centerY ? (overlayHeight - coverSize) / 2 : 0);
+
+        overlayX = Math.max(PADDING_X, overlayX);
+        overlayX = Math.min(SCREEN_WIDTH - overlayWidth + PADDING_X, overlayX);
+        overlayY = Math.max(PADDING_Y, overlayY);
+        overlayY = Math.min(SCREEN_HEIGHT - overlayHeight + PADDING_Y, overlayY);
+
+        drawTheFreakingThing(overlayX, overlayY, overlayWidth, overlayHeight, position.getHorizontal(), overlapX + 2 > overlapXTarget, SCREEN_WIDTH, SCREEN_HEIGHT, config.overlay_x_screen_padding, config.overlay_y_screen_padding);*/
+
+
+
+
+
+        /*showNext = showNextTil > System.currentTimeMillis();
 
         Config config = LiteModMusicPlayer.config;
 
@@ -46,21 +185,24 @@ public class Overlay
         ScaledResolution resolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
         final int SCREEN_WIDTH = resolution.getScaledWidth() - (2 * config.overlay_x_screen_padding), SCREEN_HEIGHT = resolution.getScaledHeight() - (2 * config.overlay_y_screen_padding);
         final int PADDING_X = config.overlay_x_screen_padding, PADDING_Y = config.overlay_y_screen_padding;
+        final int COVER_SIZE = config.cover_size;
 
         doPlayingText(musicHandler.getCurrentlyPlaying(), minecraft.fontRendererObj);
-        if (nextUpProgress > 0.01)
-            doNextUpText(musicHandler.getNextUp(), minecraft.fontRendererObj);
+//        if (nextUpProgress > 0.01)
+//            doNextUpText(musicHandler.getNextUp(), minecraft.fontRendererObj);
 
         double easing = config.overlay_size_easing_speed;
-        this.widthProgress = Miscellaneous.smoothDamp(expanded ? 1D : 0D, widthProgress, easing);
+        this.sizeProgress = Miscellaneous.smoothDamp(expanded ? 1D : 0D, sizeProgress, easing);
 
         easing = config.overlay_next_up_easing_speed;
         this.nextUpProgress = Miscellaneous.smoothDamp(showNext ? 1D : 0D, nextUpProgress, easing);
 
         int textWidthTarget = (currentlyPlayingText.getLongestLine() + 5);
-        int textWidth = (int) (widthProgress * textWidthTarget);
-        int height = config.cover_size;
-        int width = height + textWidth;
+        int textHeightTarget = (currentlyPlayingText.getLines() * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT) + 10 - COVER_SIZE;
+        int textWidth = (int) (sizeProgress * textWidthTarget);
+        int textHeight = (int) (sizeProgress * textHeightTarget);
+        int height = COVER_SIZE + textHeight;
+        int width = COVER_SIZE + textWidth;
         int x = config.overlay_x_screen_padding + position.getX(SCREEN_WIDTH, width) - (alignment == RIGHT ? textWidth : 0);
         int y = config.overlay_y_screen_padding + position.getY(SCREEN_HEIGHT, height);
 
@@ -69,7 +211,7 @@ public class Overlay
         y = Math.max(PADDING_Y, y);
         y = Math.min(SCREEN_HEIGHT - height + PADDING_Y, y);
 
-        drawTheFreakingThing(x, y, width, height, alignment, textWidth + 2 > textWidthTarget, SCREEN_WIDTH, SCREEN_HEIGHT, PADDING_X, PADDING_Y);
+        drawTheFreakingThing(x, y, width, height, alignment, textWidth + 2 > textWidthTarget, SCREEN_WIDTH, SCREEN_HEIGHT, PADDING_X, PADDING_Y);*/
         /*FontRenderer renderer = minecraft.fontRendererObj;
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         ScaledResolution resolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
@@ -187,20 +329,113 @@ public class Overlay
         }*/
     }
 
-    public void drawTheFreakingThing(int x, int y, int width, int height, Alignment alignment, boolean drawText, int screenWidth, int screenHeight, int paddingX, int paddingY)
+    public void drawTheFreakingThing(int x, int y, int width, int height, boolean drawText)
     {
-        Config config = LiteModMusicPlayer.config;
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+        helper.drawButtonThingy(new Quad(x, y, width, height), 0, true);
+
+        LiteModMusicPlayer.musicHandler.getCurrentlyPlaying().bindCover();
+
+        int s = _coverSize - 6;
+        switch (_alignment)
+        {
+            case TOP_LEFT:
+                helper.drawTexturedShape(new Quad(x + 3, y + 3, s, s));
+                if (drawText)
+                    currentlyPlayingText.render(helper, x + _coverSize, y + 5, 0xFFFFFF, true, VerticalTextAlignment.LEFT, HorizontalTextAlignment.TOP);
+                break;
+            case TOP_CENTER:
+                helper.drawTexturedShape(new Quad(x + (width / 2) - (_coverSize / 2) + 3, y + 3, s, s));
+                if (drawText)
+                    currentlyPlayingText.render(helper, x + (width / 2), y + _coverSize, 0xFFFFFF, true, VerticalTextAlignment.CENTER, HorizontalTextAlignment.TOP);
+                break;
+            case TOP_RIGHT:
+                helper.drawTexturedShape(new Quad(x + width - _coverSize + 3, y + 3, s, s));
+                if (drawText)
+                    currentlyPlayingText.render(helper, x + width - _coverSize, y + 5, 0xFFFFFF, true, VerticalTextAlignment.RIGHT, HorizontalTextAlignment.TOP);
+                break;
+            case CENTER_LEFT:
+                helper.drawTexturedShape(new Quad(x + 3, y + (height / 2) - (_coverSize / 2) + 3, s, s));
+                if (drawText)
+                    currentlyPlayingText.render(helper, x + _coverSize, y + (height / 2), 0xFFFFFF, true, VerticalTextAlignment.LEFT, HorizontalTextAlignment.CENTER);
+                break;
+            case CENTER_RIGHT:
+                helper.drawTexturedShape(new Quad(x + width - _coverSize + 3, y + (height / 2) - (_coverSize / 2) + 3, s, s));
+                if (drawText)
+                    currentlyPlayingText.render(helper, x + width - _coverSize, y + (height / 2), 0xFFFFFF, true, VerticalTextAlignment.RIGHT, HorizontalTextAlignment.CENTER);
+                break;
+            case BOTTOM_LEFT:
+                helper.drawTexturedShape(new Quad(x + 3, y + height - _coverSize + 3, s, s));
+                if (drawText)
+                    currentlyPlayingText.render(helper, x + _coverSize, y + height - 5, 0xFFFFFF, true, VerticalTextAlignment.LEFT, HorizontalTextAlignment.BOTTOM);
+                break;
+            case BOTTOM_CENTER:
+                helper.drawTexturedShape(new Quad(x + (width / 2) - (_coverSize / 2) + 3, y + height - _coverSize + 3, s, s));
+                if (drawText)
+                    currentlyPlayingText.render(helper, x + (width / 2), y + height - _coverSize, 0xFFFFFF, true, VerticalTextAlignment.CENTER, HorizontalTextAlignment.BOTTOM);
+                break;
+            case BOTTOM_RIGHT:
+                helper.drawTexturedShape(new Quad(x + width - _coverSize + 3, y + height - _coverSize + 3, s, s));
+                if (drawText)
+                    currentlyPlayingText.render(helper, x + width - _coverSize, y + height - 5, 0xFFFFFF, true, VerticalTextAlignment.RIGHT, HorizontalTextAlignment.BOTTOM);
+                break;
+        }
+
+        /*Config config = LiteModMusicPlayer.config;
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         Color start = config.overlay_start_color, end = config.overlay_end_color;
-
-        int coverX = x + (alignment == RIGHT ? width - height : 0);
-
         helper.drawButtonThingy(new Quad(x, y, width, height), 0.5F, true, start, 0.25F, end, 0.25F);
-        helper.drawShape(new Quad(coverX + 3, y + 3, height - 6, height - 6));
+        HorizontalTextAlignment horizontal = config.overlay_y_text_align;
+        boolean isRight = alignment == RIGHT;
+
+        {
+            int coverSize = config.cover_size - 6;
+            int coverX = x + (isRight ? width - 3 - coverSize : 3);
+            int coverY = y + (horizontal == HorizontalTextAlignment.TOP ? 3 : (horizontal == HorizontalTextAlignment.CENTER ? height / 2 - (coverSize / 2) : height - 3 - coverSize));
+            musicHandler.getCurrentlyPlaying().bindCover();
+            helper.drawTexturedShape(new Quad(coverX, coverY, coverSize, coverSize));
+        }
+
+        if (drawText)
+        {
+            int textWidth = (width - 5 - config.cover_size);
+            boolean center = config.overlay_position.getCenterText();
+            int textX = x + (center ? (isRight ? textWidth / 2 : (textWidth / 2) + config.cover_size) : (isRight ? width - config.cover_size : config.cover_size));
+            int textY = y + (horizontal == HorizontalTextAlignment.TOP ? 5 : (horizontal == HorizontalTextAlignment.CENTER ? height / 2 : height - 5));
+            VerticalTextAlignment verticalTextAlignment = (center ? VerticalTextAlignment.CENTER : (isRight ? VerticalTextAlignment.RIGHT : VerticalTextAlignment.LEFT));
+            currentlyPlayingText.render(helper, textX, textY, 0xFFFFFF, true, verticalTextAlignment, horizontal);
+        }
+
+        if (nextUpProgress > 0.01 && nextUpText != null)
+        {
+            drawNextUpBox(x, y, width, height, alignment, screenWidth, screenHeight, paddingX, paddingY);
+        }*/
+
+        /*Config config = LiteModMusicPlayer.config;
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+        Color start = config.overlay_start_color, end = config.overlay_end_color;
 
         DrawingHelper.HorizontalTextAlignment horiAlignment = config.overlay_y_text_align;
         DrawingHelper.VerticalTextAlignment vertAlignment = config.overlay_position.getCenterText() ?
                 DrawingHelper.VerticalTextAlignment.CENTER : (alignment == RIGHT ? DrawingHelper.VerticalTextAlignment.RIGHT : DrawingHelper.VerticalTextAlignment.LEFT);
+
+        int coverSize = config.cover_size;
+
+        int coverX = x + (alignment == RIGHT ? width - height : 0);
+        int coverY = y + (horiAlignment == DrawingHelper.HorizontalTextAlignment.TOP ? 0 : (horiAlignment == DrawingHelper.HorizontalTextAlignment.CENTER ? (height / 2 - (coverSize / 2)) : (height - coverSize)));
+
+        helper.drawButtonThingy(new Quad(x, y, width, height), 0.5F, true, start, 0.25F, end, 0.25F);
+//        helper.drawShape(new Quad(coverX + 3, y + 3, height - 6, height - 6));
+        musicHandler.getCurrentlyPlaying().bindCover();
+        int frame = 7;
+        int frameHeight = 64;
+        helper.drawTexturedShape(new Quad(coverX + 3, coverY + 3, coverSize - 6, coverSize - 6*//*new Vector[]{
+                new Vector(coverX + 3, y + 3, 0, frame * frameHeight),
+                new Vector(coverX + 3 + height - 6, y + 3, 512, frame * frameHeight),
+                new Vector(coverX + 3 + height - 6, y + 3 + height - 6, 512, (frame + 1) * frameHeight),
+                new Vector(coverX + 3, y + 3 + height - 6, 0, (frame + 1) * frameHeight)
+        }*//*));
+
         int textY = y;
         switch (horiAlignment)
         {
@@ -219,28 +454,29 @@ public class Overlay
             int textX;
             if (config.overlay_position.getCenterText())
             {
-                textX = alignment == RIGHT ? coverX - ((width - 5 - height) / 2) : coverX + height + ((width - 5 - height) / 2);
+                textX = alignment == RIGHT ? coverX - ((width - 5 - coverSize) / 2) : coverX + coverSize + ((width - 5 - coverSize) / 2);
             } else
             {
-                textX = alignment == RIGHT ? coverX : coverX + height;
+                textX = alignment == RIGHT ? coverX : coverX + coverSize;
             }
+            System.out.println("textY = " + textY + ", height / 2 = " + (height / 2) + ", y = " + y);
             currentlyPlayingText.render(helper, textX, textY, 0xFFFFFF, true, vertAlignment, horiAlignment);
         }
 
         if (nextUpProgress > 0.01 && nextUpText != null)
         {
             drawNextUpBox(x, y, width, height, alignment, screenWidth, screenHeight, paddingX, paddingY);
-        }
+        }*/
     }
 
-    public void drawNextUpBox(int overlayX, int overlayY, int overlayWidth, int overlayHeight, Alignment alignment, int screenWidth, int screenHeight, int paddingX, int paddingY)
+    public void drawNextUpBox(int overlayX, int overlayY, int overlayWidth, int overlayHeight, CoverAlignment horizontal, int screenWidth, int screenHeight, int paddingX, int paddingY)
     {
-        Config config = LiteModMusicPlayer.config;
+        /*Config config = LiteModMusicPlayer.config;
         OverlayPosition.NextUpAlignment heightAlignment = config.overlay_position.next_up_alignment;
         int heightTarget = 6 + (nextUpText.getLines() * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT);
         int height = (int) (nextUpProgress * heightTarget);
         int width = nextUpText.getLongestLine() + 6;
-        int x = alignment == LEFT ? overlayX : overlayX + overlayWidth - width;
+        int x = horizontal == LEFT ? overlayX : overlayX + overlayWidth - width;
         if (heightAlignment == TOP)
         {
             int y = overlayY - 2 - heightTarget;
@@ -257,7 +493,7 @@ public class Overlay
         x = Math.min(x, screenWidth + paddingX - width);
         LiteModMusicPlayer.core.getDrawingHelper().drawButtonThingy(new Quad(x, y, width, height), 0F, true);
         if (height + 2 > heightTarget)
-            nextUpText.render(LiteModMusicPlayer.core.getDrawingHelper(), x + 3, y + 3, 0xFFFFFF, true, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.TOP);
+            nextUpText.render(LiteModMusicPlayer.core.getDrawingHelper(), x + 3, y + 3, 0xFFFFFF, true, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.TOP);*/
     }
 
     public void doPlayingText(Music playing, FontRenderer renderer)
@@ -290,5 +526,6 @@ public class Overlay
     public void showNext()
     {
         showNextTil = System.currentTimeMillis() + LiteModMusicPlayer.config.show_next_peek_time_millis;
+        doNextUpText(LiteModMusicPlayer.musicHandler.getNextUp(), Minecraft.getMinecraft().fontRendererObj);
     }
 }

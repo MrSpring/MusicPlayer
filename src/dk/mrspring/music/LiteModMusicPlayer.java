@@ -30,7 +30,10 @@ public class LiteModMusicPlayer implements Tickable
     AnyTimeKeyBind reloadConfig = new AnyTimeKeyBind(Keyboard.KEY_F5);
     AnyTimeKeyBind expandMiniPlayer = new AnyTimeKeyBind(Keyboard.KEY_P);
     AnyTimeKeyBind showNextUp = new AnyTimeKeyBind(Keyboard.KEY_O);
-    AnyTimeKeyBind togglePlaying = new AnyTimeKeyBind(Keyboard.KEY_K);
+
+    AnyTimeKeyBind previous = new AnyTimeKeyBind(Keyboard.KEY_J);
+    AnyTimeKeyBind playPause = new AnyTimeKeyBind(Keyboard.KEY_K);
+    AnyTimeKeyBind next = new AnyTimeKeyBind(Keyboard.KEY_L);
 
     public static void initializeToolkit()
     {
@@ -62,8 +65,13 @@ public class LiteModMusicPlayer implements Tickable
             overlay.toggleExpanded();
         if (showNextUp.isClicked())
             overlay.showNext();
-        if (togglePlaying.isClicked())
+
+        if (previous.isClicked())
+            musicHandler.playPrevious();
+        if (playPause.isClicked())
             musicHandler.toggle();
+        if (next.isClicked())
+            musicHandler.playNext();
 
         overlay.draw(musicHandler, minecraft);
     }

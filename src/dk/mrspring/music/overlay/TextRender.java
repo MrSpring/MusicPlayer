@@ -11,10 +11,10 @@ import java.util.List;
  */
 public class TextRender
 {
-    String rendering;
-    int longestWidth, lines;
-    FontRenderer renderer;
-    int wrap;
+    private String rendering;
+    private int longestWidth, lines;
+    private FontRenderer renderer;
+    private int wrap;
 
     public TextRender(String toRender, FontRenderer renderer, int wrapWidth)
     {
@@ -77,6 +77,11 @@ public class TextRender
     public int getLines()
     {
         return lines;
+    }
+
+    public int getTotalHeight()
+    {
+        return getLines() * renderer.FONT_HEIGHT;
     }
 
     public void render(DrawingHelper helper, int x, int y, int color, boolean shadow, DrawingHelper.VerticalTextAlignment vertical, DrawingHelper.HorizontalTextAlignment horizontal)

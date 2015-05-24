@@ -92,4 +92,9 @@ public class MusicHandler
             else player.pauseMusic();
         else play(getCurrentlyPlaying());
     }
+
+    public void playPrevious()
+    {
+        play(queue.reverseCycle());
+    }
 }

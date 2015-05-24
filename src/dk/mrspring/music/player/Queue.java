@@ -22,6 +22,16 @@ public class Queue extends Playlist
         return getCurrent();
     }
 
+    public Music reverseCycle()
+    {
+        if (musicList.size() > 1)
+        {
+            Music current = musicList.remove(musicList.size() - 1);
+            musicList.add(0, current);
+        }
+        return getCurrent();
+    }
+
     public void updateQueue(List<Music> newList)
     {
         this.musicList = newList;
