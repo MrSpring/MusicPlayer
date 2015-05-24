@@ -120,7 +120,7 @@ public class Overlay
                 break;
         }
 
-        int overlayWidth = _coverSize + (int) (sizeProgress * widthOverlapTarget) + (int) (sizeProgress * xOverlapTarget); // TODO: Add min/max to x, y
+        int overlayWidth = _coverSize + (int) (sizeProgress * widthOverlapTarget) + (int) (sizeProgress * xOverlapTarget);
         int overlayHeight = _coverSize + (int) (sizeProgress * heightOverlapTarget) + (int) (sizeProgress * yOverlapTarget);
         int overlayX = _paddingX + position.getX(_screenWidth, _coverSize) - (int) (sizeProgress * xOverlapTarget);
         int overlayY = _paddingY + position.getY(_screenHeight, _coverSize) - (int) (sizeProgress * yOverlapTarget);
