@@ -2,6 +2,8 @@ package dk.mrspring.music;
 
 import com.mumfrey.liteloader.Tickable;
 import dk.mrspring.llcore.LLCore;
+import dk.mrspring.music.gui.screen.GuiMusicHome;
+import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.util.AnyTimeKeyBind;
@@ -35,6 +37,8 @@ public class LiteModMusicPlayer implements Tickable
     AnyTimeKeyBind previous = new AnyTimeKeyBind(Keyboard.KEY_J);
     AnyTimeKeyBind playPause = new AnyTimeKeyBind(Keyboard.KEY_K);
     AnyTimeKeyBind next = new AnyTimeKeyBind(Keyboard.KEY_L);
+
+    AnyTimeKeyBind openMM = new AnyTimeKeyBind(Keyboard.KEY_M);
 
     public static void initializeToolkit()
     {
@@ -74,7 +78,11 @@ public class LiteModMusicPlayer implements Tickable
         if (next.isClicked())
             musicHandler.playNext();
 
-        overlay.draw(musicHandler, minecraft);
+        if (openMM.isClicked())
+            minecraft.displayGuiScreen(new GuiMusicHome(minecraft.currentScreen));
+
+        if (!(minecraft.currentScreen instanceof GuiScreen))
+            overlay.draw(musicHandler, minecraft);
     }
 
     @Override
