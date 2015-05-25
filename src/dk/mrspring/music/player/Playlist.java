@@ -25,6 +25,12 @@ public class Playlist
         Collections.addAll(musicList, musics);
     }
 
+    public Playlist add(int at, Music music)
+    {
+        this.musicList.add(at, music);
+        return this;
+    }
+
     public Playlist add(Music music)
     {
         this.musicList.add(music);
@@ -40,5 +46,15 @@ public class Playlist
     public boolean isEmpty()
     {
         return musicList != null && musicList.size() > 0;
+    }
+
+    public List<Music> getList()
+    {
+        return this.musicList;
+    }
+
+    public int size()
+    {
+        return getList().size();
     }
 }

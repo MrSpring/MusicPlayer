@@ -55,7 +55,7 @@ public class GuiMusicHome extends GuiScreen
         int buttonHeight = 60;
         int padding = 5;
         int offset = (options.size() * (buttonWidth)) / 2;
-        int barOffset = getBarHeight();
+        int barOffset = getTopBarHeight();
 
         for (int i = 0; i < options.size(); i++)
         {
@@ -67,7 +67,7 @@ public class GuiMusicHome extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.25F));
+        LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

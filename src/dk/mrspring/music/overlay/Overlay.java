@@ -123,8 +123,8 @@ public class Overlay
 
         int overlayWidth = _coverSize + (int) (sizeProgress * widthOverlapTarget) + (int) (sizeProgress * xOverlapTarget);
         int overlayHeight = _coverSize + (int) (sizeProgress * heightOverlapTarget) + (int) (sizeProgress * yOverlapTarget);
-        int overlayX = _paddingX + position.getX(_screenWidth, _coverSize) - (int) (sizeProgress * xOverlapTarget);
-        int overlayY = _paddingY + position.getY(_screenHeight, _coverSize) - (int) (sizeProgress * yOverlapTarget);
+        int overlayX = _paddingX + position.getX(_screenWidth-_paddingX-_paddingX, _coverSize) - (int) (sizeProgress * xOverlapTarget);
+        int overlayY = _paddingY + position.getY(_screenHeight-_paddingY-_paddingY, _coverSize) - (int) (sizeProgress * yOverlapTarget);
 
         overlayX = Math.max(_paddingX, overlayX);
         overlayY = Math.max(_paddingY, overlayY);

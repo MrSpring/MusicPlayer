@@ -32,7 +32,8 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     private boolean showBars = true;
     private boolean drawCenteredTitle = true;
     private boolean useDefaultDoneButton = true;
-    private int barHeight = 30;
+    private int topBarHeight = 30, bottomBarHeight = 30;
+    private Color topBarColor = Color.BLACK, bottomBarColor = Color.BLACK;
     private int mouseXAtLastFrame = 0, mouseYAtLastFrame = 0;
 
     public GuiScreen(String title, net.minecraft.client.gui.GuiScreen previousScreen)
@@ -90,7 +91,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     {
         String translatedTitle = TranslateHelper.translate(this.title);
 
-        int textPosY = this.barHeight / 2 - 6;
+        int textPosY = this.topBarHeight / 2 - 6;
 
         if (this.drawSubTitle())
             textPosY -= 4;
@@ -120,13 +121,23 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     public void drawCenteredSubTitle()
     {
         String translatedSubTitle = TranslateHelper.translate(this.subtitle);
-        int textPosY = this.barHeight / 2 - 10;
+        int textPosY = this.topBarHeight / 2 - 10;
         this.drawCenteredString(mc.fontRendererObj, translatedSubTitle, this.width / 2, textPosY + 10, 0xFFFFFF);
     }
 
     public boolean drawSubTitle()
     {
         return !this.subtitle.equals("");
+    }
+
+    public void setTopBarColor(Color topBarColor)
+    {
+        this.topBarColor = topBarColor;
+    }
+
+    public void setBottomBarColor(Color bottomBarColor)
+    {
+        this.bottomBarColor = bottomBarColor;
     }
 
     @Override
@@ -139,16 +150,16 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         if (this.showBars)
         {
             DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-            helper.drawShape(new Quad(0, 0, width, barHeight - 1).setColor(Color.BLACK).setAlpha(0.75F));
-            helper.drawShape(new Quad(0, height - barHeight + 1, width, barHeight - 1).setColor(Color.BLACK).setAlpha(0.75F));
+            helper.drawShape(new Quad(0, 0, width, getTopBarHeight() - 1).setColor(topBarColor).setAlpha(0.5F));
+            helper.drawShape(new Quad(0, height - getBottomBarHeight() + 1, width, getBottomBarHeight() - 1).setColor(bottomBarColor).setAlpha(0.5F));
 
-            helper.drawShape(new Quad(0, barHeight - 1, width, 1).setColor(Color.WHITE));
-            helper.drawShape(new Quad(0, height - barHeight, width, 1).setColor(Color.WHITE));
+            helper.drawShape(new Quad(0, getTopBarHeight() - 1, width, 1).setColor(Color.WHITE));
+            helper.drawShape(new Quad(0, height - getBottomBarHeight(), width, 1).setColor(Color.WHITE));
 
             if (this.drawCenteredTitle)
                 this.drawCenteredTitle();
 
-            GL11.glTranslatef(0, barHeight, 0);
+            GL11.glTranslatef(0, topBarHeight, 0);
         } else if (this.drawCenteredTitle)
             this.drawCenteredTitle();
 
@@ -168,7 +179,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
 
             int mouseYOffset = 0;
             if (this.showBars)
-                mouseYOffset += barHeight;
+                mouseYOffset += topBarHeight;
 
             if (this.drawGui(identifier, element, mouseX, mouseY - mouseYOffset) && !identifier.equals("done_button"))
             {
@@ -190,14 +201,24 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         this.mouseYAtLastFrame = mouseY;
     }
 
-    public int getBarHeight()
+    public int getTopBarHeight()
     {
-        return barHeight;
+        return topBarHeight;
     }
 
-    public void setBarHeight(int barHeight)
+    public void setTopBarHeight(int topBarHeight)
     {
-        this.barHeight = barHeight;
+        this.topBarHeight = topBarHeight;
+    }
+
+    public int getBottomBarHeight()
+    {
+        return bottomBarHeight;
+    }
+
+    public void setBottomBarHeight(int bottomBarHeight)
+    {
+        this.bottomBarHeight = bottomBarHeight;
     }
 
     @Override
@@ -252,10 +273,10 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
                 String identifier = entry.getKey();
                 IGui gui = entry.getValue();
 
-                /*if (identifier.equals("done_button") && gui.mouseDown(mouseX, mouseY, mouseButton))
-                    mc.displayGuiScreen(this.previousScreen);
-                else */
-                if (gui.mouseDown(mouseX, mouseY, mouseButton))
+                int mouseYOffset = 0;
+                if (this.showBars)
+                    mouseYOffset += topBarHeight;
+                if (gui.mouseDown(mouseX, mouseY - mouseYOffset, mouseButton))
                     this.guiClicked(identifier, gui, mouseX, mouseY, mouseButton);
             }
         } catch (Exception e)
@@ -278,8 +299,9 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     {
         for (Map.Entry<String, IGui> entry : this.guiHashMap.entrySet())
         {
+            int yOffset = this.showBars ? getTopBarHeight() : 0;
             IGui gui = entry.getValue();
-            gui.mouseUp(mouseX, mouseY, state);
+            gui.mouseUp(mouseX, mouseY - yOffset, state);
         }
     }
 
@@ -288,8 +310,9 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     {
         for (Map.Entry<String, IGui> entry : this.guiHashMap.entrySet())
         {
+            int yOffset = this.showBars ? getTopBarHeight() : 0;
             IGui gui = entry.getValue();
-            gui.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+            gui.mouseClickMove(mouseX, mouseY - yOffset, clickedMouseButton, timeSinceLastClick);
         }
     }
 
@@ -307,8 +330,8 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     public GuiScreen setSubtitle(String subtitle)
     {
         this.subtitle = subtitle;
-        if (this.barHeight < 30)
-            this.barHeight = 30;
+        if (this.topBarHeight < 30)
+            this.topBarHeight = 30;
         return this;
     }
 

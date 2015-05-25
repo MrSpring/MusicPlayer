@@ -97,4 +97,9 @@ public class MusicHandler
     {
         play(queue.reverseCycle());
     }
+
+    public Queue getQueue()
+    {
+        return queue;
+    }
 }

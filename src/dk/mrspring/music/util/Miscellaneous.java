@@ -5,19 +5,22 @@ package dk.mrspring.music.util;
  */
 public class Miscellaneous
 {
-    public static float smoothDamp(float target, float current)
+    public static float smoothDamp(float target, float current, float easing)
     {
-        float difference, distance;
-        difference = target - current;
-        if (difference > 0)
+        if (easing < 1)
         {
-            distance = (float) Math.sqrt(difference * difference);
-            return current + (distance * 0.15F);
-        } else
-        {
-            distance = (float) Math.sqrt(-difference * -difference);
-            return current + (-distance * 0.15F);
-        }
+            float difference, distance;
+            difference = target - current;
+            if (difference > 0)
+            {
+                distance = (float) Math.sqrt(difference * difference);
+                return current + (distance * easing);
+            } else
+            {
+                distance = (float) Math.sqrt(-difference * -difference);
+                return current + (-distance * easing);
+            }
+        } else return target;
     }
 
     public static double smoothDamp(double target, double current, double easing)
