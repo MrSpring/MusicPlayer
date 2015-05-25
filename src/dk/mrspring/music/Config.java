@@ -20,5 +20,4 @@ public class Config
     public OverlayPosition overlay_position = new OverlayPosition();
     public float overlay_size_easing_speed = 0.15F;
     public float overlay_next_up_easing_speed = 0.15F;
-    public boolean disable_animations = false;
 }
