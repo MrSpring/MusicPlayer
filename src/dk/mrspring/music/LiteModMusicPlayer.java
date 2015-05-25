@@ -8,6 +8,7 @@ import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.util.AnyTimeKeyBind;
 import dk.mrspring.music.util.FileUtils;
+import dk.mrspring.music.util.Icons;
 import dk.mrspring.music.util.JsonUtils;
 import javafx.embed.swing.JFXPanel;
 import net.minecraft.client.Minecraft;
@@ -110,6 +111,7 @@ public class LiteModMusicPlayer implements Tickable
     public void init(File configPath)
     {
         core = new LLCore("music_player");
+        core.registerIcon(Icons.trash, "trash_can");
         configFile = new File(configPath, "musicplayer.json");
         coverLocation = new File(configPath.getParent(), "musiccovers");
         if (!coverLocation.exists())
