@@ -1,5 +1,7 @@
 package dk.mrspring.music.util;
 
+import dk.mrspring.music.LiteModMusicPlayer;
+
 /**
  * Created by Konrad on 26-04-2015.
  */
@@ -7,7 +9,7 @@ public class Miscellaneous
 {
     public static float smoothDamp(float target, float current, float easing)
     {
-        if (easing < 1)
+        if (easing < 1 && !LiteModMusicPlayer.config.disable_animations)
         {
             float difference, distance;
             difference = target - current;
@@ -25,7 +27,7 @@ public class Miscellaneous
 
     public static double smoothDamp(double target, double current, double easing)
     {
-        if (easing < 1)
+        if (easing < 1 && !LiteModMusicPlayer.config.disable_animations)
         {
             double difference, distance;
             difference = target - current;

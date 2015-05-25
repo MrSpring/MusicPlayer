@@ -37,12 +37,19 @@ public class GuiQueueManager extends GuiScreen
     {
         LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
 
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        GuiMusicList list = (GuiMusicList) this.getGui("music_list");
+        progress = Miscellaneous.smoothDamp(list.isMovingInDeleteZone() ? 1 : 0, progress, 0.4F);
+        this.setBottomBarHeight(20 + (int) (30 * progress));
+        this.setBottomBarColor(Color.morph(Color.BLACK, Color.RED, (float) progress));
+        list.setHeight(height - getTopBarHeight() - getBottomBarHeight());
 
+        super.drawScreen(mouseX, mouseY, partialTicks);
 
         if (getBottomBarHeight() > 35)
         {
-            LiteModMusicPlayer.core.getDrawingHelper().drawText("Release to remove from Queue", new Vector(width / 2, height - getTopBarHeight() - (getBottomBarHeight() / 2)), 0xFFFFFF, true, width - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
+            float iconSize = 20;
+            LiteModMusicPlayer.core.getDrawingHelper().drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(width / 2 - (iconSize / 2), height - getTopBarHeight() - (getBottomBarHeight() / 2) - (iconSize / 2) - 6, iconSize, iconSize));
+            LiteModMusicPlayer.core.getDrawingHelper().drawText("Release to remove from Queue", new Vector(width / 2, height - getTopBarHeight() - (getBottomBarHeight() / 2) + 3 + (iconSize / 2)), 0xFFFFFF, true, width - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
         }
     }
 
@@ -50,25 +57,22 @@ public class GuiQueueManager extends GuiScreen
     public void updateScreen()
     {
 
-        IGui musicList = this.getGui("music_list");
+        /*IGui musicList = this.getGui("music_list");
         if (musicList instanceof GuiMusicList)
         {
             GuiMusicList list = (GuiMusicList) musicList;
-            progress = Miscellaneous.smoothDamp(list.isMovingInDeleteZone() ? 1 : 0, progress, 0.15F);
-            this.setBottomBarHeight(20 + (int) (30 * progress));
-            this.setBottomBarColor(Color.morph(Color.BLACK, Color.RED, (float) progress));
-        }
+        }*/
         super.updateScreen();
     }
 
     @Override
     public boolean updateElement(String identifier, IGui gui)
     {
-        if (gui instanceof GuiMusicList)
+        /*if (gui instanceof GuiMusicList)
         {
             GuiMusicList musicList = (GuiMusicList) gui;
-            musicList.setHeight(height - getTopBarHeight() - getBottomBarHeight());
-        }
+            musicList.setHeight();
+        }*/
         return true;
     }
 
