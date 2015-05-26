@@ -89,7 +89,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
 
     public void drawCenteredTitle()
     {
-        String translatedTitle = TranslateHelper.translate(this.title);
+        String translatedTitle = TranslateHelper.translate(this.getTitle());
 
         int textPosY = this.topBarHeight / 2 - 6;
 
@@ -109,7 +109,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
 //        DrawingHelper.drawQuad(underlinePosX, textPosY + 8, titleWidth + (underlineOverflow * 2), 1, Color.WHITE, 1F);
 
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-        helper.drawShape(new Quad(underlinePosX + 1, textPosY + 9, titleWidth + (underlineOverflow * 2), 1).setColor(Color.WHITE));
+        helper.drawShape(new Quad(underlinePosX + 1, textPosY + 9, titleWidth + (underlineOverflow * 2), 1).setColor(Color.DK_GREY));
         helper.drawShape(new Quad(underlinePosX, textPosY + 8, titleWidth + (underlineOverflow * 2), 1).setColor(Color.WHITE));
     }
 
@@ -118,9 +118,14 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         return title;
     }
 
+    public String getSubtitle()
+    {
+        return subtitle;
+    }
+
     public void drawCenteredSubTitle()
     {
-        String translatedSubTitle = TranslateHelper.translate(this.subtitle);
+        String translatedSubTitle = TranslateHelper.translate(this.getSubtitle());
         int textPosY = this.topBarHeight / 2 - 10;
         this.drawCenteredString(mc.fontRendererObj, translatedSubTitle, this.width / 2, textPosY + 10, 0xFFFFFF);
     }

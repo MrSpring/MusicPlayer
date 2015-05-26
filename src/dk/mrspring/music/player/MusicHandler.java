@@ -24,7 +24,7 @@ public class MusicHandler
 
     public MusicHandler(boolean autoPlay, File... baseFiles)
     {
-        this();
+//        this();
         for (File folder : baseFiles)
             loadMusicFrom(folder);
         createDefaultQueue();
@@ -32,10 +32,22 @@ public class MusicHandler
             play(queue.getCurrent());
     }
 
+    public void checkForQueueChanges()
+    {
+        if (player != null)
+        {
+            Music playing = player.getPlaying();
+            if (queue.getCurrent() != playing)
+                play(queue.getCurrent());
+        }
+    }
+
     public void createDefaultQueue()
     {
         List<Music> newQueue = new ArrayList<Music>(allMusic);
-        queue.updateQueue(newQueue);
+        if (queue == null)
+            queue = new Queue(newQueue);
+        else queue.updateQueue(newQueue);
     }
 
     public void loadMusicFrom(File folder)

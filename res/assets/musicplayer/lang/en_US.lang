@@ -3,3 +3,8 @@ overlay.next_up=Next Up:\n%1$s §7by %3$s
 
 gui.music.main.title=Music Manager
 gui.music.main.subtitle=MANAGE THE MUSIC FOUND BY THE MOD
+
+gui.playlist_editor.title=%1$s
+gui.playlist_editor.remove=Release to remove from %1$s
+
+playlist.queue.name=Queue

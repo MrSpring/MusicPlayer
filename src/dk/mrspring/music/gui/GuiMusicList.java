@@ -211,7 +211,7 @@ public class GuiMusicList implements IGui, IMouseListener
         if (moving != -1)
         {
             if (this.isMovingInDeleteZone())
-                musicList.getList().remove(moving);
+                musicList.remove(moving);
             else
             {
 
@@ -221,8 +221,8 @@ public class GuiMusicList implements IGui, IMouseListener
                     if ((i * _entryHeight) + (_entryHeight / 2) > relMouseY - moveYStart)
                     {
                         System.out.println("1: " + ((i * _entryHeight) + (_entryHeight / 2)) + ", 2: " + (relMouseY - moveYStart));
-                        Music removed = musicList.getList().remove(moving);
-                        musicList.getList().add(i/* > 0 ? i - 1 : 0*/, removed);
+                        Music removed = musicList.remove(moving);
+                        musicList.add(i/* > 0 ? i - 1 : 0*/, removed);
                         break;
                     }
                 }

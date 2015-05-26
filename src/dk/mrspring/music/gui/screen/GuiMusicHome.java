@@ -25,7 +25,7 @@ public class GuiMusicHome extends GuiScreen
             @Override
             public GuiScreen getGui()
             {
-                return new GuiQueueManager(GuiMusicHome.this);
+                return new GuiScreenQueueEditor(GuiMusicHome.this);
             }
         });
         options.add(new IOption()
@@ -33,7 +33,7 @@ public class GuiMusicHome extends GuiScreen
             @Override
             public GuiScreen getGui()
             {
-                return new GuiQueueManager(GuiMusicHome.this);
+                return new GuiScreenQueueEditor(GuiMusicHome.this);
             }
         });
         options.add(new IOption()
@@ -41,7 +41,7 @@ public class GuiMusicHome extends GuiScreen
             @Override
             public GuiScreen getGui()
             {
-                return new GuiQueueManager(GuiMusicHome.this);
+                return new GuiScreenQueueEditor(GuiMusicHome.this);
             }
         });
     }

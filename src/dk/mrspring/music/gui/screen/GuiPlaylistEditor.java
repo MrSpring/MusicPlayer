@@ -8,18 +8,33 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.GuiMusicList;
 import dk.mrspring.music.gui.GuiSimpleButton;
 import dk.mrspring.music.gui.interfaces.IGui;
+import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.Miscellaneous;
+import dk.mrspring.music.util.TranslateHelper;
 
 /**
  * Created by Konrad on 24-05-2015.
  */
-public class GuiQueueManager extends GuiScreen
+public class GuiPlaylistEditor extends GuiScreen
 {
+    Playlist playlist;
     private double progress = 0;
 
-    public GuiQueueManager(net.minecraft.client.gui.GuiScreen previousScreen)
+    public GuiPlaylistEditor(net.minecraft.client.gui.GuiScreen previousScreen, Playlist playlist)
     {
         super("gui.music.queue_manager.title", previousScreen);
+        this.playlist = playlist;
+    }
+
+    public String getPlaylistName()
+    {
+        return this.playlist.getName();
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return TranslateHelper.translateFormat("gui.playlist_editor.title", getPlaylistName());
     }
 
     @Override
@@ -39,18 +54,18 @@ public class GuiQueueManager extends GuiScreen
 
         GuiMusicList list = (GuiMusicList) this.getGui("music_list");
         progress = Miscellaneous.smoothDamp(list.isMovingInDeleteZone() ? 1 : 0, progress, 0.4F);
-        this.setBottomBarHeight(20 + (int) (30 * progress));
+        this.setBottomBarHeight(getTopBarHeight() + (int) (25 * progress));
         this.setBottomBarColor(Color.morph(Color.BLACK, Color.RED, (float) progress));
         list.setHeight(height - getTopBarHeight() - getBottomBarHeight());
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
+        float bigIconExtra = 10;
+        float iconSize = 20 + (float) (bigIconExtra * progress);
+        LiteModMusicPlayer.core.getDrawingHelper().drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(width / 2 - (iconSize / 2), height - getTopBarHeight() - (getBottomBarHeight() / 2) - (iconSize / 2) - (int) (progress * 6D), iconSize, iconSize));
+
         if (getBottomBarHeight() > 35)
-        {
-            float iconSize = 20;
-            LiteModMusicPlayer.core.getDrawingHelper().drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(width / 2 - (iconSize / 2), height - getTopBarHeight() - (getBottomBarHeight() / 2) - (iconSize / 2) - 6, iconSize, iconSize));
-            LiteModMusicPlayer.core.getDrawingHelper().drawText("Release to remove from Queue", new Vector(width / 2, height - getTopBarHeight() - (getBottomBarHeight() / 2) + 3 + (iconSize / 2)), 0xFFFFFF, true, width - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
-        }
+            LiteModMusicPlayer.core.getDrawingHelper().drawText(TranslateHelper.translateFormat("gui.playlist_editor.remove", getPlaylistName()), new Vector(width / 2, height - getTopBarHeight() - (getBottomBarHeight() / 2) + 3 + (iconSize / 2)), 0xFFFFFF, true, width - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
     }
 
     @Override

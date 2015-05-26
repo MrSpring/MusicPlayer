@@ -1,5 +1,7 @@
 package dk.mrspring.music.player;
 
+import dk.mrspring.music.LiteModMusicPlayer;
+
 import java.util.List;
 
 /**
@@ -10,6 +12,30 @@ public class Queue extends Playlist
     public Queue(List<Music> music)
     {
         super("queue", music);
+    }
+
+    @Override
+    public Playlist add(int at, Music music)
+    {
+        super.add(at, music);
+        LiteModMusicPlayer.musicHandler.checkForQueueChanges();
+        return this;
+    }
+
+    @Override
+    public Music remove(int index)
+    {
+        Music removed = super.remove(index);
+        LiteModMusicPlayer.musicHandler.checkForQueueChanges();
+        return removed;
+    }
+
+    @Override
+    public Playlist remove(Music music)
+    {
+        super.remove(music);
+        LiteModMusicPlayer.musicHandler.checkForQueueChanges();
+        return this;
     }
 
     public Music cycle()
@@ -35,6 +61,7 @@ public class Queue extends Playlist
     public void updateQueue(List<Music> newList)
     {
         this.musicList = newList;
+        LiteModMusicPlayer.musicHandler.checkForQueueChanges();
     }
 
     public Music getCurrent()

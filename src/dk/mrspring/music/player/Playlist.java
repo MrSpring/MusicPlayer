@@ -43,6 +43,11 @@ public class Playlist
         return this;
     }
 
+    public Music remove(int index)
+    {
+        return this.getList().remove(index);
+    }
+
     public boolean isEmpty()
     {
         return musicList != null && musicList.size() > 0;
@@ -56,5 +61,10 @@ public class Playlist
     public int size()
     {
         return getList().size();
+    }
+
+    public String getName()
+    {
+        return this.name;
     }
 }
