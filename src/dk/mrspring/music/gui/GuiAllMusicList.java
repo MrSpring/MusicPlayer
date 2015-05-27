@@ -71,8 +71,6 @@ public class GuiAllMusicList implements IGui, IMouseListener
         }
         float remaining = listWidth % columns;
         GL11.glTranslatef(remaining / 2F, -scroll, 0);
-//        int[] columnHeights = new int[columns];
-
         int currentColumn = 0;
         int rowHeight = 0;
         int totalHeight = 0;
@@ -81,10 +79,6 @@ public class GuiAllMusicList implements IGui, IMouseListener
             if (filter != null)
                 if (!filter.filter(music))
                     continue;
-//            int currentColumn = 0;
-//            for (int i = 0; i < columns; i++)
-//                if (columnHeights[i] < columnHeights[currentColumn])
-//                    currentColumn = i;
             TextRender render = new TextRender(music.getName(), minecraft.fontRendererObj, _entryWidth - 6 - (2 * _entrySpacing));
             int entryHeight = _entryWidth + render.getTotalHeight() + 3;
             int entryX = currentColumn * _entryWidth;
@@ -92,7 +86,6 @@ public class GuiAllMusicList implements IGui, IMouseListener
             render.render(helper, entryX + 3 + _entrySpacing, _entryWidth - _entrySpacing, 0xFFFFFF, true, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.TOP);
             music.bindCover();
             helper.drawTexturedShape(new Quad(entryX + 3 + _entrySpacing, 3 + _entrySpacing, _entryWidth - 6 - (2 * _entrySpacing), _entryWidth - 6 - (2 * _entrySpacing)));
-//            columnHeights[currentColumn] += entryHeight;
             if (entryHeight > rowHeight)
                 rowHeight = entryHeight;
             currentColumn++;
@@ -107,9 +100,6 @@ public class GuiAllMusicList implements IGui, IMouseListener
         GLClippingPlanes.glDisableClipping();
         GL11.glPopMatrix();
         this.listHeight = totalHeight + rowHeight;
-        /*for (int i = 1; i < columnHeights.length; i++)
-            if (columnHeights[i] > listHeight)
-                listHeight = columnHeights[i];*/
     }
 
     private boolean hasScroll()
