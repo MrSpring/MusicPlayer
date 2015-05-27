@@ -16,13 +16,13 @@ import org.lwjgl.input.Keyboard;
  */
 public class GuiCustomTextField implements IGui
 {
+    final int PADDING = 3;
     String text;
     int x, y, w, h;
     boolean focused, enabled = true;
     int selectionStart = 0;
     int cursorPos = 0;
     int scroll = 0;
-    final int PADDING = 3;
 
     public GuiCustomTextField(int x, int y, int width, int height, String text)
     {
@@ -104,11 +104,6 @@ public class GuiCustomTextField implements IGui
         this.x = x;
     }
 
-    public void setY(int y)
-    {
-        this.y = y;
-    }
-
     public void setW(int w)
     {
         this.w = w;
@@ -124,14 +119,14 @@ public class GuiCustomTextField implements IGui
         return text;
     }
 
-    public String getSelection()
-    {
-        return getText().substring(Math.min(selectionStart, cursorPos), Math.max(selectionStart, cursorPos));
-    }
-
     public void setText(String text)
     {
         this.text = text;
+    }
+
+    public String getSelection()
+    {
+        return getText().substring(Math.min(selectionStart, cursorPos), Math.max(selectionStart, cursorPos));
     }
 
     public void writeString(String string)
@@ -156,7 +151,7 @@ public class GuiCustomTextField implements IGui
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        focused = GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, h);
+        setFocus(GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, h));
         return focused;
     }
 
@@ -288,5 +283,15 @@ public class GuiCustomTextField implements IGui
     public int getY()
     {
         return y;
+    }
+
+    public void setY(int y)
+    {
+        this.y = y;
+    }
+
+    public void setFocus(boolean focus)
+    {
+        this.focused = focus;
     }
 }

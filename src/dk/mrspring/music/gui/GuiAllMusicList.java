@@ -26,7 +26,7 @@ public class GuiAllMusicList implements IGui, IMouseListener
     int _coverSize = 70;
     int _entryWidth = _coverSize;
     int _entrySpacing = 3;
-    int _entryWidthTarget = 70;
+    int _entryWidthTarget = 100;
     int _scrollMaxOffset = 20;
     int _scrollBarWidth = 10;
     int scroll = 0;
@@ -71,32 +71,45 @@ public class GuiAllMusicList implements IGui, IMouseListener
         }
         float remaining = listWidth % columns;
         GL11.glTranslatef(remaining / 2F, -scroll, 0);
-        int[] columnHeights = new int[columns];
+//        int[] columnHeights = new int[columns];
 
+        int currentColumn = 0;
+        int rowHeight = 0;
+        int totalHeight = 0;
         for (Music music : this.showing)
         {
             if (filter != null)
                 if (!filter.filter(music))
                     continue;
-            int currentColumn = 0;
-            for (int i = 0; i < columns; i++)
-                if (columnHeights[i] < columnHeights[currentColumn])
-                    currentColumn = i;
+//            int currentColumn = 0;
+//            for (int i = 0; i < columns; i++)
+//                if (columnHeights[i] < columnHeights[currentColumn])
+//                    currentColumn = i;
             TextRender render = new TextRender(music.getName(), minecraft.fontRendererObj, _entryWidth - 6 - (2 * _entrySpacing));
             int entryHeight = _entryWidth + render.getTotalHeight() + 3;
-            int entryX = currentColumn * _entryWidth, entryY = columnHeights[currentColumn];
-            helper.drawButtonThingy(new Quad(entryX + _entrySpacing, entryY + _entrySpacing, _entryWidth - (2 * _entrySpacing), entryHeight - (2 * _entrySpacing)), 0, true);
-            render.render(helper, entryX + 3 + _entrySpacing, entryY + _entryWidth - _entrySpacing, 0xFFFFFF, true, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.TOP);
+            int entryX = currentColumn * _entryWidth;
+            helper.drawButtonThingy(new Quad(entryX + _entrySpacing, _entrySpacing, _entryWidth - (2 * _entrySpacing), entryHeight - (2 * _entrySpacing)), 0, true);
+            render.render(helper, entryX + 3 + _entrySpacing, _entryWidth - _entrySpacing, 0xFFFFFF, true, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.TOP);
             music.bindCover();
-            helper.drawTexturedShape(new Quad(entryX + 3 + _entrySpacing, entryY + 3 + _entrySpacing, _entryWidth - 6 - (2 * _entrySpacing), _entryWidth - 6 - (2 * _entrySpacing)));
-            columnHeights[currentColumn] += entryHeight;
+            helper.drawTexturedShape(new Quad(entryX + 3 + _entrySpacing, 3 + _entrySpacing, _entryWidth - 6 - (2 * _entrySpacing), _entryWidth - 6 - (2 * _entrySpacing)));
+//            columnHeights[currentColumn] += entryHeight;
+            if (entryHeight > rowHeight)
+                rowHeight = entryHeight;
+            currentColumn++;
+            if (currentColumn >= columns)
+            {
+                currentColumn = 0;
+                GL11.glTranslatef(0, rowHeight, 0);
+                totalHeight += rowHeight;
+                rowHeight = 0;
+            }
         }
         GLClippingPlanes.glDisableClipping();
         GL11.glPopMatrix();
-        this.listHeight = columnHeights[0];
-        for (int i = 1; i < columnHeights.length; i++)
+        this.listHeight = totalHeight + rowHeight;
+        /*for (int i = 1; i < columnHeights.length; i++)
             if (columnHeights[i] > listHeight)
-                listHeight = columnHeights[i];
+                listHeight = columnHeights[i];*/
     }
 
     private boolean hasScroll()
