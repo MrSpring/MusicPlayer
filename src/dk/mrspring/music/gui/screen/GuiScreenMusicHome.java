@@ -12,11 +12,11 @@ import java.util.List;
 /**
  * Created by Konrad on 24-05-2015.
  */
-public class GuiMusicHome extends GuiScreen
+public class GuiScreenMusicHome extends GuiScreen
 {
     List<IOption> options = new ArrayList<IOption>();
 
-    public GuiMusicHome(net.minecraft.client.gui.GuiScreen previousScreen)
+    public GuiScreenMusicHome(net.minecraft.client.gui.GuiScreen previousScreen)
     {
         super("gui.music.main.title", previousScreen);
 
@@ -25,7 +25,7 @@ public class GuiMusicHome extends GuiScreen
             @Override
             public GuiScreen getGui()
             {
-                return new GuiScreenQueueEditor(GuiMusicHome.this);
+                return new GuiScreenQueueEditor(GuiScreenMusicHome.this);
             }
         });
         options.add(new IOption()
@@ -33,7 +33,7 @@ public class GuiMusicHome extends GuiScreen
             @Override
             public GuiScreen getGui()
             {
-                return new GuiScreenQueueEditor(GuiMusicHome.this);
+                return new GuiScreenAllMusic(GuiScreenMusicHome.this);
             }
         });
         options.add(new IOption()
@@ -41,7 +41,7 @@ public class GuiMusicHome extends GuiScreen
             @Override
             public GuiScreen getGui()
             {
-                return new GuiScreenQueueEditor(GuiMusicHome.this);
+                return new GuiScreenQueueEditor(GuiScreenMusicHome.this);
             }
         });
     }

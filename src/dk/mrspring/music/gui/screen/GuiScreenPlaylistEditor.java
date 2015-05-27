@@ -5,7 +5,7 @@ import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
-import dk.mrspring.music.gui.GuiMusicList;
+import dk.mrspring.music.gui.GuiPlaylist;
 import dk.mrspring.music.gui.GuiSimpleButton;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.player.Playlist;
@@ -15,12 +15,12 @@ import dk.mrspring.music.util.TranslateHelper;
 /**
  * Created by Konrad on 24-05-2015.
  */
-public class GuiPlaylistEditor extends GuiScreen
+public class GuiScreenPlaylistEditor extends GuiScreen
 {
     Playlist playlist;
     private double progress = 0;
 
-    public GuiPlaylistEditor(net.minecraft.client.gui.GuiScreen previousScreen, Playlist playlist)
+    public GuiScreenPlaylistEditor(net.minecraft.client.gui.GuiScreen previousScreen, Playlist playlist)
     {
         super("gui.music.queue_manager.title", previousScreen);
         this.playlist = playlist;
@@ -44,7 +44,7 @@ public class GuiPlaylistEditor extends GuiScreen
 
         this.addGuiElement("back", new GuiSimpleButton(3, -getTopBarHeight() + 3, 60, getTopBarHeight() - 6, "Back"));
 
-        this.addGuiElement("music_list", new GuiMusicList(0, 0, width, height - (2 * getTopBarHeight()), LiteModMusicPlayer.musicHandler.getQueue()));
+        this.addGuiElement("music_list", new GuiPlaylist(0, 0, width, height - getTopBarHeight()-getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getQueue()));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GuiPlaylistEditor extends GuiScreen
     {
         LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
 
-        GuiMusicList list = (GuiMusicList) this.getGui("music_list");
+        GuiPlaylist list = (GuiPlaylist) this.getGui("music_list");
         progress = Miscellaneous.smoothDamp(list.isMovingInDeleteZone() ? 1 : 0, progress, 0.4F);
         this.setBottomBarHeight(getTopBarHeight() + (int) (25 * progress));
         this.setBottomBarColor(Color.morph(Color.BLACK, Color.RED, (float) progress));

@@ -2,7 +2,7 @@ package dk.mrspring.music;
 
 import com.mumfrey.liteloader.Tickable;
 import dk.mrspring.llcore.LLCore;
-import dk.mrspring.music.gui.screen.GuiMusicHome;
+import dk.mrspring.music.gui.screen.GuiScreenMusicHome;
 import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
@@ -80,7 +80,7 @@ public class LiteModMusicPlayer implements Tickable
             musicHandler.playNext();
 
         if (openMM.isClicked())
-            minecraft.displayGuiScreen(new GuiMusicHome(minecraft.currentScreen));
+            minecraft.displayGuiScreen(new GuiScreenMusicHome(minecraft.currentScreen));
 
         if (!(minecraft.currentScreen instanceof GuiScreen))
             overlay.draw(musicHandler, minecraft);
@@ -112,6 +112,7 @@ public class LiteModMusicPlayer implements Tickable
     {
         core = new LLCore("music_player");
         core.registerIcon(Icons.trash, "trash_can");
+        core.registerIcon(Icons.search, "search");
         configFile = new File(configPath, "musicplayer.json");
         coverLocation = new File(configPath.getParent(), "musiccovers");
         if (!coverLocation.exists())

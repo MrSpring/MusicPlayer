@@ -1,14 +1,12 @@
 package dk.mrspring.music.gui.screen;
 
 import dk.mrspring.music.LiteModMusicPlayer;
-import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.TranslateHelper;
-import net.minecraft.client.gui.*;
 
 /**
  * Created by Konrad on 26-05-2015.
  */
-public class GuiScreenQueueEditor extends GuiPlaylistEditor
+public class GuiScreenQueueEditor extends GuiScreenPlaylistEditor
 {
     public GuiScreenQueueEditor(net.minecraft.client.gui.GuiScreen previousScreen)
     {

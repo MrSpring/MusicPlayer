@@ -2,6 +2,7 @@ package dk.mrspring.music.overlay;
 
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Vector;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
 import java.util.List;
@@ -86,6 +87,7 @@ public class TextRender
 
     public void render(DrawingHelper helper, int x, int y, int color, boolean shadow, DrawingHelper.VerticalTextAlignment vertical, DrawingHelper.HorizontalTextAlignment horizontal)
     {
+//        this.renderer.onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
         helper.drawText(rendering, new Vector(x, y), color, shadow, this.wrap, vertical, horizontal);
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Konrad on 25-05-2015.
  */
-public class GuiMusicList implements IGui, IMouseListener
+public class GuiPlaylist implements IGui, IMouseListener
 {
     Playlist musicList;
     int x, y, width, height;
@@ -31,7 +31,7 @@ public class GuiMusicList implements IGui, IMouseListener
     private int _scrollBarWidth = 10;
     private int _scrollMaxOffset = 20;
 
-    public GuiMusicList(int x, int y, int w, int h, Playlist music)
+    public GuiPlaylist(int x, int y, int w, int h, Playlist music)
     {
         this.musicList = music;
         this.x = x;

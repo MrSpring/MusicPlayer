@@ -114,4 +114,9 @@ public class MusicHandler
     {
         return queue;
     }
+
+    public List<Music> getAllMusic()
+    {
+        return this.allMusic;
+    }
 }
