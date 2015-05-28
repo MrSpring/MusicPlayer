@@ -84,6 +84,9 @@ public class LiteModMusicPlayer implements Tickable
 
         if (!(minecraft.currentScreen instanceof GuiScreen))
             overlay.draw(musicHandler, minecraft);
+
+        if (config != null)
+            System.out.println(config.gui_mm_list_entry_size);
     }
 
     @Override
@@ -103,6 +106,16 @@ public class LiteModMusicPlayer implements Tickable
                 config = JsonUtils.loadFromJson(configFile, Config.class);
             if (config == null)
                 config = new Config();
+            saveConfig();
+        }
+    }
+
+    private void saveConfig()
+    {
+        if (configFile != null)
+        {
+            if (!configFile.exists())
+                FileUtils.createFile(configFile);
             JsonUtils.writeToFile(configFile, config);
         }
     }
@@ -121,6 +134,14 @@ public class LiteModMusicPlayer implements Tickable
         initializeToolkit();
         musicHandler = new MusicHandler(config.auto_play, new File("C:\\Users\\Konrad\\Music"));
         overlay = new Overlay();
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                saveConfig();
+            }
+        }));
     }
 
     @Override

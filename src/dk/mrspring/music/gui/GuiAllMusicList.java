@@ -42,6 +42,15 @@ public class GuiAllMusicList implements IGui, IMouseListener
         this.showing = allMusic;
     }
 
+    public void setEntryWidthTarget(int entryWidthTarget)
+    {
+        if (this._entryWidthTarget!=entryWidthTarget)
+        {
+            this._entryWidthTarget = entryWidthTarget;
+            this.clampScroll();
+        }else this._entryWidthTarget = entryWidthTarget;
+    }
+
     public MusicFilter getFilter()
     {
         return filter;
@@ -58,6 +67,7 @@ public class GuiAllMusicList implements IGui, IMouseListener
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         GL11.glPushMatrix();
         GLClippingPlanes.glEnableVerticalClipping(0, height);
+        GL11.glTranslatef(x, y, 0);
         int listWidth = width - (this.hasScroll() ? _scrollBarWidth : 0);
         int columns = listWidth / _entryWidthTarget;
         _entryWidth = listWidth / columns;
@@ -169,5 +179,19 @@ public class GuiAllMusicList implements IGui, IMouseListener
     {
         this.scroll += scroll;
         this.clampScroll();
+    }
+
+    public void setWidth(int width)
+    {
+        if (width != this.width)
+        {
+            this.width = width;
+            this.clampScroll();
+        } else this.width = width;
+    }
+
+    public void setX(int x)
+    {
+        this.x = x;
     }
 }

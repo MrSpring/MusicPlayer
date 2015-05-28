@@ -21,4 +21,6 @@ public class Config
     public float overlay_size_easing_speed = 0.15F;
     public float overlay_next_up_easing_speed = 0.15F;
     public boolean disable_animations = false;
+    public int gui_mm_list_entry_size = 50;
+    public int gui_mm_side_panel_size=90;
 }

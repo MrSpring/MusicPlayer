@@ -23,8 +23,7 @@ public class GuiSlider implements IGui, IDelayedDraw
     boolean dragging = false;
     int alphaProgress = 0;
     int alphaTarget = 0;
-    IDrawable latestDrawable;
-    DecimalFormat format = new DecimalFormat("#.##");
+    boolean showHover = true;
 
     public GuiSlider(int xPos, int yPos, int width, int height, int startValue)
     {
@@ -40,6 +39,12 @@ public class GuiSlider implements IGui, IDelayedDraw
             value = maximum;
         else if (value < minimum)
             value = minimum;
+    }
+
+    public GuiSlider setShowHover(boolean showHover)
+    {
+        this.showHover = showHover;
+        return this;
     }
 
     public int getValue()
@@ -124,8 +129,11 @@ public class GuiSlider implements IGui, IDelayedDraw
             {
                 if (GuiSlider.this.dragging)
                 {
-                    String line = String.valueOf(GuiSlider.this.getValue()) + "%";
-                    GuiSlider.this.drawHoveringText(line, mouseX, mouseY, minecraft.fontRendererObj);
+                    if (showHover)
+                    {
+                        String line = String.valueOf(GuiSlider.this.getValue()) + "%";
+                        GuiSlider.this.drawHoveringText(line, mouseX, mouseY, minecraft.fontRendererObj);
+                    }
                 }
             }
         };
@@ -135,6 +143,6 @@ public class GuiSlider implements IGui, IDelayedDraw
     {
         int lineWidth = fontRendererObj.getStringWidth(line) + 7;
         LiteModMusicPlayer.core.getDrawingHelper().drawButtonThingy(new Quad(mouseX, mouseY - 16, lineWidth, 16), 0, false);
-        LiteModMusicPlayer.core.getDrawingHelper().drawText(line, new Vector(mouseX + (lineWidth / 2) + 1, mouseY - 12), 0xFFFFFF, true, -1, dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.LEFT, dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.TOP);
+        LiteModMusicPlayer.core.getDrawingHelper().drawText(line, new Vector(mouseX + 4, mouseY - 12), 0xFFFFFF, true, -1, dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.LEFT, dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.TOP);
     }
 }
