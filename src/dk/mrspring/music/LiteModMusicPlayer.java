@@ -31,6 +31,8 @@ public class LiteModMusicPlayer implements Tickable
     public static Overlay overlay;
     public static File coverLocation;
 
+    public static boolean disableKeys=false;
+
     AnyTimeKeyBind reloadConfig = new AnyTimeKeyBind(Keyboard.KEY_F5);
     AnyTimeKeyBind expandMiniPlayer = new AnyTimeKeyBind(Keyboard.KEY_P);
     AnyTimeKeyBind showNextUp = new AnyTimeKeyBind(Keyboard.KEY_O);
@@ -65,28 +67,28 @@ public class LiteModMusicPlayer implements Tickable
     @Override
     public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock)
     {
-        if (reloadConfig.isClicked())
-            loadConfigFile();
-        if (expandMiniPlayer.isClicked())
-            overlay.toggleExpanded();
-        if (showNextUp.isClicked())
-            overlay.showNext();
+        if (!disableKeys)
+        {
+            if (reloadConfig.isClicked())
+                loadConfigFile();
+            if (expandMiniPlayer.isClicked())
+                overlay.toggleExpanded();
+            if (showNextUp.isClicked())
+                overlay.showNext();
 
-        if (previous.isClicked())
-            musicHandler.playPrevious();
-        if (playPause.isClicked())
-            musicHandler.toggle();
-        if (next.isClicked())
-            musicHandler.playNext();
+            if (previous.isClicked())
+                musicHandler.playPrevious();
+            if (playPause.isClicked())
+                musicHandler.toggle();
+            if (next.isClicked())
+                musicHandler.playNext();
 
-        if (openMM.isClicked())
-            minecraft.displayGuiScreen(new GuiScreenMusicHome(minecraft.currentScreen));
+            if (openMM.isClicked())
+                minecraft.displayGuiScreen(new GuiScreenMusicHome(minecraft.currentScreen));
+        }
 
         if (!(minecraft.currentScreen instanceof GuiScreen))
             overlay.draw(musicHandler, minecraft);
-
-        if (config != null)
-            System.out.println(config.gui_mm_list_entry_size);
     }
 
     @Override

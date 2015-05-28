@@ -9,6 +9,7 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.util.GuiHelper;
 import net.minecraft.client.Minecraft;
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -145,7 +146,7 @@ public class GuiCustomTextField implements IGui
     @Override
     public void update()
     {
-
+        LiteModMusicPlayer.disableKeys = getFocused();
     }
 
     @Override
@@ -293,5 +294,10 @@ public class GuiCustomTextField implements IGui
     public void setFocus(boolean focus)
     {
         this.focused = focus;
+    }
+
+    public boolean getFocused()
+    {
+        return focused;
     }
 }

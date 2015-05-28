@@ -12,6 +12,7 @@ import dk.mrspring.music.util.GuiHelper;
 import dk.mrspring.music.util.filter.AnyFilter;
 import dk.mrspring.music.util.filter.MusicFilter;
 import net.minecraft.client.Minecraft;
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -44,11 +45,11 @@ public class GuiAllMusicList implements IGui, IMouseListener
 
     public void setEntryWidthTarget(int entryWidthTarget)
     {
-        if (this._entryWidthTarget!=entryWidthTarget)
+        if (this._entryWidthTarget != entryWidthTarget)
         {
             this._entryWidthTarget = entryWidthTarget;
             this.clampScroll();
-        }else this._entryWidthTarget = entryWidthTarget;
+        } else this._entryWidthTarget = entryWidthTarget;
     }
 
     public MusicFilter getFilter()
@@ -89,7 +90,11 @@ public class GuiAllMusicList implements IGui, IMouseListener
             if (filter != null)
                 if (!filter.filter(music))
                     continue;
-            TextRender render = new TextRender(music.getName(), minecraft.fontRendererObj, _entryWidth - 6 - (2 * _entrySpacing));
+            String key = filter != null ? filter.getFilter() : "";
+//            String name = StringUtils.replace(music.getName(), key, "\u00a7e" + key + "\u00a7r");
+            String name = music.getName();
+            name = name.replaceAll("(?i)(" + key + ")", "\u00a7e$1\u00a7r");
+            TextRender render = new TextRender(name, minecraft.fontRendererObj, _entryWidth - 6 - (2 * _entrySpacing));
             int entryHeight = _entryWidth + render.getTotalHeight() + 3;
             int entryX = currentColumn * _entryWidth;
             helper.drawButtonThingy(new Quad(entryX + _entrySpacing, _entrySpacing, _entryWidth - (2 * _entrySpacing), entryHeight - (2 * _entrySpacing)), 0, true);
