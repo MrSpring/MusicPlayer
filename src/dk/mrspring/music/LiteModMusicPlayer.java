@@ -6,6 +6,7 @@ import dk.mrspring.music.gui.screen.GuiScreenMusicHome;
 import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
+import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.AnyTimeKeyBind;
 import dk.mrspring.music.util.FileUtils;
 import dk.mrspring.music.util.Icons;
@@ -16,6 +17,7 @@ import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -31,7 +33,9 @@ public class LiteModMusicPlayer implements Tickable
     public static Overlay overlay;
     public static File coverLocation;
 
-    public static boolean disableKeys=false;
+    public static boolean disableKeys = false;
+
+    public static Playlist testerList;
 
     AnyTimeKeyBind reloadConfig = new AnyTimeKeyBind(Keyboard.KEY_F5);
     AnyTimeKeyBind expandMiniPlayer = new AnyTimeKeyBind(Keyboard.KEY_P);
@@ -135,6 +139,16 @@ public class LiteModMusicPlayer implements Tickable
         loadConfigFile();
         initializeToolkit();
         musicHandler = new MusicHandler(config.auto_play, new File("C:\\Users\\Konrad\\Music"));
+        /*testerList = new Playlist("TestList", musicHandler.getAllMusic());
+//        JsonUtils.writeToFile(new File(configPath, "playlist.json"), testerList.toJson());
+        try
+        {
+            core.getFileLoader().writeToFile(new File(configPath, "playlist.json"), testerList.toJson());
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }*/
+        testerList = musicHandler.loadPlaylistFromFile(new File(configPath, "playlist.json"));
         overlay = new Overlay();
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
         {

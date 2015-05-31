@@ -14,6 +14,6 @@ public class TranslateHelper
 
     public static String translateFormat(String toTranslate, Object... format)
     {
-        return StatCollector.translateToLocalFormatted(toTranslate, format);
+        return StatCollector.translateToLocalFormatted(toTranslate, format).replace("§","\u00a7").replace("\\n", "\n");/*.replace("§", *//*"\u00a7"*//*"text");*/
     }
 }

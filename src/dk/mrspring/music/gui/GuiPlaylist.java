@@ -7,6 +7,7 @@ import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
+import dk.mrspring.music.gui.interfaces.IResizable;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.GuiHelper;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * Created by Konrad on 25-05-2015.
  */
-public class GuiPlaylist implements IGui, IMouseListener
+public class GuiPlaylist implements IGui, IMouseListener, IResizable
 {
     Playlist musicList;
     int x, y, width, height;
@@ -40,35 +41,78 @@ public class GuiPlaylist implements IGui, IMouseListener
         this.height = h;
     }
 
+    public static void drawMusic(int x, int y, int width, int height, Music music)
+    {
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+        helper.drawButtonThingy(new Quad(x + 3, y + 3, width - 6, height - 6), 0F, true);
+        helper.drawText(music.getName(), new Vector(x + 6, y + (height / 2)), 0xFFFFFF, true, -1, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
+        int w = 10;
+        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) - 1 - 4, w, 2));
+        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) - 1, w, 2));
+        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) + 3, w, 2));
+    }
+
     public Playlist getPlaylist()
     {
         return this.musicList;
     }
 
+    @Override
     public void setWidth(int width)
     {
         this.width = width;
     }
 
+    @Override
     public void setHeight(int height)
     {
         this.height = height;
     }
 
+    @Override
     public void setX(int x)
     {
         this.x = x;
     }
 
+    @Override
     public void setY(int y)
     {
         this.y = y;
     }
 
     @Override
+    public int x()
+    {
+        return x;
+    }
+
+    @Override
+    public int y()
+    {
+        return y;
+    }
+
+    @Override
+    public int width()
+    {
+        return width;
+    }
+
+    @Override
+    public int height()
+    {
+        return height;
+    }
+
+    @Override
     public void draw(Minecraft minecraft, int mouseX, int mouseY)
     {
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+
+        GL11.glPushMatrix();
+
+        GL11.glTranslatef(x, y, 0);
 
         GL11.glPushMatrix();
 
@@ -142,17 +186,8 @@ public class GuiPlaylist implements IGui, IMouseListener
         GLClippingPlanes.glDisableClipping();
 
         GL11.glPopMatrix();
-    }
 
-    public static void drawMusic(int x, int y, int width, int height, Music music)
-    {
-        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-        helper.drawButtonThingy(new Quad(x + 3, y + 3, width - 6, height - 6), 0F, true);
-        helper.drawText(music.getName(), new Vector(x + 6, y + (height / 2)), 0xFFFFFF, true, -1, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
-        int w = 10;
-        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) - 1 - 4, w, 2));
-        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) - 1, w, 2));
-        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) + 3, w, 2));
+        GL11.glPopMatrix();
     }
 
     private boolean hasScroll()

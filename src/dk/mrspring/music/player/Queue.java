@@ -1,6 +1,7 @@
 package dk.mrspring.music.player;
 
 import dk.mrspring.music.LiteModMusicPlayer;
+import dk.mrspring.music.util.TranslateHelper;
 
 import java.util.List;
 
@@ -12,6 +13,17 @@ public class Queue extends Playlist
     public Queue(List<Music> music)
     {
         super("queue", music);
+
+        for (Music piece : music)
+        {
+            System.out.println("Adding: " + piece.getName() + ", by: " + piece.getArtist() + ". Hashed ID: " + piece.getId());
+        }
+    }
+
+    @Override
+    public String getName()
+    {
+        return TranslateHelper.translate("playlist.queue.name");
     }
 
     @Override

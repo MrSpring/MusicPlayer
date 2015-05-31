@@ -9,6 +9,7 @@ import dk.mrspring.music.Config;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.*;
 import dk.mrspring.music.gui.interfaces.IGui;
+import dk.mrspring.music.gui.interfaces.IResizable;
 import dk.mrspring.music.util.GuiHelper;
 import dk.mrspring.music.util.Miscellaneous;
 import dk.mrspring.music.util.TranslateHelper;
@@ -24,6 +25,7 @@ public class GuiScreenAllMusic extends GuiScreen
 {
     private int maxCoverSize = 150;
     private int minCoverSize = 40;
+    private double progress = 0D;
 
     public GuiScreenAllMusic(net.minecraft.client.gui.GuiScreen previousScreen)
     {
@@ -37,33 +39,38 @@ public class GuiScreenAllMusic extends GuiScreen
 
         Config config = LiteModMusicPlayer.config;
 
-        this.enableRepeats();
+        this.enableRepeats().hideBottomBar();
 
         int sidePanelSize = config.gui_mm_side_panel_size;
 
         this.addGuiElement("search_bar", new GuiCustomTextField((width / 3) * 2, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, ""));
         this.addGuiElement("size_slider", new GuiSlider(3, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, config.gui_mm_list_entry_size).setShowHover(false));
         this.addGuiElement("back", new GuiSimpleButton(3, height - getBottomBarHeight() - getTopBarHeight() + 3, 60, getTopBarHeight() - 6, "Back"));
-        this.addGuiElement("list", new GuiAllMusicList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllMusic()));
+        this.addGuiElement("list", new GuiArtistList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllArtists().get(1), GuiArtistList.Showing.ALBUMS)/*new GuiAllArtistsList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllArtists())*//*new GuiPlaylist(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), /*LiteModMusicPlayer.testerList*//*musicHandler.getQueue())*//*new GuiAllMusicList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllMusic())*/);
         this.addGuiElement("side_panel", new SidePanel(0, 0, sidePanelSize, height - getTopBarHeight() - getBottomBarHeight()));
+    }
+
+    private void setList(IResizable newList)
+    {
+        this.replaceGui("list", (IGui) newList);
     }
 
     private void updatePanelWidth(int newWidth)
     {
         LiteModMusicPlayer.config.gui_mm_side_panel_size = newWidth;
-        GuiAllMusicList musicList = (GuiAllMusicList) getGui("list");
-        musicList.setWidth(width - newWidth);
-        musicList.setX(newWidth);
+        IResizable list = (IResizable) getGui("list");
+        list.setWidth(width - newWidth);
+        list.setX(newWidth);
     }
 
     @Override
     public boolean updateElement(String identifier, IGui gui)
     {
-        if (identifier.equals("list"))
+        if (identifier.equals("list") && gui instanceof GuiSquareList)
         {
-            GuiAllMusicList list = (GuiAllMusicList) gui;
+            GuiSquareList list = (GuiSquareList) gui;
             String newFilter = ((GuiCustomTextField) this.getGui("search_bar")).getText();
-            list.getFilter().setFilter(newFilter);
+            list.setFilter(newFilter);
             int value = ((GuiSlider) this.getGui("size_slider")).getValue();
             LiteModMusicPlayer.config.gui_mm_list_entry_size = value;
             int size = (int) (minCoverSize + ((maxCoverSize - minCoverSize) * ((float) value / 100F)));
@@ -73,12 +80,54 @@ public class GuiScreenAllMusic extends GuiScreen
     }
 
     @Override
+    public int getBottomBarHeight()
+    {
+        return super.getBottomBarHeight();
+    }
+
+    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         float iconSize = getTopBarHeight() - 18;
-        LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
+        helper.drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
+        IResizable resizable = (IResizable) getGui("list");
+        double target = 0;
+        if (resizable instanceof GuiPlaylist)
+        {
+            GuiPlaylist playlist = (GuiPlaylist) resizable;
+            if (playlist.isMovingInDeleteZone())
+                target = 1D;
+            this.progress = Miscellaneous.smoothDamp(target, progress, 0.4);
+            playlist.setHeight(height - getTopBarHeight() - getBottomBarHeight());
+        } else this.progress = Miscellaneous.smoothDamp(target, progress, 0.4);
+
+        this.setBottomBarHeight(getTopBarHeight() + (int) (25 * progress));
+        this.setBottomBarColor(Color.morph(Color.BLACK, Color.RED, (float) progress));
+
+        int panelWidth = ((SidePanel) this.getGui("side_panel")).w;
+        int bottomHeight = (int) (25 * progress);
+
+        helper.drawShape(new Quad(panelWidth, height - 29 - bottomHeight, width - panelWidth, bottomHeight).setAlpha(0.5F).setColor(this.getBottomBarColor()));
+        helper.drawShape(new Quad(panelWidth, height - 30 - bottomHeight, width - panelWidth, 1));
+
+        helper.drawShape(new Quad(0, height - 29, width, 29).setAlpha(0.5F).setColor(this.getBottomBarColor()));
+        helper.drawShape(new Quad(0, height - 30, panelWidth, 1));
         super.drawScreen(mouseX, mouseY, partialTicks);
-        LiteModMusicPlayer.core.getDrawingHelper().drawIcon(LiteModMusicPlayer.core.getIcon("search"), new Quad(width - iconSize - 5 - (width / 3), -getTopBarHeight() + 8, iconSize, iconSize));
+
+        if (resizable instanceof GuiPlaylist)
+        {
+            GuiPlaylist playlist = (GuiPlaylist) resizable;
+            float bigIconExtra = 10;
+            float size = 20 + (float) (bigIconExtra * progress);
+            float xPos = panelWidth + ((width - panelWidth) / 2);
+            helper.drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(xPos - (size / 2), height - getTopBarHeight() - (getBottomBarHeight() / 2) - (size / 2) - (int) (progress * 6D), size, size));
+
+            if (getBottomBarHeight() > 35)
+                helper.drawText(TranslateHelper.translateFormat("gui.playlist_editor.remove", playlist.getPlaylist().getName()), new Vector(xPos, height - getTopBarHeight() - (getBottomBarHeight() / 2) + 3 + (size / 2)), 0xFFFFFF, true, width - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
+        }
+
+        helper.drawIcon(LiteModMusicPlayer.core.getIcon("search"), new Quad(width - iconSize - 5 - (width / 3), -getTopBarHeight() + 8, iconSize, iconSize));
     }
 
     @Override

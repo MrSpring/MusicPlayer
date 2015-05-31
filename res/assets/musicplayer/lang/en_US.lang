@@ -7,4 +7,13 @@ gui.music.main.subtitle=MANAGE THE MUSIC FOUND BY THE MOD
 gui.playlist_editor.title=%1$s
 gui.playlist_editor.remove=Release to remove from %1$s
 
+gui.music_list.entry_text=%1$s\n%2$s\n%3$s
+gui.album_list.entry_text=%1$s\n%2$s
+gui.album_list.amount_text=%1$s Songs
+gui.artist_list.entry_text=%1$s
+gui.artist_list.amount_text=%1$s Albums\n%2$s Songs
+
+gui.artist_list.songs.name=Songs\n§7All songs by this artist
+gui.artist_list.albums.name=Albums\n§7All albums by this artist
+
 playlist.queue.name=Queue

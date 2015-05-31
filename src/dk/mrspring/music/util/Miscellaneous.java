@@ -9,7 +9,7 @@ public class Miscellaneous
 {
     public static float smoothDamp(float target, float current, float easing)
     {
-        if (easing < 1 && !LiteModMusicPlayer.config.disable_animations)
+        if (easing < 1 && !LiteModMusicPlayer.config.disable_animations && current != target)
         {
             float difference, distance;
             difference = target - current;
@@ -27,7 +27,7 @@ public class Miscellaneous
 
     public static double smoothDamp(double target, double current, double easing)
     {
-        if (easing < 1 && !LiteModMusicPlayer.config.disable_animations)
+        if (easing < 1 && !LiteModMusicPlayer.config.disable_animations && current != target)
         {
             double difference, distance;
             difference = target - current;

@@ -23,11 +23,16 @@ public class JsonUtils
         }
     }
 
+    public static String toJsonCode(Object object)
+    {
+        return LiteModMusicPlayer.core.getJsonHandler().toJson(object);
+    }
+
     public static boolean writeToFile(File file, Object object)
     {
         try
         {
-            String jsonCode = LiteModMusicPlayer.core.getJsonHandler().toJson(object);
+            String jsonCode = toJsonCode(object);
             return LiteModMusicPlayer.core.getFileLoader().writeToFile(file, jsonCode);
         } catch (Exception e)
         {
