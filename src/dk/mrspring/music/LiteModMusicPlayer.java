@@ -1,6 +1,7 @@
 package dk.mrspring.music;
 
 import com.mumfrey.liteloader.Tickable;
+import com.mumfrey.liteloader.core.LiteLoader;
 import dk.mrspring.llcore.LLCore;
 import dk.mrspring.music.gui.screen.GuiScreenMusicHome;
 import dk.mrspring.music.gui.screen.GuiScreen;
@@ -112,6 +113,7 @@ public class LiteModMusicPlayer implements Tickable
                 config = JsonUtils.loadFromJson(configFile, Config.class);
             if (config == null)
                 config = new Config();
+            config.validateConfig();
             saveConfig();
         }
     }
@@ -132,8 +134,9 @@ public class LiteModMusicPlayer implements Tickable
         core = new LLCore("music_player");
         core.registerIcon(Icons.trash, "trash_can");
         core.registerIcon(Icons.search, "search");
+        core.registerIcon(Icons.right_arrow, "right_arrow");
         configFile = new File(configPath, "musicplayer.json");
-        coverLocation = new File(configPath.getParent(), "musiccovers");
+        coverLocation = new File(LiteLoader.getGameDirectory(), "musiccovers");
         if (!coverLocation.exists())
             coverLocation.mkdir();
         loadConfigFile();

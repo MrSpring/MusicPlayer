@@ -61,6 +61,12 @@ public class GuiAllAlbumsList extends GuiSquareList<Album>
         return entryHeight;
     }
 
+    @Override
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, Album clicked)
+    {
+        return false;
+    }
+
     private void bindMusicCover(Music music)
     {
         if (music != null)

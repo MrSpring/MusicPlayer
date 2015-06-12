@@ -7,15 +7,15 @@ import net.minecraft.client.Minecraft;
  */
 public interface IGui
 {
-    public void draw(Minecraft minecraft, int mouseX, int mouseY);
+    void draw(Minecraft minecraft, int mouseX, int mouseY);
 
-    public void update();
+    void update();
 
-    public boolean mouseDown(int mouseX, int mouseY, int mouseButton);
+    boolean mouseDown(int mouseX, int mouseY, int mouseButton);
 
-    public void mouseUp(int mouseX, int mouseY, int mouseButton);
+    void mouseUp(int mouseX, int mouseY, int mouseButton);
 
-    public void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceClick);
+    void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceClick);
 
-    public void handleKeyTyped(int keyCode, char character);
+    void handleKeyTyped(int keyCode, char character);
 }

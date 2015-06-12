@@ -90,4 +90,9 @@ public class TextRender
 //        this.renderer.onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
         helper.drawText(rendering, new Vector(x, y), color, shadow, this.wrap, vertical, horizontal);
     }
+
+    public FontRenderer getRenderer()
+    {
+        return renderer;
+    }
 }

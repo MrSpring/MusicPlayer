@@ -13,6 +13,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.StatCollector;
 
 import static dk.mrspring.music.overlay.OverlayPosition.CoverAlignment;
+import static dk.mrspring.music.LiteModMusicPlayer.config;
+import static dk.mrspring.music.LiteModMusicPlayer.core;
 import static dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment;
 import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment;
 
@@ -40,8 +42,6 @@ public class Overlay
 
     public void draw(MusicHandler musicHandler, Minecraft minecraft)
     {
-        Config config = LiteModMusicPlayer.config;
-
         doPlayingText(musicHandler.getCurrentlyPlaying(), minecraft.fontRendererObj);
         doNextUpText(musicHandler.getNextUp(), minecraft.fontRendererObj);
         showNext = showNextTil > System.currentTimeMillis();
@@ -123,8 +123,8 @@ public class Overlay
 
         int overlayWidth = _coverSize + (int) (sizeProgress * widthOverlapTarget) + (int) (sizeProgress * xOverlapTarget);
         int overlayHeight = _coverSize + (int) (sizeProgress * heightOverlapTarget) + (int) (sizeProgress * yOverlapTarget);
-        int overlayX = _paddingX + position.getX(_screenWidth-_paddingX-_paddingX, _coverSize) - (int) (sizeProgress * xOverlapTarget);
-        int overlayY = _paddingY + position.getY(_screenHeight-_paddingY-_paddingY, _coverSize) - (int) (sizeProgress * yOverlapTarget);
+        int overlayX = _paddingX + position.getX(_screenWidth - _paddingX - _paddingX, _coverSize) - (int) (sizeProgress * xOverlapTarget);
+        int overlayY = _paddingY + position.getY(_screenHeight - _paddingY - _paddingY, _coverSize) - (int) (sizeProgress * yOverlapTarget);
 
         overlayX = Math.max(_paddingX, overlayX);
         overlayY = Math.max(_paddingY, overlayY);
@@ -138,8 +138,10 @@ public class Overlay
 
     public void drawTheFreakingThing(int x, int y, int width, int height, boolean drawText)
     {
-        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-        helper.drawButtonThingy(new Quad(x, y, width, height), 0, true);
+        DrawingHelper helper = core.getDrawingHelper();
+        helper.drawButtonThingy(new Quad(x, y, width, height), config.disable_overlay_gradient ? 0 : 1, true,
+                config.overlay_start_color, config.overlay_start_alpha,
+                config.overlay_end_color, config.overlay_end_alpha);
 
         int s = _coverSize - 6;
         HorizontalTextAlignment horizontal = HorizontalTextAlignment.CENTER;
@@ -232,7 +234,11 @@ public class Overlay
         nextUpX = Math.min(_screenWidth - _paddingX - nextUpWidth, nextUpX);
         nextUpY = Math.min(_screenHeight - _paddingY - nextUpHeight, nextUpY);
 
-        LiteModMusicPlayer.core.getDrawingHelper().drawButtonThingy(new Quad(nextUpX, nextUpY, nextUpWidth, nextUpHeight), 0, true);
+        DrawingHelper helper = core.getDrawingHelper();
+
+        helper.drawButtonThingy(new Quad(nextUpX, nextUpY, nextUpWidth, nextUpHeight), config.disable_overlay_gradient ? 0 : 1, true,
+                config.overlay_start_color, config.overlay_start_alpha,
+                config.overlay_end_color, config.overlay_end_alpha);
         if (nextUpProgress > 0.98)
             nextUpText.render(LiteModMusicPlayer.core.getDrawingHelper(), nextUpX + 5, nextUpY + 5, 0xFFFFFF, true, VerticalTextAlignment.LEFT, HorizontalTextAlignment.TOP);
     }
@@ -266,7 +272,7 @@ public class Overlay
 
     public void showNext()
     {
-        showNextTil = System.currentTimeMillis() + LiteModMusicPlayer.config.show_next_peek_time_millis;
+        showNextTil = System.currentTimeMillis() + config.show_next_peek_time_millis;
         doNextUpText(LiteModMusicPlayer.musicHandler.getNextUp(), Minecraft.getMinecraft().fontRendererObj);
     }
 }

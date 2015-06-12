@@ -160,6 +160,8 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
         scroll = Math.max(scroll, 0);
     }
 
+    protected abstract boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, T clicked);
+
     @Override
     public void update()
     {
@@ -169,7 +171,7 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        return false;
+        return onElementClicked(mouseX - x, mouseY - y, mouseButton, showing.get(0));
     }
 
     @Override

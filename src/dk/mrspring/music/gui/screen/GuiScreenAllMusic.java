@@ -10,18 +10,18 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.*;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IResizable;
-import dk.mrspring.music.util.GuiHelper;
-import dk.mrspring.music.util.Miscellaneous;
-import dk.mrspring.music.util.TranslateHelper;
+import dk.mrspring.music.player.Music;
+import dk.mrspring.music.util.*;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Konrad on 26-05-2015.
  */
-public class GuiScreenAllMusic extends GuiScreen
+public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.IPanelContainer
 {
     private int maxCoverSize = 150;
     private int minCoverSize = 40;
@@ -146,6 +146,70 @@ public class GuiScreenAllMusic extends GuiScreen
         if (identifier.equals("back"))
             mc.displayGuiScreen(previousScreen);
     }
+
+    /*@Override
+    public void openAlbum(Album opening)
+    {
+
+    }
+
+    @Override
+    public void openArtist(Artist opening)
+    {
+
+    }
+
+    @Override
+    public void openOptionsMenu(int startX, int startY, Object rightClick)
+    {
+
+    }*/
+
+    /*public interface MainPanel extends IResizable, IGui
+    {
+        void saveInstance(IPanelContainer container);
+
+        void onPanelLoad();
+
+        void onPanelUnload();
+    }
+
+    public interface IPanelContainer
+    {
+        void openAlbum(Album opening);
+
+        void openArtist(Artist opening);
+
+        void openOptionsMenu(int startX, int startY, Object rightClick);
+    }
+
+    public class AllMusicPanel extends GuiAllMusicList implements MainPanel
+    {
+        IPanelContainer container;
+
+        public AllMusicPanel(int x, int y, int w, int h, List<Music> allMusic)
+        {
+            super(x, y, w, h, allMusic);
+        }
+
+        @Override
+        public void saveInstance(IPanelContainer container)
+        {
+            this.container = container;
+        }
+
+        @Override
+        public void onPanelLoad()
+        {
+
+        }
+
+        @Override
+        public void onPanelUnload()
+        {
+
+        }
+    }*/
 
     public class SidePanel implements IGui
     {

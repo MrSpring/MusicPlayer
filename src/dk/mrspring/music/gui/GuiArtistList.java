@@ -88,6 +88,12 @@ public class GuiArtistList extends GuiSquareList<Object>
         return type == Showing.ALBUMS && drawing instanceof Album ? drawAlbum(currentColumn, minecraft, helper, (Album) drawing) : (drawing instanceof Music ? drawMusic(currentColumn, minecraft, helper, (Music) drawing) : 0);
     }
 
+    @Override
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, Object clicked)
+    {
+        return false;
+    }
+
     private int drawAlbum(int currentColumn, Minecraft minecraft, DrawingHelper helper, Album drawing)
     {
         String key = currentFilter;

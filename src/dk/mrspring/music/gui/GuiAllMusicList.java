@@ -40,6 +40,12 @@ public class GuiAllMusicList extends GuiSquareList<Music>
     }
 
     @Override
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, Music clicked)
+    {
+        return false;
+    }
+
+    @Override
     public void setFilter(String newFilter)
     {
         super.setFilter(newFilter);
