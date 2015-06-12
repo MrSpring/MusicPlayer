@@ -9,6 +9,8 @@ import dk.mrspring.music.gui.interfaces.IDelayedDraw;
 import dk.mrspring.music.gui.interfaces.IDrawable;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
+import dk.mrspring.music.gui.menu.IMenuItem;
+import dk.mrspring.music.gui.menu.Menu;
 import dk.mrspring.music.util.TranslateHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -36,11 +38,30 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     private int topBarHeight = 30, bottomBarHeight = 30;
     private Color topBarColor = Color.BLACK, bottomBarColor = Color.BLACK;
     private int mouseXAtLastFrame = 0, mouseYAtLastFrame = 0;
+    private Menu openMenu = null;
 
     public GuiScreen(String title, net.minecraft.client.gui.GuiScreen previousScreen)
     {
         this.title = title;
         this.previousScreen = previousScreen;
+    }
+
+    public Menu getOpenMenu()
+    {
+        return openMenu;
+    }
+
+    public void openMenu(int mouseX, int mouseY, IMenuItem... items)
+    {
+        if (items != null && items.length > 0)
+        {
+            this.openMenu = new Menu(mouseX, mouseY, width, height, items);
+        }
+    }
+
+    public void closeMenu()
+    {
+        this.openMenu = null;
     }
 
     @Override
@@ -149,11 +170,6 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         this.topBarColor = topBarColor;
     }
 
-    public void setBottomBarColor(Color bottomBarColor)
-    {
-        this.bottomBarColor = bottomBarColor;
-    }
-
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
@@ -184,20 +200,24 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
             this.getGui("done_button").draw(mc, mouseX, actualMouseY);
         }*/
 
+        int mouseYOffset = 0;
+        if (this.showTopBar)
+            mouseYOffset += topBarHeight;
+
         List<IDrawable> drawables = new ArrayList<IDrawable>();
+
+        int currentMouseX = mouseX, currentMouseY = mouseY;
+        if (this.openMenu != null && this.openMenu.isMouseHovering(mouseX, mouseY - mouseYOffset))
+            currentMouseX = currentMouseY = -1000;
 
         for (Map.Entry<String, IGui> entry : guiHashMap.entrySet())
         {
             String identifier = entry.getKey();
             IGui element = entry.getValue();
 
-            int mouseYOffset = 0;
-            if (this.showTopBar)
-                mouseYOffset += topBarHeight;
-
             if (this.drawGui(identifier, element, mouseX, mouseY - mouseYOffset) && !identifier.equals("done_button"))
             {
-                element.draw(mc, mouseX, mouseY - mouseYOffset);
+                element.draw(mc, currentMouseX, currentMouseY - mouseYOffset);
                 if (element instanceof IDelayedDraw)
                 {
                     drawables.add(((IDelayedDraw) element).getDelayedDrawable());
@@ -210,6 +230,9 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
             for (IDrawable drawable : drawables)
                 drawable.draw(mc, mouseX, mouseY);
         }
+
+        if (this.openMenu != null)
+            this.openMenu.draw(mc, mouseX, mouseY - mouseYOffset);
 
         this.mouseXAtLastFrame = mouseX;
         this.mouseYAtLastFrame = mouseY;
@@ -287,14 +310,17 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     {
         try
         {
+            int mouseYOffset = 0;
+            if (this.showTopBar)
+                mouseYOffset += topBarHeight;
+
+            if (this.openMenu != null)
+                this.openMenu.mouseDown(mouseX, mouseY - mouseYOffset, mouseButton);
+            this.closeMenu();
             for (Map.Entry<String, IGui> entry : this.guiHashMap.entrySet())
             {
                 String identifier = entry.getKey();
                 IGui gui = entry.getValue();
-
-                int mouseYOffset = 0;
-                if (this.showTopBar)
-                    mouseYOffset += topBarHeight;
                 if (gui.mouseDown(mouseX, mouseY - mouseYOffset, mouseButton))
                     this.guiClicked(identifier, gui, mouseX, mouseY, mouseButton);
             }
@@ -394,5 +420,10 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     public Color getBottomBarColor()
     {
         return bottomBarColor;
+    }
+
+    public void setBottomBarColor(Color bottomBarColor)
+    {
+        this.bottomBarColor = bottomBarColor;
     }
 }

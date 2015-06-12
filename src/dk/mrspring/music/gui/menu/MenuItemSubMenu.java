@@ -42,7 +42,7 @@ public class MenuItemSubMenu extends MenuItemButton
     @Override
     public int getMinWidth()
     {
-        return super.getMinWidth() + getHeight()+2;
+        return super.getMinWidth() + getHeight() + 2;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MenuItemSubMenu extends MenuItemButton
         helper.drawIcon(LiteModMusicPlayer.core.getIcon("right_arrow"), new Quad(buttonWidth - getHeight() + 3, 3, getHeight() - 6, getHeight() - 6));
         if (expanded)
         {
-            int relMouseX = mouseX-buttonWidth,relMouseY=mouseY;
+            int relMouseX = mouseX - buttonWidth, relMouseY = mouseY;
             GL11.glPushMatrix();
             GL11.glTranslatef(buttonWidth + 4, 0, 0);
             int yOffset = 0;
@@ -67,7 +67,7 @@ public class MenuItemSubMenu extends MenuItemButton
                 int itemHeight = item.getHeight();
                 int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
                 boolean hovering = GuiHelper.isMouseInBounds(localMouseX, localMouseY, 0, 0, width, itemHeight);
-                Color color = hovering?Color.BLUE:Color.BLACK;
+                Color color = hovering ? Color.BLUE : Color.BLACK;
                 helper.drawShape(new Quad(-2, 0, width + 4, itemHeight).setColor(color).setAlpha(0.5F));
 //            if (item instanceof MenuItemSubMenu)
 //                helper.drawShape(new Quad(0, 0, width, itemHeight).setColor(Color.BLACK).setAlpha(0.5F));
@@ -88,7 +88,21 @@ public class MenuItemSubMenu extends MenuItemButton
         }
     }
 
-
+    @Override
+    public boolean isMouseHovering(int mouseX, int mouseY, int buttonWidth)
+    {
+        if (!expanded)
+            return super.isMouseHovering(mouseX, mouseY, width);
+        int yOffset = 0;
+        for (IMenuItem item : items)
+        {
+            int itemHeight = item.getHeight();
+            if (GuiHelper.isMouseInBounds(mouseX - buttonWidth, mouseY - yOffset, 0, 0, width, itemHeight))
+                return true;
+            yOffset += itemHeight;
+        }
+        return super.isMouseHovering(mouseX, mouseY, buttonWidth);
+    }
 
     private void drawOutline(DrawingHelper helper, int x, int y, int w, int h)
     {

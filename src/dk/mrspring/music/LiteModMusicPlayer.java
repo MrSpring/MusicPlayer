@@ -3,8 +3,10 @@ package dk.mrspring.music;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
 import dk.mrspring.llcore.LLCore;
+import dk.mrspring.music.gui.screen.GuiScreenAllMusic;
 import dk.mrspring.music.gui.screen.GuiScreenMusicHome;
 import dk.mrspring.music.gui.screen.GuiScreen;
+import dk.mrspring.music.gui.screen.GuiScreenQueueEditor;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.player.Playlist;
@@ -89,7 +91,7 @@ public class LiteModMusicPlayer implements Tickable
                 musicHandler.playNext();
 
             if (openMM.isClicked())
-                minecraft.displayGuiScreen(new GuiScreenMusicHome(minecraft.currentScreen));
+                minecraft.displayGuiScreen(new GuiScreenAllMusic(minecraft.currentScreen));
         }
 
         if (!(minecraft.currentScreen instanceof GuiScreen))

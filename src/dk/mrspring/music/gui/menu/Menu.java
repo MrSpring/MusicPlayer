@@ -15,14 +15,14 @@ import java.util.List;
 /**
  * Created by Konrad on 07-06-2015.
  */
-public class GuiMenu implements IGui
+public class Menu implements IGui
 {
     Size limitations;
     Size size;
     List<IMenuItem> items;
     MenuAction onClick;
 
-    public GuiMenu(int mouseX, int mouseY, int screenWidth, int screenHeight, IMenuItem... items)
+    public Menu(int mouseX, int mouseY, int screenWidth, int screenHeight, IMenuItem... items)
     {
         this.items = Arrays.asList(items);
         this.alignWithMouse(mouseX, mouseY, screenWidth, screenHeight);
@@ -60,6 +60,7 @@ public class GuiMenu implements IGui
     public void draw(Minecraft minecraft, int mouseX, int mouseY)
     {
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+        helper.setZIndex(10);
         GL11.glPushMatrix();
         GL11.glTranslatef(size.x + 2, size.y + 2, 0);
         int yOffset = 0;
@@ -70,7 +71,7 @@ public class GuiMenu implements IGui
             int itemHeight = item.getHeight();
             int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
             boolean hovering = GuiHelper.isMouseInBounds(localMouseX, localMouseY, 0, 0, size.w, itemHeight);
-            Color color = hovering?Color.BLUE:Color.BLACK;
+            Color color = hovering ? Color.BLUE : Color.BLACK;
             helper.drawShape(new Quad(-2, 0, size.w + 4, itemHeight).setColor(color).setAlpha(0.5F));
 //            if (item instanceof MenuItemSubMenu)
 //                helper.drawShape(new Quad(0, 0, size.w, itemHeight).setColor(Color.BLACK).setAlpha(0.5F));
@@ -88,6 +89,22 @@ public class GuiMenu implements IGui
             yOffset += itemHeight;
         }
         GL11.glPopMatrix();
+        helper.setZIndex(0);
+    }
+
+    public boolean isMouseHovering(int mouseX, int mouseY)
+    {
+        if (GuiHelper.isMouseInBounds(mouseX, mouseY, size.asQuad()))
+            return true;
+        else {
+            for (IMenuItem item : items)
+            {
+                int relMouseX = mouseX - size.x, relMouseY = mouseY - size.y;
+                if (item.isMouseHovering(mouseX, mouseY, size.w))
+                    return true;
+            }
+            return false;
+        }
     }
 
     private void drawOutline(DrawingHelper helper, int x, int y, int w, int h)

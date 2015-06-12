@@ -71,4 +71,10 @@ public class MenuItemButton extends IndexedMenuItem
     {
         return clickListener.mouseDown(relMouseX, relMouseY, mouseButton);
     }
+
+    @Override
+    public boolean isMouseHovering(int mouseX, int mouseY, int width)
+    {
+        return false;
+    }
 }

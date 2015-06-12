@@ -21,4 +21,6 @@ public interface IMenuItem
     int getMinWidth();
 
     boolean mouseDown(int relMouseX, int relMouseY, int mouseButton);
+
+    boolean isMouseHovering(int mouseX, int mouseY, int width);
 }

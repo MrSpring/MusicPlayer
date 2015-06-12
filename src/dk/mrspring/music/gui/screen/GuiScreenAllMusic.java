@@ -10,6 +10,8 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.*;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IResizable;
+import dk.mrspring.music.gui.menu.MenuItemButton;
+import dk.mrspring.music.gui.menu.MenuItemSubMenu;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.util.*;
 import net.minecraft.client.Minecraft;
@@ -301,7 +303,41 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             {
                 this.dragXOffset = mouseX - x - w;
                 return resizing = true;
-            } else return false;
+            } else
+            {
+                if (mouseButton == 1 && buttons[0].mouseDown(mouseX, mouseY, mouseButton))
+                {
+                    GuiScreenAllMusic.this.openMenu(mouseX, mouseY,
+                            new MenuItemButton("Do stuff...", mc.fontRendererObj, 0),
+                            new MenuItemButton("Do some other stuff...", mc.fontRendererObj, 1),
+                            new MenuItemSubMenu("Make new this:", mc.fontRendererObj,
+                                    new MenuItemButton("Something one", mc.fontRendererObj, 2),
+                                    new MenuItemButton("Something two", mc.fontRendererObj, 3),
+                                    new MenuItemButton("Something three", mc.fontRendererObj, 4),
+                                    new MenuItemSubMenu("Oh hey, another sub.menu:", mc.fontRendererObj,
+                                            new MenuItemButton("Another one!", mc.fontRendererObj, 6),
+                                            new MenuItemButton("And another!", mc.fontRendererObj, 7),
+                                            new MenuItemButton("Another one!", mc.fontRendererObj, 8),
+                                            new MenuItemButton("And another!", mc.fontRendererObj, 9)
+                                    ),
+                                    new MenuItemSubMenu("Oh hey, another sub.menu:", mc.fontRendererObj,
+                                            new MenuItemButton("Another one!", mc.fontRendererObj, 6),
+                                            new MenuItemButton("And another!", mc.fontRendererObj, 7),
+                                            new MenuItemButton("Another one!", mc.fontRendererObj, 8),
+                                            new MenuItemButton("And another!", mc.fontRendererObj, 9)
+                                    ),
+                                    new MenuItemSubMenu("Oh hey, another sub.menu:", mc.fontRendererObj,
+                                            new MenuItemButton("Another one!", mc.fontRendererObj, 6),
+                                            new MenuItemButton("And another!", mc.fontRendererObj, 7),
+                                            new MenuItemButton("Another one!", mc.fontRendererObj, 8),
+                                            new MenuItemButton("And another!", mc.fontRendererObj, 9)
+                                    )
+                            ),
+                            new MenuItemButton("Something after the sub-menu thing", mc.fontRendererObj, 5)
+                    );
+                    return true;
+                }else return false;
+            }
         }
 
         @Override

@@ -1,11 +1,7 @@
 package dk.mrspring.music.gui.screen;
 
-import dk.mrspring.llcore.Color;
-import dk.mrspring.llcore.Quad;
-import dk.mrspring.music.LiteModMusicPlayer;
-import dk.mrspring.music.gui.GuiSimpleButton;
 import dk.mrspring.music.gui.interfaces.IGui;
-import dk.mrspring.music.gui.menu.GuiMenu;
+import dk.mrspring.music.gui.menu.Menu;
 import dk.mrspring.music.gui.menu.MenuItemButton;
 import dk.mrspring.music.gui.menu.MenuItemSubMenu;
 
@@ -65,7 +61,7 @@ public class GuiScreenMusicHome extends GuiScreen
 //            IOption option = options.get(i);
 //            this.addGuiElement("option:" + i, new GuiSimpleButton((width / 2) - offset + (buttonWidth * i) + padding, (height / 2) - (buttonHeight / 2) + padding - barOffset, buttonWidth - (2 * padding), buttonHeight - (2 * padding), "Stuff: " + i));
 //        }
-        this.addGuiElement("menu", new GuiMenu(5, 5, width, height,
+        this.addGuiElement("menu", new Menu(5, 5, width, height,
                 new MenuItemButton("Do stuff...", mc.fontRendererObj, 0),
                 new MenuItemButton("Do some other stuff...", mc.fontRendererObj, 1),
                 new MenuItemSubMenu("Make new this:", mc.fontRendererObj,
