@@ -57,50 +57,46 @@ public class MenuItemSubMenu extends MenuItemButton
         helper.drawIcon(LiteModMusicPlayer.core.getIcon("right_arrow"), new Quad(buttonWidth - getHeight() + 3, 3, getHeight() - 6, getHeight() - 6));
         if (expanded)
         {
+            int relMouseX = mouseX-buttonWidth,relMouseY=mouseY;
             GL11.glPushMatrix();
-            GL11.glTranslatef(buttonWidth + 3, 0, 0);
+            GL11.glTranslatef(buttonWidth + 4, 0, 0);
             int yOffset = 0;
             for (int i = 0; i < items.size(); i++)
             {
                 IMenuItem item = items.get(i);
-                int height = item.getHeight() + 3;
-                int relMouseX = mouseX - width;
-                boolean hovering = GuiHelper.isMouseInBounds(relMouseX, mouseY, 0, yOffset, width, height);
-                Color color = hovering ? Color.BLUE : Color.BLACK;
+                int itemHeight = item.getHeight();
+                int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
+                boolean hovering = GuiHelper.isMouseInBounds(localMouseX, localMouseY, 0, 0, width, itemHeight);
+                Color color = hovering?Color.BLUE:Color.BLACK;
+                helper.drawShape(new Quad(-2, 0, width + 4, itemHeight).setColor(color).setAlpha(0.5F));
+//            if (item instanceof MenuItemSubMenu)
+//                helper.drawShape(new Quad(0, 0, width, itemHeight).setColor(Color.BLACK).setAlpha(0.5F));
                 if (i == 0)
-                {
-                    helper.drawShape(new Quad(1, 0, width - 2, 1).setColor(color).setAlpha(0.5F));
-                    helper.drawShape(new Quad(0, 1, width, height - 1).setColor(color).setAlpha(0.5F));
-
-                    helper.drawShape(new Quad(1, 1, width - 2, 1));
-                    helper.drawShape(new Quad(1, 2, 1, height - 2));
-                    helper.drawShape(new Quad(width - 2, 2, 1, height - 2));
-                } else if (i == items.size() - 1)
-                {
-                    helper.drawShape(new Quad(1, height - 1, width - 2, 1).setColor(color).setAlpha(0.5F));
-                    helper.drawShape(new Quad(0, 0, width, height - 1).setColor(color).setAlpha(0.5F));
-
-                    helper.drawShape(new Quad(1, 0, width - 2, 1));          // Outline
-                    helper.drawShape(new Quad(1, 0, 1, height - 1));         // Outline
-                    helper.drawShape(new Quad(width - 2, 0, 1, height - 1)); // Outline
-                    helper.drawShape(new Quad(1, height - 2, width - 2, 1)); // Outline
-                } else
-                {
-                    helper.drawShape(new Quad(0, 0, width, height).setColor(color).setAlpha(0.5F)); // Background
-
-                    helper.drawShape(new Quad(1, 0, width - 2, 1));      // Outline
-                    helper.drawShape(new Quad(1, 0, 1, height));         // Outline
-                    helper.drawShape(new Quad(width - 2, 0, 1, height)); // Outline
-                }
+                    helper.drawShape(new Quad(-1, -1, width + 2, 1).setColor(color).setAlpha(0.5F));
+                else if (i == items.size() - 1)
+                    helper
+                            .drawShape(new Quad(-2, itemHeight, width + 4, 1).setColor(color).setAlpha(0.5F))
+                            .drawShape(new Quad(-1, itemHeight + 1, width + 2, 1).setColor(color).setAlpha(0.5F));
+                drawOutline(helper, -1, 0, width + 2, itemHeight);
                 GL11.glPushMatrix();
-                GL11.glTranslatef(3, 3, 0);
-                item.draw(relMouseX, mouseY - yOffset, width - 6);
+                item.draw(localMouseX, localMouseY, width);
                 GL11.glPopMatrix();
-                GL11.glTranslatef(0, height, 0);
-                yOffset += height;
+                GL11.glTranslatef(0, itemHeight, 0);
+                yOffset += itemHeight;
             }
             GL11.glPopMatrix();
         }
+    }
+
+
+
+    private void drawOutline(DrawingHelper helper, int x, int y, int w, int h)
+    {
+        helper.drawShape(new Quad(x, y, w, 1));
+        helper.drawShape(new Quad(x, y + h, w, 1));
+
+        helper.drawShape(new Quad(x, y, 1, h));
+        helper.drawShape(new Quad(x + w - 1, y, 1, h));
     }
 
     @Override

@@ -80,7 +80,7 @@ public class GuiMenu implements IGui
                 helper
                         .drawShape(new Quad(-2, itemHeight, size.w + 4, 1).setColor(color).setAlpha(0.5F))
                         .drawShape(new Quad(-1, itemHeight + 1, size.w + 2, 1).setColor(color).setAlpha(0.5F));
-//            drawOutline(helper, -1, 0, size.w + 2, itemHeight);
+            drawOutline(helper, -1, 0, size.w + 2, itemHeight);
             GL11.glPushMatrix();
             item.draw(localMouseX, localMouseY, size.w);
             GL11.glPopMatrix();
