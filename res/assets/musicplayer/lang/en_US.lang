@@ -4,6 +4,27 @@ overlay.next_up=Next Up:\n%1$s §7by %3$s
 gui.music.main.title=Music Manager
 gui.music.main.subtitle=MANAGE THE MUSIC FOUND BY THE MOD
 
+gui.music.main.right_click.music.play_now=Play %1$s
+gui.music.main.right_click.music.play_next=Play %1$s next
+gui.music.main.right_click.music.add_to_queue=Add %1$s to Queue
+gui.music.main.right_click.music.add_to_playlist=Add %1$s to...
+
+gui.music.main.right_click.album.play_now=Play %1$s
+gui.music.main.right_click.album.play_next=Play %1$s next
+gui.music.main.right_click.album.add_to_queue=Add %1$s to Queue
+gui.music.main.right_click.album.add_to_playlist=Add %1$s to...
+
+gui.music.main.right_click.artist.play_now=Play %1$s
+gui.music.main.right_click.artist.play_next=Play %1$s next
+gui.music.main.right_click.artist.add_to_queue=Add %1$s to Queue
+gui.music.main.right_click.artist.add_to_playlist=Add %1$s to...
+
+gui.music.main.new_playlist=New Playlist
+gui.music.main.panel.playlist.title=Playlists
+gui.music.main.panel.music.title=All Music
+gui.music.main.panel.album.title=Albums
+gui.music.main.panel.artist.title=Artists
+
 gui.playlist_editor.title=%1$s
 gui.playlist_editor.remove=Release to remove from %1$s
 

@@ -28,6 +28,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
     private int maxCoverSize = 150;
     private int minCoverSize = 40;
     private double progress = 0D;
+    private IPanel openPanel = null;
 
     public GuiScreenAllMusic(net.minecraft.client.gui.GuiScreen previousScreen)
     {
@@ -48,7 +49,8 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         this.addGuiElement("search_bar", new GuiCustomTextField((width / 3) * 2, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, ""));
         this.addGuiElement("size_slider", new GuiSlider(3, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, config.gui_mm_list_entry_size).setShowHover(false));
         this.addGuiElement("back", new GuiSimpleButton(3, height - getBottomBarHeight() - getTopBarHeight() + 3, 60, getTopBarHeight() - 6, "Back"));
-        this.addGuiElement("list", new GuiArtistList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllArtists().get(1), GuiArtistList.Showing.ALBUMS)/*new GuiAllArtistsList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllArtists())*//*new GuiPlaylist(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), /*LiteModMusicPlayer.testerList*//*musicHandler.getQueue())*//*new GuiAllMusicList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllMusic())*/);
+        this.openPanel = new ArtistPanel(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllArtists().get(1), GuiArtistList.Showing.ALBUMS)/*new GuiAllArtistsList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllArtists())*//*new GuiPlaylist(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), /*LiteModMusicPlayer.testerList*//*musicHandler.getQueue())*//*new GuiAllMusicList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllMusic())*/;
+        this.addGuiElement("panel", this.openPanel);
         this.addGuiElement("side_panel", new SidePanel(0, 0, sidePanelSize, height - getTopBarHeight() - getBottomBarHeight()));
     }
 
@@ -149,69 +151,37 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             mc.displayGuiScreen(previousScreen);
     }
 
-    /*@Override
-    public void openAlbum(Album opening)
+    public void openPanel(IPanel newPanel)
     {
 
     }
 
-    @Override
-    public void openArtist(Artist opening)
+    public interface IPanel extends IGui
     {
 
     }
 
-    @Override
-    public void openOptionsMenu(int startX, int startY, Object rightClick)
+    private class ArtistPanel extends GuiArtistList implements IPanel
     {
-
-    }*/
-
-    /*public interface MainPanel extends IResizable, IGui
-    {
-        void saveInstance(IPanelContainer container);
-
-        void onPanelLoad();
-
-        void onPanelUnload();
-    }
-
-    public interface IPanelContainer
-    {
-        void openAlbum(Album opening);
-
-        void openArtist(Artist opening);
-
-        void openOptionsMenu(int startX, int startY, Object rightClick);
-    }
-
-    public class AllMusicPanel extends GuiAllMusicList implements MainPanel
-    {
-        IPanelContainer container;
-
-        public AllMusicPanel(int x, int y, int w, int h, List<Music> allMusic)
+        public ArtistPanel(int x, int y, int w, int h, Artist artist, Showing type)
         {
-            super(x, y, w, h, allMusic);
+            super(x, y, w, h, artist, type);
         }
 
         @Override
-        public void saveInstance(IPanelContainer container)
+        protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Object clicked)
         {
-            this.container = container;
+            if (mouseButton == 1)
+            {
+                String text = clicked instanceof Album ? ((Album) clicked).getAlbumName() : (clicked instanceof Music ? ((Music) clicked).getName() : "");
+                openMenu(mouseX, mouseY,
+                        new MenuItemButton("IT'S WORKING!!!", mc.fontRendererObj, 0),
+                        new MenuItemButton(text, mc.fontRendererObj, 1)
+                );
+                return true;
+            } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
         }
-
-        @Override
-        public void onPanelLoad()
-        {
-
-        }
-
-        @Override
-        public void onPanelUnload()
-        {
-
-        }
-    }*/
+    }
 
     public class SidePanel implements IGui
     {
@@ -336,7 +306,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                             new MenuItemButton("Something after the sub-menu thing", mc.fontRendererObj, 5)
                     );
                     return true;
-                }else return false;
+                } else return false;
             }
         }
 

@@ -125,6 +125,11 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
         this.currentFilter = newFilter;
     }
 
+    public abstract int getEntryHeight(int currentColumn, T thing);
+
+    /**
+     * Draws the entry and returns the same as #getEntryHeight
+     */
     public abstract int drawEntry(int currentColumn, Minecraft minecraft, DrawingHelper helper, T drawing);
     /*{
         String key = filter != null ? filter.getFilter().trim() : "";
@@ -160,7 +165,12 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
         scroll = Math.max(scroll, 0);
     }
 
-    protected abstract boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, T clicked);
+    protected abstract boolean onElementClicked(int relMouseX, int relMouseY, int globalMouseX, int globalMouseY, int mouseButton, T clicked);
+
+    protected boolean isOtherElementsClicked(int mouseX, int mouseY, int mouseButton)
+    {
+        return false;
+    }
 
     @Override
     public void update()
@@ -171,7 +181,34 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        return onElementClicked(mouseX - x, mouseY - y, mouseButton, showing.get(0));
+        int listWidth = width - (this.hasScroll() ? _scrollBarWidth : 0);
+        int columns = listWidth / _entryWidthTarget;
+        int currentColumn = 0;
+        int rowHeight = 0;
+        int currentYOffset = 0;
+        int relMouseX = mouseX - x, relMouseY = mouseY - y;
+        for (T music : this.showing)
+        {
+            if (!filter(music, currentFilter))
+                continue;
+            int entryHeight = getEntryHeight(currentColumn, music);
+            // Mouse check
+            int entryX = currentColumn * _entryWidth, entryY = currentYOffset;
+            if (GuiHelper.isMouseInBounds(relMouseX, relMouseY, entryX, entryY, _entryWidth, entryHeight))
+                if (this.onElementClicked(relMouseX - entryX, relMouseY - entryY, mouseX, mouseY, mouseButton, music))
+                    return true;
+            if (entryHeight > rowHeight)
+                rowHeight = entryHeight;
+            currentColumn++;
+            if (currentColumn >= columns)
+            {
+                currentColumn = 0;
+                currentYOffset += rowHeight;
+                rowHeight = 0;
+            }
+        }
+        return isOtherElementsClicked(mouseX, mouseY, mouseButton);
+//        return onElementClicked(mouseX - x, mouseY - y, mouseButton, showing.get(0));
     }
 
     @Override

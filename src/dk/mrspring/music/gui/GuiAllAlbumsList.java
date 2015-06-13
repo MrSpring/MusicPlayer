@@ -28,6 +28,12 @@ public class GuiAllAlbumsList extends GuiSquareList<Album>
     }
 
     @Override
+    public int getEntryHeight(int currentColumn, Album thing)
+    {
+        return 0;
+    }
+
+    @Override
     public int drawEntry(int currentColumn, Minecraft minecraft, DrawingHelper helper, Album drawing)
     {
         String key = currentFilter;
@@ -62,7 +68,7 @@ public class GuiAllAlbumsList extends GuiSquareList<Album>
     }
 
     @Override
-    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, Album clicked)
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Album clicked)
     {
         return false;
     }

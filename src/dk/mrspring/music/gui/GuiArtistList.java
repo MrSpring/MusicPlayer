@@ -77,9 +77,9 @@ public class GuiArtistList extends GuiSquareList<Object>
     }
 
     @Override
-    public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
+    protected boolean isOtherElementsClicked(int mouseX, int mouseY, int mouseButton)
     {
-        return super.mouseDown(mouseX, mouseY, mouseButton) || typeList.mouseDown(mouseX, mouseY, mouseButton);
+        return typeList.mouseDown(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -89,7 +89,31 @@ public class GuiArtistList extends GuiSquareList<Object>
     }
 
     @Override
-    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, Object clicked)
+    public int getEntryHeight(int currentColumn, Object drawing)
+    {
+        return type == Showing.ALBUMS && drawing instanceof Album ? getAlbumHeight(currentColumn, (Album) drawing) : (drawing instanceof Music ? getMusicHeight(currentColumn, (Music) drawing) : 0);
+    }
+
+    private int getAlbumHeight(int currentColumn, Album drawing)
+    {
+        Minecraft minecraft = Minecraft.getMinecraft();
+        String text = TranslateHelper.translateFormat("gui.album_list.entry_text", drawing.getAlbumName(), drawing.getArtistName());
+        text = text.replaceAll("(?i)(" + currentFilter + ")", "\u00a7e$1\u00a7r");
+        MultilineTextRender render = new MultilineTextRender(text, minecraft.fontRendererObj, _entryWidth - 6 - (2 * _entrySpacing), true, 5);
+        return _entryWidth + render.getTotalHeight() + 3;
+    }
+
+    private int getMusicHeight(int currentColumn, Music music)
+    {
+        Minecraft minecraft = Minecraft.getMinecraft();
+        String text = TranslateHelper.translateFormat("gui.music_list.entry_text", music.getName(), music.getAlbum(), music.getArtist());
+        text = text.replaceAll("(?i)(" + currentFilter + ")", "\u00a7e$1\u00a7r");
+        MultilineTextRender render = new MultilineTextRender(text, minecraft.fontRendererObj, _entryWidth - 6 - (2 * _entrySpacing), true, 5);
+        return _entryWidth + render.getTotalHeight() + 3;
+    }
+
+    @Override
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Object clicked)
     {
         return false;
     }

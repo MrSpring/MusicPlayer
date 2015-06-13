@@ -40,7 +40,7 @@ public class GuiAllMusicList extends GuiSquareList<Music>
     }
 
     @Override
-    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, Music clicked)
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Music clicked)
     {
         return false;
     }
@@ -50,6 +50,12 @@ public class GuiAllMusicList extends GuiSquareList<Music>
     {
         super.setFilter(newFilter);
         this.filter.setFilter(newFilter);
+    }
+
+    @Override
+    public int getEntryHeight(int currentColumn, Music thing)
+    {
+        return 0;
     }
 
     @Override

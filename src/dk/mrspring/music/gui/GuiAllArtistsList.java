@@ -29,6 +29,12 @@ public class GuiAllArtistsList extends GuiSquareList<Artist>
     }
 
     @Override
+    public int getEntryHeight(int currentColumn, Artist thing)
+    {
+        return 0;
+    }
+
+    @Override
     public int drawEntry(int currentColumn, Minecraft minecraft, DrawingHelper helper, Artist drawing)
     {
         String key = currentFilter;
@@ -63,7 +69,7 @@ public class GuiAllArtistsList extends GuiSquareList<Artist>
     }
 
     @Override
-    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseButton, Artist clicked)
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int globalMouseX, int globalMouseY, int mouseButton, Artist clicked)
     {
         return false;
     }
