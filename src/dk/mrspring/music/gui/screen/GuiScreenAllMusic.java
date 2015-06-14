@@ -56,13 +56,13 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
 
     private void setList(IResizable newList)
     {
-        this.replaceGui("list", (IGui) newList);
+        this.replaceGui("panel", (IGui) newList);
     }
 
     private void updatePanelWidth(int newWidth)
     {
         LiteModMusicPlayer.config.gui_mm_side_panel_size = newWidth;
-        IResizable list = (IResizable) getGui("list");
+        IResizable list = (IResizable) getGui("panel");
         list.setWidth(width - newWidth);
         list.setX(newWidth);
     }
@@ -70,7 +70,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
     @Override
     public boolean updateElement(String identifier, IGui gui)
     {
-        if (identifier.equals("list") && gui instanceof GuiSquareList)
+        if (identifier.equals("panel") && gui instanceof GuiSquareList)
         {
             GuiSquareList list = (GuiSquareList) gui;
             String newFilter = ((GuiCustomTextField) this.getGui("search_bar")).getText();
@@ -95,7 +95,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         float iconSize = getTopBarHeight() - 18;
         helper.drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
-        IResizable resizable = (IResizable) getGui("list");
+        IResizable resizable = (IResizable) getGui("panel");
         double target = 0;
         if (resizable instanceof GuiPlaylist)
         {
