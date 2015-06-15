@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Konrad on 24-05-2015.
  */
-public class GuiScreenMusicHome extends GuiScreen
+public class GuiScreenMusicHome extends GuiScreen // TODO: Remove
 {
     List<IOption> options = new ArrayList<IOption>();
 

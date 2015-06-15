@@ -6,7 +6,7 @@ import dk.mrspring.music.util.TranslateHelper;
 /**
  * Created by Konrad on 26-05-2015.
  */
-public class GuiScreenQueueEditor extends GuiScreenPlaylistEditor
+public class GuiScreenQueueEditor extends GuiScreenPlaylistEditor // TODO: Remove
 {
     public GuiScreenQueueEditor(net.minecraft.client.gui.GuiScreen previousScreen)
     {

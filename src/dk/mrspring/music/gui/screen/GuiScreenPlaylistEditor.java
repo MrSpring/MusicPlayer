@@ -15,7 +15,7 @@ import dk.mrspring.music.util.TranslateHelper;
 /**
  * Created by Konrad on 24-05-2015.
  */
-public class GuiScreenPlaylistEditor extends GuiScreen
+public class GuiScreenPlaylistEditor extends GuiScreen // TODO: Remove
 {
     Playlist playlist;
     private double progress = 0;

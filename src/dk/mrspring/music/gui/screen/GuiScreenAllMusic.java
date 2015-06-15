@@ -11,7 +11,6 @@ import dk.mrspring.music.gui.*;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IResizable;
 import dk.mrspring.music.gui.menu.MenuItemButton;
-import dk.mrspring.music.gui.menu.MenuItemSubMenu;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.util.*;
 import net.minecraft.client.Minecraft;
@@ -28,7 +27,6 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
     private int maxCoverSize = 150;
     private int minCoverSize = 40;
     private double progress = 0D;
-    private IPanel openPanel = null;
 
     public GuiScreenAllMusic(net.minecraft.client.gui.GuiScreen previousScreen)
     {
@@ -49,14 +47,18 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         this.addGuiElement("search_bar", new GuiCustomTextField((width / 3) * 2, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, ""));
         this.addGuiElement("size_slider", new GuiSlider(3, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, config.gui_mm_list_entry_size).setShowHover(false));
         this.addGuiElement("back", new GuiSimpleButton(3, height - getBottomBarHeight() - getTopBarHeight() + 3, 60, getTopBarHeight() - 6, "Back"));
-        this.openPanel = new ArtistPanel(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllArtists().get(1), GuiArtistList.Showing.ALBUMS)/*new GuiAllArtistsList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllArtists())*//*new GuiPlaylist(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), /*LiteModMusicPlayer.testerList*//*musicHandler.getQueue())*//*new GuiAllMusicList(sidePanelSize, 0, width - sidePanelSize, height - getTopBarHeight() - getBottomBarHeight(), LiteModMusicPlayer.musicHandler.getAllMusic())*/;
-        this.addGuiElement("panel", this.openPanel);
+        openPanel(new ArtistPanel(LiteModMusicPlayer.musicHandler.getAllArtists().get(1), GuiArtistList.Showing.ALBUMS));
         this.addGuiElement("side_panel", new SidePanel(0, 0, sidePanelSize, height - getTopBarHeight() - getBottomBarHeight()));
     }
 
-    private void setList(IResizable newList)
+    public void openPanel(IPanel newPanel)
     {
-        this.replaceGui("panel", (IGui) newList);
+        int sidePanelSize = LiteModMusicPlayer.config.gui_mm_side_panel_size;
+        newPanel.setX(sidePanelSize);
+        newPanel.setY(0);
+        newPanel.setWidth(width - sidePanelSize);
+        newPanel.setHeight(height - getTopBarHeight());
+        this.replaceGui("panel", newPanel);
     }
 
     private void updatePanelWidth(int newWidth)
@@ -151,21 +153,16 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             mc.displayGuiScreen(previousScreen);
     }
 
-    public void openPanel(IPanel newPanel)
-    {
-
-    }
-
-    public interface IPanel extends IGui
+    public interface IPanel extends IGui, IResizable
     {
 
     }
 
     private class ArtistPanel extends GuiArtistList implements IPanel
     {
-        public ArtistPanel(int x, int y, int w, int h, Artist artist, Showing type)
+        public ArtistPanel(Artist artist, Showing type)
         {
-            super(x, y, w, h, artist, type);
+            super(0, 0, 100, 100, artist, type);
         }
 
         @Override
@@ -181,6 +178,36 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                 return true;
             } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
         }
+    }
+
+    private class AllMusicPanel extends GuiAllMusicList implements IPanel
+    {
+        public AllMusicPanel(List<Music> allMusic)
+        {
+            super(0, 0, 100, 100, allMusic);
+        }
+
+        // TODO: onElementClicked right-click
+    }
+
+    private class AllAlbumsPanel extends GuiAllAlbumsList implements IPanel
+    {
+        public AllAlbumsPanel(List<Album> allMusic)
+        {
+            super(0, 0, 100, 100, allMusic);
+        }
+
+        // TODO: onElementClicked right-click
+    }
+
+    private class AllArtistPanel extends GuiAllArtistsList implements IPanel
+    {
+        public AllArtistPanel(List<Artist> allMusic)
+        {
+            super(0, 0, 100, 100, allMusic);
+        }
+
+        // TODO: onElementClicked right-click
     }
 
     public class SidePanel implements IGui
@@ -275,38 +302,14 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                 return resizing = true;
             } else
             {
-                if (mouseButton == 1 && buttons[0].mouseDown(mouseX, mouseY, mouseButton))
-                {
-                    GuiScreenAllMusic.this.openMenu(mouseX, mouseY,
-                            new MenuItemButton("Do stuff...", mc.fontRendererObj, 0),
-                            new MenuItemButton("Do some other stuff...", mc.fontRendererObj, 1),
-                            new MenuItemSubMenu("Make new this:", mc.fontRendererObj,
-                                    new MenuItemButton("Something one", mc.fontRendererObj, 2),
-                                    new MenuItemButton("Something two", mc.fontRendererObj, 3),
-                                    new MenuItemButton("Something three", mc.fontRendererObj, 4),
-                                    new MenuItemSubMenu("Oh hey, another sub.menu:", mc.fontRendererObj,
-                                            new MenuItemButton("Another one!", mc.fontRendererObj, 6),
-                                            new MenuItemButton("And another!", mc.fontRendererObj, 7),
-                                            new MenuItemButton("Another one!", mc.fontRendererObj, 8),
-                                            new MenuItemButton("And another!", mc.fontRendererObj, 9)
-                                    ),
-                                    new MenuItemSubMenu("Oh hey, another sub.menu:", mc.fontRendererObj,
-                                            new MenuItemButton("Another one!", mc.fontRendererObj, 6),
-                                            new MenuItemButton("And another!", mc.fontRendererObj, 7),
-                                            new MenuItemButton("Another one!", mc.fontRendererObj, 8),
-                                            new MenuItemButton("And another!", mc.fontRendererObj, 9)
-                                    ),
-                                    new MenuItemSubMenu("Oh hey, another sub.menu:", mc.fontRendererObj,
-                                            new MenuItemButton("Another one!", mc.fontRendererObj, 6),
-                                            new MenuItemButton("And another!", mc.fontRendererObj, 7),
-                                            new MenuItemButton("Another one!", mc.fontRendererObj, 8),
-                                            new MenuItemButton("And another!", mc.fontRendererObj, 9)
-                                    )
-                            ),
-                            new MenuItemButton("Something after the sub-menu thing", mc.fontRendererObj, 5)
-                    );
-                    return true;
-                } else return false;
+                if (buttons[0].mouseDown(mouseX, mouseY, mouseButton))
+                    openPanel(new AllMusicPanel(LiteModMusicPlayer.musicHandler.getAllMusic()));
+                else if (buttons[1].mouseDown(mouseX, mouseY, mouseButton))
+                    openPanel(new AllAlbumsPanel(LiteModMusicPlayer.musicHandler.getAllAlbums()));
+                else if (buttons[2].mouseDown(mouseX, mouseY, mouseButton))
+                    openPanel(new AllArtistPanel(LiteModMusicPlayer.musicHandler.getAllArtists()));
+                else return false;
+                return true;
             }
         }
 
