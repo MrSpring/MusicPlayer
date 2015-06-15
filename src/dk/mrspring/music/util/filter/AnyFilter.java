@@ -2,7 +2,6 @@ package dk.mrspring.music.util.filter;
 
 import dk.mrspring.music.player.Music;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
 
 /**
  * Created by Konrad on 27-05-2015.
