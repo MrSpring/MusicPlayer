@@ -69,6 +69,11 @@ public class MultilineTextRender
         }
     }
 
+    public String getText()
+    {
+        return rendering;
+    }
+
     public void render(DrawingHelper helper, int x, int y, int color, boolean shadow, DrawingHelper.VerticalTextAlignment vertical, DrawingHelper.HorizontalTextAlignment horizontal)
     {
         int yOffset = 0;

@@ -1,6 +1,5 @@
 package dk.mrspring.music.gui;
 
-import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.gl.GLClippingPlanes;
 import dk.mrspring.llcore.Color;
 import dk.mrspring.llcore.DrawingHelper;
@@ -9,7 +8,6 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.util.GuiHelper;
 import net.minecraft.client.Minecraft;
-import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -24,6 +22,7 @@ public class GuiCustomTextField implements IGui
     int selectionStart = 0;
     int cursorPos = 0;
     int scroll = 0;
+    private String ghost;
 
     public GuiCustomTextField(int x, int y, int width, int height, String text)
     {
@@ -56,7 +55,7 @@ public class GuiCustomTextField implements IGui
 
         GLClippingPlanes.glEnableClipping(x + PADDING, x + w - PADDING, y, y + h);
 
-        minecraft.fontRendererObj.drawString(getText(), x + PADDING - scroll, textY, 0xFFFFFF, false);
+        minecraft.fontRendererObj.drawString(getText(), x + PADDING - scroll, textY, 0xFFFFFF, !focused);
 
         GLClippingPlanes.glDisableClipping();
 
@@ -67,12 +66,18 @@ public class GuiCustomTextField implements IGui
                 cursorX = minecraft.fontRendererObj.getStringWidth(getText().substring(0, cursorPos));
             else if (cursorPos == getText().length())
                 cursorX = minecraft.fontRendererObj.getStringWidth(getText());
-        }
+        } else if (this.getText().length() == 0)
+            minecraft.fontRendererObj.drawString(this.getGhost(), x + PADDING, textY, 0xBFBFBF, true);
 
         if (focused)
             minecraft.fontRendererObj.drawString("|", x + cursorX + PADDING - 1 - scroll, textY, 0xFF0000, false);
 
         this.drawScrollBar(minecraft);
+    }
+
+    public String getGhost()
+    {
+        return ghost;
     }
 
     private void drawScrollBar(Minecraft minecraft)
@@ -299,5 +304,11 @@ public class GuiCustomTextField implements IGui
     public boolean getFocused()
     {
         return focused;
+    }
+
+    public GuiCustomTextField setGhost(String ghost)
+    {
+        this.ghost = ghost;
+        return this;
     }
 }

@@ -2,8 +2,11 @@ package dk.mrspring.music;
 
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
+import com.wrapper.spotify.Api;
 import dk.mrspring.llcore.LLCore;
-import dk.mrspring.music.gui.screen.*;
+import dk.mrspring.music.gui.screen.GuiScreen;
+import dk.mrspring.music.gui.screen.GuiScreenAllMusic;
+import dk.mrspring.music.gui.screen.GuiScreenSpotifyLogin;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.player.Playlist;
@@ -17,7 +20,6 @@ import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -26,6 +28,10 @@ import java.util.concurrent.CountDownLatch;
 public class LiteModMusicPlayer implements Tickable
 {
     public static MusicHandler musicHandler;
+    public static Api spotifyApi = Api.builder()
+            .clientId("stuff")
+            .clientSecret("stuff")
+            .redirectURI("stuff").build();
 
     public static LLCore core;
     public static File configFile;
@@ -46,6 +52,7 @@ public class LiteModMusicPlayer implements Tickable
     AnyTimeKeyBind next = new AnyTimeKeyBind(Keyboard.KEY_L);
 
     AnyTimeKeyBind openMM = new AnyTimeKeyBind(Keyboard.KEY_M);
+    AnyTimeKeyBind openSpotify = new AnyTimeKeyBind(Keyboard.KEY_N);
 
     public static void initializeToolkit()
     {
@@ -89,6 +96,8 @@ public class LiteModMusicPlayer implements Tickable
 
             if (openMM.isClicked())
                 minecraft.displayGuiScreen(new GuiScreenAllMusic(minecraft.currentScreen));
+            if (openSpotify.isClicked())
+                minecraft.displayGuiScreen(new GuiScreenSpotifyLogin(minecraft.currentScreen));
         }
 
         if (!(minecraft.currentScreen instanceof GuiScreen))
