@@ -11,6 +11,8 @@ import dk.mrspring.music.gui.*;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IResizable;
 import dk.mrspring.music.gui.menu.MenuItemButton;
+import dk.mrspring.music.gui.screen.overlay.CardMusic;
+import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.util.*;
 import net.minecraft.client.Minecraft;
@@ -44,10 +46,10 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
 
         int sidePanelSize = config.gui_mm_side_panel_size;
 
-        this.addGuiElement("search_bar", new GuiCustomTextField((width / 3) * 2, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, ""));
+        this.addGuiElement("search_bar", new GuiCustomTextField((width / 3) * 2, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, "").setGhost("Search"));
         this.addGuiElement("size_slider", new GuiSlider(3, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, config.gui_mm_list_entry_size).setShowHover(false));
         this.addGuiElement("back", new GuiSimpleButton(3, height - getBottomBarHeight() - getTopBarHeight() + 3, 60, getTopBarHeight() - 6, "Back"));
-        openPanel(new ArtistPanel(LiteModMusicPlayer.musicHandler.getAllArtists().get(1), GuiArtistList.Showing.ALBUMS));
+        openPanel(new AllMusicPanel(LiteModMusicPlayer.musicHandler.getAllMusic()));//(new ArtistPanel(LiteModMusicPlayer.musicHandler.getAllArtists().get(1), GuiArtistList.Showing.ALBUMS));
         this.addGuiElement("side_panel", new SidePanel(0, 0, sidePanelSize, height - getTopBarHeight() - getBottomBarHeight()));
     }
 
@@ -185,6 +187,19 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         public AllMusicPanel(List<Music> allMusic)
         {
             super(0, 0, 100, 100, allMusic);
+        }
+
+        @Override
+        protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Music clicked)
+        {
+            System.out.println("Clicked");
+            if (mouseButton == 0)
+            {
+                OverlayScreen overlay = new OverlayScreen("Music Details", GuiScreenAllMusic.this);
+                overlay.addCard(new CardMusic(overlay, clicked));
+                mc.displayGuiScreen(overlay);
+                return true;
+            } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
         }
 
         // TODO: onElementClicked right-click

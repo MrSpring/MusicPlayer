@@ -12,6 +12,7 @@ import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.menu.IMenuItem;
 import dk.mrspring.music.gui.menu.Menu;
 import dk.mrspring.music.util.TranslateHelper;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -39,6 +40,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     private Color topBarColor = Color.BLACK, bottomBarColor = Color.BLACK;
     private int mouseXAtLastFrame = 0, mouseYAtLastFrame = 0;
     private Menu openMenu = null;
+    private boolean bypassInit;
 
     public GuiScreen(String title, net.minecraft.client.gui.GuiScreen previousScreen)
     {
@@ -59,6 +61,17 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         }
     }
 
+    public GuiScreen bypassInit(boolean bypass)
+    {
+        this.bypassInit = bypass;
+        return this;
+    }
+
+    public boolean doesBypassInit()
+    {
+        return this.bypassInit;
+    }
+
     public void closeMenu()
     {
         this.openMenu = null;
@@ -72,6 +85,19 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         this.guiHashMap = new HashMap<String, IGui>();
 
         this.addGuiElement("done_button", new GuiSimpleButton(0, 0, 40, 20, "Done").hideBackground());
+    }
+
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        this.mc = mc;
+        this.itemRender = mc.getRenderItem();
+        this.fontRendererObj = mc.fontRendererObj;
+        this.width = width;
+        this.height = height;
+        this.buttonList.clear();
+        if (!bypassInit)
+            this.initGui();
     }
 
     public void addGuiElement(String identifier, IGui gui)

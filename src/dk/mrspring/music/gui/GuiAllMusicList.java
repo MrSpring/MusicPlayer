@@ -55,7 +55,11 @@ public class GuiAllMusicList extends GuiSquareList<Music>
     @Override
     public int getEntryHeight(int currentColumn, Music thing)
     {
-        return 0;
+        Minecraft minecraft = Minecraft.getMinecraft();
+        String text = TranslateHelper.translateFormat("gui.music_list.entry_text", thing.getName(), thing.getAlbum(), thing.getArtist());
+        text = text.replaceAll("(?i)(" + currentFilter + ")", "\u00a7e$1\u00a7r");
+        MultilineTextRender render = new MultilineTextRender(text, minecraft.fontRendererObj, _entryWidth - 6 - (2 * _entrySpacing), true, 5);
+        return _entryWidth + render.getTotalHeight() + 3;
     }
 
     @Override

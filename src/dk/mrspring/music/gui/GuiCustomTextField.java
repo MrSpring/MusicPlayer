@@ -1,6 +1,5 @@
 package dk.mrspring.music.gui;
 
-import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.gl.GLClippingPlanes;
 import dk.mrspring.llcore.Color;
 import dk.mrspring.llcore.DrawingHelper;
@@ -9,7 +8,6 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.util.GuiHelper;
 import net.minecraft.client.Minecraft;
-import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -19,6 +17,7 @@ public class GuiCustomTextField implements IGui
 {
     final int PADDING = 3;
     String text;
+    String ghost = "";
     int x, y, w, h;
     boolean focused, enabled = true;
     int selectionStart = 0;
@@ -32,6 +31,17 @@ public class GuiCustomTextField implements IGui
         this.w = width;
         this.h = height;
         this.text = text;
+    }
+
+    public String getGhost()
+    {
+        return ghost;
+    }
+
+    public GuiCustomTextField setGhost(String ghost)
+    {
+        this.ghost = ghost;
+        return this;
     }
 
     @Override
@@ -67,7 +77,8 @@ public class GuiCustomTextField implements IGui
                 cursorX = minecraft.fontRendererObj.getStringWidth(getText().substring(0, cursorPos));
             else if (cursorPos == getText().length())
                 cursorX = minecraft.fontRendererObj.getStringWidth(getText());
-        }
+        } else if (getText().length() == 0)
+            minecraft.fontRendererObj.drawString(getGhost(), x + PADDING, textY, 0xBFBFBF, true);
 
         if (focused)
             minecraft.fontRendererObj.drawString("|", x + cursorX + PADDING - 1 - scroll, textY, 0xFF0000, false);

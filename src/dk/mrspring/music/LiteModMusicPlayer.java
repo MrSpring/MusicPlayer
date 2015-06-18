@@ -4,6 +4,7 @@ import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
 import dk.mrspring.llcore.LLCore;
 import dk.mrspring.music.gui.screen.*;
+import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.player.Playlist;
@@ -91,7 +92,7 @@ public class LiteModMusicPlayer implements Tickable
                 minecraft.displayGuiScreen(new GuiScreenAllMusic(minecraft.currentScreen));
         }
 
-        if (!(minecraft.currentScreen instanceof GuiScreen))
+        if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen))
             overlay.draw(musicHandler, minecraft);
     }
 
