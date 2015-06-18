@@ -9,6 +9,7 @@ import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.util.GuiHelper;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -39,6 +40,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         List<Card> list = new ArrayList<Card>();
         Collections.addAll(list, cards);
         this.cardList = list;
+        dark = true;
 //        this.cardList = this.asList(cards);
     }
 
@@ -48,6 +50,12 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         Collections.addAll(list, cards);
         return list;
     }*/
+
+    @Override
+    public Minecraft getMinecraft()
+    {
+        return mc;
+    }
 
     @Override
     public int getDefaultTextColor()
@@ -113,7 +121,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
             card.draw(mc, mouseX, mouseY);
             GL11.glPopMatrix();
 
-            GL11.glTranslatef(0, cardHeight + 5, 0);
+            GL11.glTranslatef(0, cardHeight + 10, 0);
         }
 
         GL11.glPopMatrix();
@@ -124,7 +132,10 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     public void drawCard(Quad quad)
     {
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-        Color backgroundColor = dark ? Color.BLACK : Color.WHITE;
+        float x = quad.getX(), y = quad.getY(), w = quad.getWidth(), h = quad.getHeight();
+        helper.drawShape(new Quad(x, y, w, h).setColor(Color.BLACK).setAlpha(0.75F));
+        helper.drawButtonThingy(new Quad(x - 2, y - 2, w + 4, h + 4), 0F, true);
+        /*Color backgroundColor = dark ? Color.BLACK : Color.WHITE;
         float backgroundAlpha = dark ? 0.75F : 1F;
         float x = quad.getX(), y = quad.getY(), w = quad.getWidth(), h = quad.getHeight();
         if (!dark)
@@ -134,7 +145,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         }
         helper.drawShape(new Quad(x + 1, y, w - 2, 1).setColor(backgroundColor).setAlpha(backgroundAlpha));
         helper.drawShape(new Quad(x, y + 1, w, h - 2).setColor(backgroundColor).setAlpha(backgroundAlpha));
-        helper.drawShape(new Quad(x + 1, y + h - 1, w - 2, 1).setColor(backgroundColor).setAlpha(backgroundAlpha));
+        helper.drawShape(new Quad(x + 1, y + h - 1, w - 2, 1).setColor(backgroundColor).setAlpha(backgroundAlpha));*/
     }
 
     @Override
@@ -179,7 +190,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     {
         int height = 0;
         for (Card card : cardList)
-            height += card.getHeight() + 5;
+            height += card.getHeight() + 10;
         return height;
     }
 
