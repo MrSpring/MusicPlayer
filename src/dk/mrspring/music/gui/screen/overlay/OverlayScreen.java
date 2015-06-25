@@ -110,6 +110,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         this.overlaying.drawScreen(-1000, -1000, partialTicks);
         GL11.glPopMatrix();
 
+
         int x = width - overlayWidth / 2;
         int y = height - overlayHeight / 2;
 
@@ -125,6 +126,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         GL11.glPushMatrix();
         GL11.glTranslatef(width / 2 - (getOverlayWidth() / 2), height / 3 - scroll, 0);
 
+        int listHeight = 0;
         for (Card card : cardList)
         {
             int cardHeight = card.getHeight();
@@ -136,9 +138,21 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
             GL11.glPopMatrix();
 
             GL11.glTranslatef(0, cardHeight + 10, 0);
+            listHeight += cardHeight + 10;
         }
 
         GL11.glPopMatrix();
+
+        {
+            double progress = ((double) height / 3) / (double) (listHeight);
+            int scrollBarHeight = (int) (progress * ((height / 3) - 6));
+            progress = ((double) scroll) / ((double) getMaxScroll());
+            int scrollBarY = (height / 3) + (int) ((((height / 3) - 20) - scrollBarHeight) * progress);
+            LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 4, height / 3-1, 6, height / 3-18).setColor(Color.BLACK).setAlpha(0.75F));
+            LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 5, scrollBarY, 4, scrollBarHeight));
+            System.out.println("scrollBarHeight = " + scrollBarHeight);
+//            LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(10,10,10,10));
+        }
         LiteModMusicPlayer.core.getDrawingHelper().setZIndex(0);
         GL11.glPopMatrix();
     }
