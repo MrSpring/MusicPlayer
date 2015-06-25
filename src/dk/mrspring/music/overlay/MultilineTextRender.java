@@ -66,7 +66,7 @@ public class MultilineTextRender
         {
             this.rendering = newText;
             this.recalculate();
-        }
+        } else this.rendering = newText;
     }
 
     public void render(DrawingHelper helper, int x, int y, int color, boolean shadow, DrawingHelper.VerticalTextAlignment vertical, DrawingHelper.HorizontalTextAlignment horizontal)
@@ -83,20 +83,30 @@ public class MultilineTextRender
                 {
                     if (vertical == DrawingHelper.VerticalTextAlignment.LEFT)
                     {
-                        helper.drawShape(new Quad(x + 3 + 1, y + yOffset+(lineHeight/2) + 1, wrap - 6, 1).setColor(Color.DK_GREY));
-                        helper.drawShape(new Quad(x + 3, y + yOffset+(lineHeight/2), wrap - 6, 1));
+                        helper.drawShape(new Quad(x + 3 + 1, y + yOffset + (lineHeight / 2) + 1, wrap - 6, 1).setColor(Color.DK_GREY));
+                        helper.drawShape(new Quad(x + 3, y + yOffset + (lineHeight / 2), wrap - 6, 1));
                     } else if (vertical == DrawingHelper.VerticalTextAlignment.CENTER)
                     {
-                        helper.drawShape(new Quad(x - (render.getLongestLine() / 2) + 3 + 1, y + yOffset+(lineHeight/2) + 1, wrap - 6, 1).setColor(Color.DK_GREY));
-                        helper.drawShape(new Quad(x - (render.getLongestLine() / 2) + 3, y + yOffset+(lineHeight/2), wrap - 6, 1));
+                        helper.drawShape(new Quad(x - (render.getLongestLine() / 2) + 3 + 1, y + yOffset + (lineHeight / 2) + 1, wrap - 6, 1).setColor(Color.DK_GREY));
+                        helper.drawShape(new Quad(x - (render.getLongestLine() / 2) + 3, y + yOffset + (lineHeight / 2), wrap - 6, 1));
                     } else
                     {
-                        helper.drawShape(new Quad(x - render.getLongestLine() + 3 + 1, y + yOffset+(lineHeight/2) + 1, wrap - 6, 1).setColor(Color.DK_GREY));
-                        helper.drawShape(new Quad(x - render.getLongestLine() + 3, y + yOffset+(lineHeight/2), wrap - 6, 1));
+                        helper.drawShape(new Quad(x - render.getLongestLine() + 3 + 1, y + yOffset + (lineHeight / 2) + 1, wrap - 6, 1).setColor(Color.DK_GREY));
+                        helper.drawShape(new Quad(x - render.getLongestLine() + 3, y + yOffset + (lineHeight / 2), wrap - 6, 1));
                     }
                 }
                 yOffset += lineHeight;
             }
         }
+    }
+
+    public void setWrapWidth(int wrapWidth)
+    {
+        if (this.wrap != wrapWidth)
+        {
+            this.wrap = wrapWidth;
+            this.recalculate();
+        } else
+            this.wrap = wrapWidth;
     }
 }

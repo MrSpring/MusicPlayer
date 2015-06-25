@@ -15,5 +15,7 @@ public interface OverlayParent
 
     void addCard(Card card);
 
+    void addCards(Card... cards);
+
     Minecraft getMinecraft();
 }

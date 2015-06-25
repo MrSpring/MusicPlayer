@@ -49,7 +49,13 @@ public class MusicHandler
         }
 
         for (Map.Entry<String, List<Music>> entry : albumLookup.entrySet())
-            allAlbums.add(new Album(entry.getValue()));
+        {
+            List<Music> musicList = entry.getValue();
+            Album newAlbum = new Album(musicList);
+            for (Music music : musicList)
+                music.setAlbumInstance(newAlbum);
+            allAlbums.add(newAlbum);
+        }
 
         Map<String, List<Album>> artistLookup = new HashMap<String, List<Album>>();
         for (Album album : allAlbums)
@@ -61,7 +67,14 @@ public class MusicHandler
         }
 
         for (Map.Entry<String, List<Album>> entry : artistLookup.entrySet())
-            allArtists.add(new Artist(entry.getValue()));
+        {
+            List<Album> albumList = entry.getValue();
+            Artist newArtist = new Artist(albumList);
+            for (Album album : albumList)
+                for (Music music : album.getMusicList())
+                    music.setArtistInstance(newArtist);
+            allArtists.add(newArtist);
+        }
     }
 
     public Playlist loadPlaylistFromFile(File file)

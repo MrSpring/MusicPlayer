@@ -16,7 +16,12 @@ public abstract class Card implements IGui
 
     public abstract int getHeight();
 
-    public boolean drawBackdrop(){
+    public void initGui()
+    {
+    }
+
+    public boolean drawBackdrop()
+    {
         return true;
     }
 

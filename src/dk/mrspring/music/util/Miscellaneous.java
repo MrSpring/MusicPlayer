@@ -42,4 +42,9 @@ public class Miscellaneous
             }
         } else return target;
     }
+
+    public static String cleanupHTMLCode(String html)
+    {
+        return html.replaceAll("\\<.*?>", "").replaceAll("&amp;", "&");
+    }
 }

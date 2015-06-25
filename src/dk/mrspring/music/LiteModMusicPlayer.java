@@ -34,6 +34,8 @@ public class LiteModMusicPlayer implements Tickable
     public static Overlay overlay;
     public static File coverLocation;
 
+    public static String apiKey = "77fdf3c6e86950cb4baf5c41218bdc33";
+
     public static boolean disableKeys = false;
 
     public static Playlist testerList;

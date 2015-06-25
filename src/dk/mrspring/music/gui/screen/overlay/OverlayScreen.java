@@ -37,19 +37,16 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     {
         this.overlaying = previousScreen;
         this.title = title;
-        List<Card> list = new ArrayList<Card>();
-        Collections.addAll(list, cards);
-        this.cardList = list;
-        dark = true;
-//        this.cardList = this.asList(cards);
+        this.dark = true;
+        this.cardList = this.asList(cards);
     }
 
-    /*private List<Card> asList(Card... cards)
+    private List<Card> asList(Card... cards)
     {
         List<Card> list = new ArrayList<Card>();
         Collections.addAll(list, cards);
         return list;
-    }*/
+    }
 
     @Override
     public Minecraft getMinecraft()
@@ -77,13 +74,30 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         this.cardList.add(card);
     }
 
+    public void addCards(Card... cards)
+    {
+        if (cardList == null)
+            cardList = new ArrayList<Card>();
+        Collections.addAll(cardList, cards);
+    }
+
     @Override
     public void initGui()
     {
         super.initGui();
 
-        this.overlayWidth = width / 3;
+        this.overlayWidth = width / 2;
         this.overlayHeight = height / 3;
+
+        for (Card card : cardList)
+            card.initGui();
+    }
+
+    @Override
+    public void updateScreen()
+    {
+        for (Card card : cardList)
+            card.update();
     }
 
     @Override
@@ -109,7 +123,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
                     true, width - 10, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.TOP);
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(width / 3, height / 3 - scroll, 0);
+        GL11.glTranslatef(width / 2 - (getOverlayWidth() / 2), height / 3 - scroll, 0);
 
         for (Card card : cardList)
         {

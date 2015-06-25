@@ -1,6 +1,9 @@
 package dk.mrspring.music.player;
 
+import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.cover.Cover;
+import dk.mrspring.music.util.Album;
+import dk.mrspring.music.util.Artist;
 import javafx.scene.media.Media;
 import javafx.util.Duration;
 import net.minecraft.client.Minecraft;
@@ -10,6 +13,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Konrad on 27-04-2015.
@@ -21,12 +25,19 @@ public class Music
 
     final File musicFile;
     MusicAttribute name, album, artist;
+    Album albumInstance;
+    Artist artistInstance;
     Media media;
     Cover cover;
 
     protected Music(File file)
     {
         this.musicFile = file;
+    }
+
+    public static void bindDefaultCover()
+    {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Music.UNKNOWN);
     }
 
     public File getMusicFile()
@@ -108,9 +119,38 @@ public class Music
         return str.hashCode();
     }
 
-    public static void bindDefaultCover()
+    public Artist getArtistInstance()
     {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Music.UNKNOWN);
+        if (this.albumInstance == null)
+        {
+            List<Artist> allArtists = LiteModMusicPlayer.musicHandler.getAllArtists();
+            for (Artist artist : allArtists)
+                if (artist.getArtistName().equals(getAlbum()))
+                    return this.artistInstance = artist;
+            return null;
+        } else return this.artistInstance;
+    }
+
+    public void setArtistInstance(Artist artistInstance)
+    {
+        this.artistInstance = artistInstance;
+    }
+
+    public Album getAlbumInstance()
+    {
+        if (this.albumInstance == null)
+        {
+            List<Album> allAlbums = LiteModMusicPlayer.musicHandler.getAllAlbums();
+            for (Album album : allAlbums)
+                if (album.getAlbumName().equals(getAlbum()))
+                    return this.albumInstance = album;
+            return null;
+        } else return this.albumInstance;
+    }
+
+    public void setAlbumInstance(Album albumInstance)
+    {
+        this.albumInstance = albumInstance;
     }
 
     public static class MusicAttribute

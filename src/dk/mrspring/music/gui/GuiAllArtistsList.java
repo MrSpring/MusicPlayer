@@ -9,6 +9,7 @@ import dk.mrspring.music.util.Album;
 import dk.mrspring.music.util.Artist;
 import dk.mrspring.music.util.TranslateHelper;
 import net.minecraft.client.Minecraft;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class GuiAllArtistsList extends GuiSquareList<Artist>
     @Override
     public boolean filter(Artist artist, String filter)
     {
-        return artist.getArtistName().contains(filter);
+        return StringUtils.containsIgnoreCase(artist.getArtistName(), filter);
     }
 
     @Override
