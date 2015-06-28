@@ -34,7 +34,7 @@ public class LiteModMusicPlayer implements Tickable
     public static Overlay overlay;
     public static File coverLocation;
 
-    public static String apiKey = "77fdf3c6e86950cb4baf5c41218bdc33";
+    public static String apiKey = "api";
 
     public static boolean disableKeys = false;
 
@@ -74,6 +74,12 @@ public class LiteModMusicPlayer implements Tickable
     @Override
     public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock)
     {
+        if (config.show_startup_dialog)
+        {
+//            config.show_startup_dialog = false;
+//            minecraft.displayGuiScreen(new GuiScreenFolderSelector(minecraft.currentScreen));
+        }
+
         if (!disableKeys)
         {
             if (reloadConfig.isClicked())
@@ -91,7 +97,7 @@ public class LiteModMusicPlayer implements Tickable
                 musicHandler.playNext();
 
             if (openMM.isClicked())
-                minecraft.displayGuiScreen(new GuiScreenAllMusic(minecraft.currentScreen));
+                minecraft.displayGuiScreen(new GuiScreenFolderSelector(minecraft.currentScreen)/*new GuiScreenAllMusic(minecraft.currentScreen)*/);
         }
 
         if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen))
@@ -143,7 +149,7 @@ public class LiteModMusicPlayer implements Tickable
             coverLocation.mkdir();
         loadConfigFile();
         initializeToolkit();
-        musicHandler = new MusicHandler(config.auto_play, new File("C:\\Users\\Konrad\\Music"));
+        musicHandler = new MusicHandler(config.auto_play, new File(System.getProperty("user.home"), "Music"));
         /*testerList = new Playlist("TestList", musicHandler.getAllMusic());
 //        JsonUtils.writeToFile(new File(configPath, "playlist.json"), testerList.toJson());
         try

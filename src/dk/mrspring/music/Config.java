@@ -3,6 +3,7 @@ package dk.mrspring.music;
 import dk.mrspring.llcore.Color;
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.music.overlay.OverlayPosition;
+import dk.mrspring.music.util.FileSorter;
 import net.minecraft.util.MathHelper;
 
 /**
@@ -27,6 +28,12 @@ public class Config
     public boolean disable_animations = false;
     public int gui_mm_list_entry_size = 50;
     public int gui_mm_side_panel_size = 90;
+    public int explorer_icon_size = 20;
+    public boolean show_file_edit_below_name = true;
+    public boolean show_file_size_below_name = true;
+    public boolean sort_folders = true;
+    public FileSorter.SortingType file_sort_type = FileSorter.SortingType.NAME;
+    public boolean show_startup_dialog=true;
 
     private static float clamp01(float current)
     {
@@ -68,5 +75,6 @@ public class Config
         overlay_size_easing_speed = clamp01(overlay_size_easing_speed);
         overlay_next_up_easing_speed = clamp01(overlay_next_up_easing_speed);
         gui_mm_list_entry_size = clamp(gui_mm_list_entry_size, 0, 100);
+        if (file_sort_type == null) file_sort_type = defaultConfig.file_sort_type;
     }
 }

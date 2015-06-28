@@ -215,8 +215,8 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
 
         if (this.showBottomBar)
         {
-            helper.drawShape(new Quad(0, height - getBottomBarHeight() + 1, width, getBottomBarHeight() - 1).setColor(bottomBarColor).setAlpha(0.5F));
-            helper.drawShape(new Quad(0, height - getBottomBarHeight(), width, 1).setColor(Color.WHITE));
+            helper.drawShape(new Quad(0, height - getTopBarHeight()- getBottomBarHeight() + 1, width, getBottomBarHeight() - 1).setColor(bottomBarColor).setAlpha(0.5F));
+            helper.drawShape(new Quad(0, height - getTopBarHeight()-getBottomBarHeight(), width, 1).setColor(Color.WHITE));
         }
 
         /*if (this.useDefaultDoneButton)

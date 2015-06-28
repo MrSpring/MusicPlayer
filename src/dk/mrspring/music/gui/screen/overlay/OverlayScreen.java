@@ -109,18 +109,18 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         GL11.glPushMatrix();
         this.overlaying.drawScreen(-1000, -1000, partialTicks);
         GL11.glPopMatrix();
-
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 
         int x = width - overlayWidth / 2;
         int y = height - overlayHeight / 2;
 
         GL11.glPushMatrix();
 
-        LiteModMusicPlayer.core.getDrawingHelper().setZIndex(10);
-        LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
+        helper.setZIndex(10);
+        helper.drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
 
         if (showTitle)
-            LiteModMusicPlayer.core.getDrawingHelper().drawText(title, new Vector(width / 2, 30), getInvertedTextColor(),
+            helper.drawText(title, new Vector(width / 2, 30), getInvertedTextColor(),
                     true, width - 10, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.TOP);
 
         GL11.glPushMatrix();
@@ -148,12 +148,11 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
             int scrollBarHeight = (int) (progress * ((height / 3) - 6));
             progress = ((double) scroll) / ((double) getMaxScroll());
             int scrollBarY = (height / 3) + (int) ((((height / 3) - 20) - scrollBarHeight) * progress);
-            LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 4, height / 3-1, 6, height / 3-18).setColor(Color.BLACK).setAlpha(0.75F));
-            LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 5, scrollBarY, 4, scrollBarHeight));
-            System.out.println("scrollBarHeight = " + scrollBarHeight);
-//            LiteModMusicPlayer.core.getDrawingHelper().drawShape(new Quad(10,10,10,10));
+            helper.drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 4, height / 3 - 1, 6, height / 3 - 18).setColor(Color.BLACK).setAlpha(0.75F));
+            helper.drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 5, scrollBarY, 4, scrollBarHeight));
         }
-        LiteModMusicPlayer.core.getDrawingHelper().setZIndex(0);
+
+        helper.setZIndex(0);
         GL11.glPopMatrix();
     }
 

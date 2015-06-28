@@ -130,7 +130,8 @@ public class CardMusic extends Card
     {
         MusicView[] views;
         boolean expanded = false;
-        int collapsedViewCount = 10;
+        int collapsedViewCount = 5;
+        int expandFalloff = 7;
 
         public AlbumCard(OverlayParent overlayParent, FontRenderer renderer)
         {
@@ -144,14 +145,17 @@ public class CardMusic extends Card
 
             List<Music> album = showing.getAlbumInstance().getMusicList();
             views = new MusicView[album.size()];
-            System.out.println("Creating views");
             for (int i = 0; i < views.length; i++)
             {
                 Music music = album.get(i);
                 int width = parent.getOverlayWidth() - 4;
-                System.out.println("Created view: " + i + ", for: " + music.getName() + ", width: " + width);
                 views[i] = new MusicView(width, music, Minecraft.getMinecraft().fontRendererObj);
             }
+        }
+
+        private boolean collapse()
+        {
+            return !expanded && views.length > expandFalloff;
         }
 
         @Override
@@ -160,7 +164,7 @@ public class CardMusic extends Card
             int listHeight = 0;
             for (int i = 0; i < views.length; i++)
             {
-                if (!expanded && i >= collapsedViewCount)
+                if (i >= collapsedViewCount && collapse())
                 {
                     listHeight += 18;
                     break;
@@ -191,10 +195,10 @@ public class CardMusic extends Card
             int lineOffset = 10;
             for (int i = 0; i < views.length; i++)
             {
-                if (!expanded && i >= collapsedViewCount)
+                if (!expanded && i >= collapsedViewCount && collapse())
                 {
                     int remaining = views.length - i;
-                    helper.drawText("Show "+remaining+" more...", new Vector(parent.getOverlayWidth() / 2, 5), color, true, parent.getOverlayWidth() - 4, VerticalTextAlignment.CENTER, TOP);
+                    helper.drawText("Show " + remaining + " more...", new Vector(parent.getOverlayWidth() / 2, 5), color, true, parent.getOverlayWidth() - 4, VerticalTextAlignment.CENTER, TOP);
                     break;
                 }
                 MusicView view = views[i];

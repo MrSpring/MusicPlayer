@@ -19,4 +19,12 @@ public class FileUtils
             return false;
         }
     }
+
+    public static String getFileExtension(String fileName, boolean keepDot)
+    {
+        int lastDot = fileName.lastIndexOf('.');
+        if (lastDot == -1)
+            return "";
+        else return fileName.substring(lastDot + (keepDot ? 0 : 1));
+    }
 }
