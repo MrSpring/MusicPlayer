@@ -18,7 +18,6 @@ import java.util.Date;
 public class GuiFile extends GuiFileBase
 {
     GuiSimpleButton button;
-    long timeAtLastClick = 0;
     boolean wrapName = true;
     FileSize cachedFileSize;
     private Runnable onFileOpened = new Runnable()
@@ -239,12 +238,12 @@ public class GuiFile extends GuiFileBase
         if (this.button.mouseDown(mouseX, mouseY, mouseButton))
         {
             this.button.makeHighlighted();
-            long systemTime = System.currentTimeMillis();
-            if (systemTime - timeAtLastClick < 250)
-            {
-                this.onFileOpened.run();
-            }
-            this.timeAtLastClick = System.currentTimeMillis();
+//            long systemTime = System.currentTimeMillis();
+//            if (systemTime - timeAtLastClick < 250)
+//            {
+//                this.onFileOpened.run();
+//            }
+//            this.timeAtLastClick = System.currentTimeMillis();
             return true;
         } else
         {

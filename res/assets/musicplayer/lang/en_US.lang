@@ -1,5 +1,5 @@
-overlay.currently_playing=%1$s\n§7%2$s\n%3$s
-overlay.next_up=Next Up:\n%1$s §7by %3$s
+overlay.currently_playing=%1$s\nï¿½7%2$s\n%3$s
+overlay.next_up=Next Up:\n%1$s ï¿½7by %3$s
 
 gui.music.main.title=Music Manager
 gui.music.main.subtitle=MANAGE THE MUSIC FOUND BY THE MOD
@@ -34,13 +34,15 @@ gui.album_list.amount_text=%1$s Songs
 gui.artist_list.entry_text=%1$s
 gui.artist_list.amount_text=%1$s Albums\n%2$s Songs
 
-gui.artist_list.songs.name=Songs\n§7All songs by this artist
-gui.artist_list.albums.name=Albums\n§7All albums by this artist
+gui.artist_list.songs.name=Songs\nï¿½7All songs by this artist
+gui.artist_list.albums.name=Albums\nï¿½7All albums by this artist
 
 gui.explorer.open=Open
 gui.explorer.refresh=Refresh
 gui.explorer.create_new=New File
 gui.explorer.go_up=Go Back
 gui.explorer.new_file_name=Enter file name...
+gui.explorer.open_directory=Open Directory
+gui.explorer.use_folder=Use This Folder
 
 playlist.queue.name=Queue

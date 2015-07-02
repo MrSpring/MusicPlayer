@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by MrSpring on 03-12-2014 for In-Game File Explorer.
  */
-public class GuiFileExplorer implements IGui, IMouseListener
+public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
 {
     int x, y, w, h, listHeight;
     boolean showControls = true;
@@ -28,6 +28,8 @@ public class GuiFileExplorer implements IGui, IMouseListener
     String currentPath;
     IOnFileOpened onFileOpened;
     int pathX = 0, pathY = 0;
+    long timeAtLastFileClick = 0;
+    GuiFile lastClicked = null;
 
     boolean drawPath = false;
     GuiSimpleButton[] pathButtons;
@@ -125,13 +127,13 @@ public class GuiFileExplorer implements IGui, IMouseListener
         if (showPath)
         {
             String openFile = getCurrentAbsolutePath();
-            listHeight -= (9 * helper.drawText(TranslateHelper.translate("gui.explorer.open_directory") + ":\n\u00a77" + openFile, new Vector(x + 3, y + listHeight), 0xFFFFFF, true, width, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.BOTTOM)) + 4;
+            listHeight -= (9 * helper.drawText(TranslateHelper.translate("gui.explorer.open_directory") + ":\n\u00a77" + openFile, new Vector(x + 3, y + listHeight - 6), 0xFFFFFF, true, width, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER)) + 4;
         }
 
         if (showBackground)
             helper.drawButtonThingy(new Quad(x - 2, y - 2, width + 11, listHeight + 4), 0, true);
 
-        int yOffset = -scroll+3, xOffset = 2;
+        int yOffset = -scroll + 3, xOffset = 2;
 //        helper.drawShape(new Quad(x, y-1, width - xOffset+10, 1));
 
         GLClippingPlanes.glEnableClipping(x, x + width + 5, y, y + listHeight);
@@ -169,8 +171,6 @@ public class GuiFileExplorer implements IGui, IMouseListener
             double sizeProgress = ((double) listHeight) / ((double) getListHeight());
             int scrollbarHeight = (int) (sizeProgress * ((double) scrollbarRange));
             int scrollbarY = (int) (progress * (double) (scrollbarRange - scrollbarHeight));
-
-            System.out.println(listHeight + ", " + h + ", " + scroll + ", " + getMaxScroll());
 
             float alpha = 0.5F;
             helper.drawShape(new Quad(3, 4, 6, scrollbarRange).setColor(Color.BLACK).setAlpha(alpha));
@@ -264,11 +264,28 @@ public class GuiFileExplorer implements IGui, IMouseListener
                 for (GuiFileBase guiFile : this.guiFiles)
                     if (guiFile.mouseDown(mouseX, mouseY, mouseButton) && guiFile instanceof GuiFile)
                     {
-                        if (!((GuiFile) guiFile).isDirectory())
+                        if (((GuiFile) guiFile).isDirectory())
+                        {
                             openFile.enable();
+                            if (this.lastClicked != null && lastClicked == guiFile)
+                            {
+                                System.out.println("Equal");
+                                long currentTime = System.currentTimeMillis();
+                                long difference = currentTime - timeAtLastFileClick;
+                                System.out.println("difference = " + difference);
+                                if (difference <= 1000)
+                                {
+                                    openSelectedFile();
+                                } else timeAtLastFileClick = currentTime;
+                            } else
+                            {
+                                System.out.println(lastClicked==null);
+                                timeAtLastFileClick = System.currentTimeMillis();
+                                lastClicked = (GuiFile) guiFile;
+                            }
+                        }
                         returnFromHere = true;
                     }
-
                 if (returnFromHere)
                     return true;
             }
@@ -418,6 +435,7 @@ public class GuiFileExplorer implements IGui, IMouseListener
             guiFiles.remove(newFile);
         } catch (IOException e)
         {
+            LiteModMusicPlayer.log.addLine("Failed to create file: \"" + path + "\".");
             System.err.println("Failed to create file: \"" + path + "\":");
             e.printStackTrace();
         }
@@ -465,7 +483,7 @@ public class GuiFileExplorer implements IGui, IMouseListener
 
     private int getMaxScroll()
     {
-        return getListHeight() - listHeight+10;
+        return getListHeight() - listHeight + 10;
     }
 
     private int getListHeight()
@@ -473,7 +491,6 @@ public class GuiFileExplorer implements IGui, IMouseListener
         int height = 0;
         if (guiFiles.size() > 0)
             for (GuiFileBase guiFile : guiFiles)
-//                if (!drawGuiFile(5, height, guiFile))
                 height += guiFile.getHeight() + 5;
         return height;
     }
