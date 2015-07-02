@@ -1,10 +1,9 @@
 package dk.mrspring.music;
 
 import dk.mrspring.llcore.Color;
-import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.music.overlay.OverlayPosition;
 import dk.mrspring.music.util.FileSorter;
-import net.minecraft.util.MathHelper;
+import org.lwjgl.input.Keyboard;
 
 /**
  * Created by Konrad on 26-04-2015.
@@ -33,7 +32,9 @@ public class Config
     public boolean show_file_size_below_name = true;
     public boolean sort_folders = true;
     public FileSorter.SortingType file_sort_type = FileSorter.SortingType.NAME;
-    public boolean show_startup_dialog=true;
+    public boolean show_startup_dialog = true;
+    public int console_scroll_up_key = Keyboard.KEY_PRIOR;
+    public int console_scroll_down_key = Keyboard.KEY_NEXT;
 
     private static float clamp01(float current)
     {

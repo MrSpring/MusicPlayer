@@ -123,7 +123,8 @@ public class MusicHandler
         LiteModMusicPlayer.core.getFileLoader().addFilesToList(folder, foundFiles, false, FileFilterUtils.suffixFileFilter(".mp3", IOCase.INSENSITIVE));
         for (File file : foundFiles)
         {
-            System.out.println("Found music file: " + file.getPath());
+//            System.out.println("Found music file: " + file.getPath());
+            LiteModMusicPlayer.log.addLine("Found music file: " + file.getPath());
             allMusic.add(new Music(file));
         }
     }

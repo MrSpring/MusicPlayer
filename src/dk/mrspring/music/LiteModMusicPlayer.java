@@ -3,7 +3,9 @@ package dk.mrspring.music;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
 import dk.mrspring.llcore.LLCore;
-import dk.mrspring.music.gui.screen.*;
+import dk.mrspring.llcore.Quad;
+import dk.mrspring.music.gui.screen.GuiScreen;
+import dk.mrspring.music.gui.screen.GuiScreenFolderSelector;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
@@ -14,11 +16,11 @@ import dk.mrspring.music.util.Icons;
 import dk.mrspring.music.util.JsonUtils;
 import javafx.embed.swing.JFXPanel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -33,10 +35,12 @@ public class LiteModMusicPlayer implements Tickable
     public static Config config;
     public static Overlay overlay;
     public static File coverLocation;
+    public static ConsoleOutput log;
 
     public static String apiKey = "api";
 
     public static boolean disableKeys = false;
+    public static boolean showConsole = true;
 
     public static Playlist testerList;
 
@@ -49,6 +53,7 @@ public class LiteModMusicPlayer implements Tickable
     AnyTimeKeyBind next = new AnyTimeKeyBind(Keyboard.KEY_L);
 
     AnyTimeKeyBind openMM = new AnyTimeKeyBind(Keyboard.KEY_M);
+    AnyTimeKeyBind toggleConsole=new AnyTimeKeyBind(Keyboard.KEY_F9);
 
     public static void initializeToolkit()
     {
@@ -78,6 +83,15 @@ public class LiteModMusicPlayer implements Tickable
         {
 //            config.show_startup_dialog = false;
 //            minecraft.displayGuiScreen(new GuiScreenFolderSelector(minecraft.currentScreen));
+        }
+
+        if (toggleConsole.isClicked())
+            showConsole = !showConsole;
+
+        if (showConsole)
+        {
+            ScaledResolution res = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
+            log.draw(new Quad(5, 5, (res.getScaledWidth()-10)/3, (res.getScaledHeight()-10)/3));
         }
 
         if (!disableKeys)
@@ -149,6 +163,9 @@ public class LiteModMusicPlayer implements Tickable
             coverLocation.mkdir();
         loadConfigFile();
         initializeToolkit();
+        log = new ConsoleOutput(Minecraft.getMinecraft().fontRendererObj);
+        log.zOffset = 1;
+        log.addLine("Initialized Music Player mod successfully.");
         musicHandler = new MusicHandler(config.auto_play, new File(System.getProperty("user.home"), "Music"));
         /*testerList = new Playlist("TestList", musicHandler.getAllMusic());
 //        JsonUtils.writeToFile(new File(configPath, "playlist.json"), testerList.toJson());

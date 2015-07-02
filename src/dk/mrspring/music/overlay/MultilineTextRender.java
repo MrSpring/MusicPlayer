@@ -60,13 +60,14 @@ public class MultilineTextRender
         return height;
     }
 
-    public void setText(String newText)
+    public MultilineTextRender setText(String newText)
     {
         if (!this.rendering.equals(newText))
         {
             this.rendering = newText;
             this.recalculate();
         } else this.rendering = newText;
+        return this;
     }
 
     public void render(DrawingHelper helper, int x, int y, int color, boolean shadow, DrawingHelper.VerticalTextAlignment vertical, DrawingHelper.HorizontalTextAlignment horizontal)
