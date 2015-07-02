@@ -186,9 +186,13 @@ public class LiteModMusicPlayer implements Tickable
             @Override
             public void run()
             {
-                saveConfig();
+                saveAll();
             }
         }));
+    }
+
+    private void saveAll(){
+
     }
 
     @Override

@@ -18,4 +18,6 @@ public interface OverlayParent
     void addCards(Card... cards);
 
     Minecraft getMinecraft();
+
+    void closeOverlay();
 }
