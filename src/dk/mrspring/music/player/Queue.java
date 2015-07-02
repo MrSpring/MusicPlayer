@@ -52,39 +52,39 @@ public class Queue extends Playlist
 
     public Music cycle()
     {
-        if (musicList.size() > 1)
+        if (getMusicList().size() > 1)
         {
-            Music current = musicList.remove(0);
-            musicList.add(current);
+            Music current = getMusicList().remove(0);
+            getMusicList().add(current);
         }
         return getCurrent();
     }
 
     public Music reverseCycle()
     {
-        if (musicList.size() > 1)
+        if (getMusicList().size() > 1)
         {
-            Music current = musicList.remove(musicList.size() - 1);
-            musicList.add(0, current);
+            Music current = getMusicList().remove(getMusicList().size() - 1);
+            getMusicList().add(0, current);
         }
         return getCurrent();
     }
 
     public void updateQueue(List<Music> newList)
     {
-        this.musicList = newList;
+        setMusicList(newList);
         LiteModMusicPlayer.musicHandler.checkForQueueChanges();
     }
 
     public Music getCurrent()
     {
-        return musicList.get(0);
+        return getMusicList().get(0);
     }
 
     public Music getNext()
     {
-        if (musicList.size() > 1)
-            return musicList.get(1);
+        if (getMusicList().size() > 1)
+            return getMusicList().get(1);
         else return getCurrent();
     }
 }

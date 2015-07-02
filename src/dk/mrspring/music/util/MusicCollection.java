@@ -20,4 +20,10 @@ public class MusicCollection
     {
         return musicList;
     }
+
+    public MusicCollection setMusicList(List<Music> newMusicList)
+    {
+        this.musicList = newMusicList;
+        return this;
+    }
 }

@@ -23,6 +23,7 @@ public class MusicHandler
     List<Album> allAlbums = new ArrayList<Album>();
     List<Artist> allArtists = new ArrayList<Artist>();
     Map<Integer, Music> idLookup = new HashMap<Integer, Music>();
+    List<Playlist> playlists = new ArrayList<Playlist>();
     MusicPlayer player;
 
     public MusicHandler()
@@ -97,6 +98,19 @@ public class MusicHandler
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Playlist createNewPlaylist(String name)
+    {
+        Playlist newPlaylist = new Playlist(name);
+        registerPlaylist(newPlaylist);
+        return newPlaylist;
+    }
+
+    public MusicHandler registerPlaylist(Playlist list)
+    {
+        this.playlists.add(list);
+        return this;
     }
 
     public void checkForQueueChanges()
@@ -196,5 +210,10 @@ public class MusicHandler
     public List<Artist> getAllArtists()
     {
         return allArtists;
+    }
+
+    public List<Playlist> getPlaylists()
+    {
+        return playlists;
     }
 }

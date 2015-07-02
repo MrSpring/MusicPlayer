@@ -5,7 +5,7 @@ import com.mumfrey.liteloader.core.LiteLoader;
 import dk.mrspring.llcore.LLCore;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.gui.screen.GuiScreen;
-import dk.mrspring.music.gui.screen.GuiScreenFolderSelector;
+import dk.mrspring.music.gui.screen.GuiScreenAllMusic;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
@@ -40,7 +40,7 @@ public class LiteModMusicPlayer implements Tickable
     public static String apiKey = "api";
 
     public static boolean disableKeys = false;
-    public static boolean showConsole = true;
+    public static boolean showConsole = false;
 
     public static Playlist testerList;
 
@@ -111,7 +111,7 @@ public class LiteModMusicPlayer implements Tickable
                 musicHandler.playNext();
 
             if (openMM.isClicked())
-                minecraft.displayGuiScreen(new GuiScreenFolderSelector(minecraft.currentScreen)/*new GuiScreenAllMusic(minecraft.currentScreen)*/);
+                minecraft.displayGuiScreen(/*new GuiScreenFolderSelector(minecraft.currentScreen)*/new GuiScreenAllMusic(minecraft.currentScreen));
         }
 
         if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen))
@@ -167,6 +167,9 @@ public class LiteModMusicPlayer implements Tickable
         log.zOffset = 1;
         log.addLine("Initialized Music Player mod successfully.");
         musicHandler = new MusicHandler(config.auto_play, new File(System.getProperty("user.home"), "Music"));
+        Playlist playlistOne = musicHandler.createNewPlaylist("Playlist 1");
+        playlistOne.addAll(musicHandler.getAllAlbums().get(0).getMusicList());
+        musicHandler.createNewPlaylist("Another playlist");
         /*testerList = new Playlist("TestList", musicHandler.getAllMusic());
 //        JsonUtils.writeToFile(new File(configPath, "playlist.json"), testerList.toJson());
         try

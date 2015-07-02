@@ -4,6 +4,7 @@ import com.mumfrey.liteloader.gl.GLClippingPlanes;
 import dk.mrspring.llcore.Color;
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
+import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.util.GuiHelper;
@@ -62,11 +63,14 @@ public class GuiCustomTextField implements IGui
             GLClippingPlanes.glDisableClipping();
         }
 
-        int textY = y + (h / 2) - 4;
+//        int textY = y + (h / 2) - 4;
 
-        GLClippingPlanes.glEnableClipping(x + PADDING, x + w - PADDING, y, y + h);
+//        GLClippingPlanes.glEnableClipping(x + PADDING, x + w - PADDING, y, y + h);
+        GLClippingPlanes.glEnableHorizontalClipping(x + PADDING, x + w - PADDING);
 
-        minecraft.fontRendererObj.drawString(getText(), x + PADDING - scroll, textY, 0xFFFFFF, false);
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+//        minecraft.fontRendererObj.drawString(getText(), x + PADDING - scroll, textY, 0xFFFFFF, false);
+        helper.drawText(getText(), new Vector(x + PADDING, y + (h / 2)), 0xFFFFFF, false, -1, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
 
         GLClippingPlanes.glDisableClipping();
 
@@ -78,10 +82,12 @@ public class GuiCustomTextField implements IGui
             else if (cursorPos == getText().length())
                 cursorX = minecraft.fontRendererObj.getStringWidth(getText());
         } else if (getText().length() == 0)
-            minecraft.fontRendererObj.drawString(getGhost(), x + PADDING, textY, 0xBFBFBF, true);
+//            minecraft.fontRendererObj.drawString(getGhost(), x + PADDING, textY, 0xBFBFBF, true);
+            helper.drawText(getGhost(), new Vector(x + (w / 2), y + (h / 2)), 0xBFBFBF, true, -1, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
 
         if (focused)
-            minecraft.fontRendererObj.drawString("|", x + cursorX + PADDING - 1 - scroll, textY, 0xFF0000, false);
+//            minecraft.fontRendererObj.drawString("|", x + cursorX + PADDING - 1 - scroll, textY, 0xFF0000, false);
+            helper.drawText("|", new Vector(x + cursorX + PADDING - 1 - scroll, y + (h / 2)), 0xFF0000, false, -1, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
 
         this.drawScrollBar(minecraft);
     }
@@ -124,6 +130,16 @@ public class GuiCustomTextField implements IGui
     public void setH(int h)
     {
         this.h = h;
+    }
+
+    public int getW()
+    {
+        return w;
+    }
+
+    public int getH()
+    {
+        return h;
     }
 
     public String getText()

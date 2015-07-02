@@ -116,6 +116,14 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
         GL11.glPushMatrix();
 
+        if (musicList.size() == 0)
+        {
+            helper.drawText("Empty...\nExplore your library, and find some music to add!", new Vector(width/2,height/2), 0xFFFFFF, true, width, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
+            GL11.glPopMatrix();
+            GL11.glPopMatrix();
+            return;
+        }
+
         GLClippingPlanes.glEnableVerticalClipping(0, height);
 
         int relMouseY = mouseY - y + scroll;
@@ -138,18 +146,10 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
         int currentHeight = 0;
 
-        List<Music> list = musicList.getList();
+        List<Music> list = musicList.getMusicList();
         boolean moved = moving == -1;
         for (int i = 0; i < list.size(); i++)
         {
-            /*if (currentHeight + _entryHeight > relMouseY - moveYStart && !moved)
-            {
-                int diff = currentHeight + _entryHeight - (relMouseY - moveYStart);
-                double progress = ((double) diff) / (double) _entryHeight;
-                GL11.glTranslatef(0, -((float) progress * _entryHeight) + _entryHeight, 0);
-                moved = true;
-            }*/
-
             if (i != this.moving)
             {
                 Music music = list.get(i);
@@ -162,7 +162,6 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
                     GL11.glTranslatef(0, ((float) progress * _entryHeight), 0);
                     drawMusic(0, 0, _entryWidth, _entryHeight, music);
                     GL11.glTranslatef(0, ((float) invertedProgress * _entryHeight) + _entryHeight, 0);
-//                    GL11.glTranslatef(0, _entryHeight, 0);
                     moved = true;
                 } else
                 {
@@ -177,10 +176,11 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
         if (moving != -1 && mouseY < y + height)
         {
-            Music music = musicList.getList().get(moving);
-            /*helper.drawButtonThingy(new Quad(3, mouseY - moveYStart + 3, _entryWidth - 6, _entryHeight - 6), 0F, true);
-            helper.drawText(music.getName(), new Vector(6, mouseY - moveYStart + (_entryHeight / 2)), 0xFFFFFF, true, -1, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);*/
+            double oldZ = helper.getZIndex();
+            helper.setZIndex(oldZ+10);
+            Music music = list.get(moving);
             drawMusic(3, Math.max(y, mouseY - moveYStart), _entryWidth, _entryHeight, music);
+            helper.setZIndex(oldZ);
         }
 
         GLClippingPlanes.glDisableClipping();

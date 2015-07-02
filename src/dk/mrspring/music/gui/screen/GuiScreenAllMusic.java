@@ -12,13 +12,16 @@ import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IResizable;
 import dk.mrspring.music.gui.menu.MenuItemButton;
 import dk.mrspring.music.gui.screen.overlay.CardMusic;
+import dk.mrspring.music.gui.screen.overlay.CardNewPlaylist;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.player.Music;
+import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.*;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -225,12 +228,22 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         // TODO: onElementClicked right-click
     }
 
+    private class PlaylistPanel extends GuiPlaylist implements IPanel
+    {
+        public PlaylistPanel(Playlist music)
+        {
+            super(0, 0, 100, 100, music);
+        }
+    }
+
     public class SidePanel implements IGui
     {
         int x, y, w, h;
         int dragXOffset = -1;
         boolean resizing = false;
         GuiSimpleButton[] buttons;
+        GuiSimpleButton[] playlists;
+        GuiSimpleButton newPlaylist;
 
         public SidePanel(int x, int y, int w, int h)
         {
@@ -244,6 +257,21 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                     new GuiSimpleButton(-2, 0, w + 4, 15, "Albums"),
                     new GuiSimpleButton(-2, 0, w + 4, 15, "Artists")
             };
+            playlistButtons();
+            newPlaylist = new GuiSimpleButton(-2, 0, w + 4, 15, "New Playlist");
+        }
+
+        private void playlistButtons()
+        {
+            List<Playlist> lists = LiteModMusicPlayer.musicHandler.getPlaylists();
+            List<GuiSimpleButton> simpleButtons = new ArrayList<GuiSimpleButton>();
+            for (Playlist list : lists)
+            {
+                String listName = list.getName();
+                GuiSimpleButton button = new GuiSimpleButton(-2, 0, w + 4, 15, listName);
+                simpleButtons.add(button);
+            }
+            playlists = simpleButtons.toArray(new GuiSimpleButton[simpleButtons.size()]);
         }
 
         @Override
@@ -264,23 +292,36 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 
             int yOffset = 4;
-            for (GuiSimpleButton button : this.buttons)
+            yOffset += drawButtons(this.buttons, yOffset, minecraft, mouseX, mouseY, 25);
+
+            if (this.playlists.length > 0)
             {
-                if (button != null)
-                {
-                    int height = 25;
-                    button.setWidth(w + 4);
-                    button.setHeight(height);
-                    button.setY(y + yOffset);
-                    button.draw(minecraft, mouseX, mouseY);
-                    yOffset += height + 3;
-//                    GL11.glTranslatef(0, 18F, 0);
-                }
+                yOffset += 6;
+
+                helper.drawShape(new Quad(x + 6, y + yOffset + 4, w - 12 - 1, 1));
+                helper.drawShape(new Quad(x + 6, y + yOffset + 5, w - 12 - 1, 1).setColor(Color.DK_GREY));
+                yOffset += 20;
+                helper.drawText("Playlists", new Vector(x + (w / 2), y + yOffset), 0xFFFFFF, true, width, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.BOTTOM);
+
+                yOffset += 8;
+
+                yOffset += drawButtons(this.playlists, yOffset, minecraft, mouseX, mouseY, 25);
             }
 
-            helper.drawShape(new Quad(x + w - 1, y, 1, h));
+            yOffset += 4;
+
+            helper.drawShape(new Quad(x + 6, y + yOffset, w - 12 - 1, 1));
+            helper.drawShape(new Quad(x + 6, y + yOffset + 1, w - 12 - 1, 1).setColor(Color.DK_GREY));
+
+            yOffset += 8;
+
+            newPlaylist.setWidth(w + 4);
+            newPlaylist.setHeight(25);
+            newPlaylist.setY(y + yOffset);
+            newPlaylist.draw(minecraft, mouseX, mouseY);
 
             GLClippingPlanes.glDisableClipping();
+            helper.drawShape(new Quad(x + w - 1, y, 1, h));
             if (GuiHelper.isMouseInBounds(mouseX, mouseY, x + w - 3, y, 5, h) || resizing)
             {
                 int iconWidth = 10;
@@ -293,19 +334,33 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                 helper.drawShape(new Quad(mouseX - (iconWidth / 2), mouseY - 10, iconWidth, 1));
                 helper.drawShape(new Quad(mouseX - (iconWidth / 2) - 3, mouseY - 10, mouseX - (iconWidth / 2), mouseY - 12, mouseX - (iconWidth / 2), mouseY - 7, mouseX - (iconWidth / 2) - 3, mouseY - 9));
                 helper.drawShape(new Quad(mouseX + (iconWidth / 2), mouseY - 12, mouseX + (iconWidth / 2) + 3, mouseY - 10, mouseX + (iconWidth / 2) + 3, mouseY - 9, mouseX + (iconWidth / 2), mouseY - 7));
-//                helper.drawShape(new Quad(mouseX + 1, mouseY + 1, 3, 3).setColor(Color.DK_GREY));
-//                helper.drawShape(new Quad(mouseX, mouseY, 3, 3));
                 helper.setZIndex(0);
             }
             GL11.glPopMatrix();
         }
 
+        private int drawButtons(GuiSimpleButton[] buttons, int offset, Minecraft minecraft, int mouseX, int mouseY, int height)
+        {
+            int yOffset = 0;
+            for (GuiSimpleButton button : buttons)
+                if (button != null)
+                {
+                    button.setWidth(w + 4);
+                    button.setHeight(height);
+                    button.setY(y + yOffset + offset);
+                    button.draw(minecraft, mouseX, mouseY);
+                    yOffset += height + 3;
+                }
+            return yOffset;
+        }
+
         @Override
         public void update()
         {
-            for (GuiSimpleButton button : this.buttons)
-                if (button != null)
-                    button.update();
+            for (GuiSimpleButton button : this.buttons) if (button != null) button.update();
+            if (playlists.length != LiteModMusicPlayer.musicHandler.getPlaylists().size()) playlistButtons();
+            for (GuiSimpleButton button : this.playlists) if (button != null) button.update();
+            newPlaylist.update();
         }
 
         @Override
@@ -323,7 +378,35 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                     openPanel(new AllAlbumsPanel(LiteModMusicPlayer.musicHandler.getAllAlbums()));
                 else if (buttons[2].mouseDown(mouseX, mouseY, mouseButton))
                     openPanel(new AllArtistPanel(LiteModMusicPlayer.musicHandler.getAllArtists()));
-                else return false;
+                else
+                {
+                    for (int i = 0; i < playlists.length; i++)
+                    {
+                        GuiSimpleButton button = playlists[i];
+                        if (button != null && button.mouseDown(mouseX, mouseY, mouseButton))
+                        {
+                            Playlist list = LiteModMusicPlayer.musicHandler.getPlaylists().get(i);
+                            openPanel(new PlaylistPanel(list));
+                            return true;
+                        }
+                    }
+                    if (newPlaylist.mouseDown(mouseX, mouseY, mouseButton))
+                    {
+                        OverlayScreen overlay = new OverlayScreen("New Playlist", GuiScreenAllMusic.this);
+                        overlay.addCard(new CardNewPlaylist(overlay, new CardNewPlaylist.PlaylistCreated()
+                        {
+                            @Override
+                            public void onCreated(Playlist created)
+                            {
+                                LiteModMusicPlayer.musicHandler.registerPlaylist(created);
+                                openPanel(new PlaylistPanel(created));
+                            }
+                        }));
+                        mc.displayGuiScreen(overlay);
+                        return true;
+                    }
+                    return false;
+                }
                 return true;
             }
         }

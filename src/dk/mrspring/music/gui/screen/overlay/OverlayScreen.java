@@ -5,17 +5,14 @@ import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
-import dk.mrspring.music.gui.interfaces.IGui;
-import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.screen.GuiScreen;
-import dk.mrspring.music.util.GuiHelper;
 import net.minecraft.client.Minecraft;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,7 +21,7 @@ import java.util.List;
  */
 public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements OverlayParent
 {
-    public boolean dark = false;
+    public boolean dark = true;
     String title = "";
     boolean showTitle;
     int overlayWidth, overlayHeight;
@@ -37,7 +34,6 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     {
         this.overlaying = previousScreen;
         this.title = title;
-        this.dark = true;
         this.cardList = this.asList(cards);
     }
 
@@ -91,6 +87,8 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
 
         for (Card card : cardList)
             card.initGui();
+
+        Keyboard.enableRepeatEvents(true);
     }
 
     @Override
@@ -110,9 +108,6 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         this.overlaying.drawScreen(-1000, -1000, partialTicks);
         GL11.glPopMatrix();
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-
-        int x = width - overlayWidth / 2;
-        int y = height - overlayHeight / 2;
 
         GL11.glPushMatrix();
 
@@ -143,8 +138,9 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
 
         GL11.glPopMatrix();
 
+        if ((height / 3) < listHeight)
         {
-            double progress = ((double) height / 3) / (double) (listHeight);
+            double progress = Math.min(1, ((double) height / 3) / (double) (listHeight));
             int scrollBarHeight = (int) (progress * ((height / 3) - 6));
             progress = ((double) scroll) / ((double) getMaxScroll());
             int scrollBarY = (height / 3) + (int) ((((height / 3) - 20) - scrollBarHeight) * progress);
@@ -162,17 +158,6 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         float x = quad.getX(), y = quad.getY(), w = quad.getWidth(), h = quad.getHeight();
         helper.drawShape(new Quad(x, y, w, h).setColor(Color.BLACK).setAlpha(0.75F));
         helper.drawButtonThingy(new Quad(x - 2, y - 2, w + 4, h + 4), 0F, true);
-        /*Color backgroundColor = dark ? Color.BLACK : Color.WHITE;
-        float backgroundAlpha = dark ? 0.75F : 1F;
-        float x = quad.getX(), y = quad.getY(), w = quad.getWidth(), h = quad.getHeight();
-        if (!dark)
-        {
-            helper.drawShape(new Quad(x, y + h - 1, w, 2).setColor(Color.BLACK).setAlpha(0.5F));
-            helper.drawShape(new Quad(x + 1, y + h + 1, w - 2, 1).setColor(Color.BLACK).setAlpha(0.5F));
-        }
-        helper.drawShape(new Quad(x + 1, y, w - 2, 1).setColor(backgroundColor).setAlpha(backgroundAlpha));
-        helper.drawShape(new Quad(x, y + 1, w, h - 2).setColor(backgroundColor).setAlpha(backgroundAlpha));
-        helper.drawShape(new Quad(x + 1, y + h - 1, w - 2, 1).setColor(backgroundColor).setAlpha(backgroundAlpha));*/
     }
 
     @Override
@@ -194,6 +179,29 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         mouseWheel /= 4;
         if (mouseWheel != 0)
             this.addScroll(-mouseWheel);
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    {
+        int sideXOffset = (width - getOverlayWidth()) / 2;
+        int topYOffset = height / 3;
+        for (Card card : cardList)
+            if (card.mouseDown(mouseX - sideXOffset, mouseY - topYOffset - scroll, mouseButton)) return;
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    {
+        super.keyTyped(typedChar, keyCode);
+        for (Card card : cardList) if (card != null) card.handleKeyTyped(keyCode, typedChar);
+    }
+
+    @Override
+    public void onGuiClosed()
+    {
+        super.onGuiClosed();
+        Keyboard.enableRepeatEvents(false);
     }
 
     private void addScroll(int scroll)
