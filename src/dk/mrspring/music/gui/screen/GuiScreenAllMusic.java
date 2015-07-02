@@ -62,7 +62,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         newPanel.setX(sidePanelSize);
         newPanel.setY(0);
         newPanel.setWidth(width - sidePanelSize);
-        newPanel.setHeight(height - getTopBarHeight());
+        newPanel.setHeight(height - getTopBarHeight()-getBottomBarHeight());
         this.replaceGui("panel", newPanel);
     }
 

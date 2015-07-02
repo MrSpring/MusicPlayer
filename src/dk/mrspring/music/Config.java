@@ -35,6 +35,7 @@ public class Config
     public boolean show_startup_dialog = true;
     public int console_scroll_up_key = Keyboard.KEY_PRIOR;
     public int console_scroll_down_key = Keyboard.KEY_NEXT;
+    public boolean clear_cover_cache_on_shutdown = false;
 
     private static float clamp01(float current)
     {

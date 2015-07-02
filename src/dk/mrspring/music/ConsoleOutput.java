@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 public class ConsoleOutput
 {
     private static final int TEXT_PADDING = 4;
-    private static final int LINE_HEIGHT = 3;
+    private static final int LINE_HEIGHT = 5;
 
     String text = "";
     MultilineTextRender render;
@@ -56,7 +56,11 @@ public class ConsoleOutput
         else render.setText(getText()).setWrapWidth(wrap ? (int) area.getWidth() - pad : -1);
 
         if (scrollUp.isClicked())
-            this.scrollUp((int) area.getHeight());
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+            {
+                autoScroll = false;
+                scroll = 0;
+            } else this.scrollUp((int) area.getHeight());
         else if (scrollDown.isClicked())
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
                 this.autoScroll = true;

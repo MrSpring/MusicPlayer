@@ -10,10 +10,7 @@ import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.player.Playlist;
-import dk.mrspring.music.util.AnyTimeKeyBind;
-import dk.mrspring.music.util.FileUtils;
-import dk.mrspring.music.util.Icons;
-import dk.mrspring.music.util.JsonUtils;
+import dk.mrspring.music.util.*;
 import javafx.embed.swing.JFXPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -21,6 +18,8 @@ import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -32,9 +31,10 @@ public class LiteModMusicPlayer implements Tickable
 
     public static LLCore core;
     public static File configFile;
+    public static File coverLocation;
+    public static File playlistLocation;
     public static Config config;
     public static Overlay overlay;
-    public static File coverLocation;
     public static ConsoleOutput log;
 
     public static String apiKey = "api";
@@ -53,7 +53,7 @@ public class LiteModMusicPlayer implements Tickable
     AnyTimeKeyBind next = new AnyTimeKeyBind(Keyboard.KEY_L);
 
     AnyTimeKeyBind openMM = new AnyTimeKeyBind(Keyboard.KEY_M);
-    AnyTimeKeyBind toggleConsole=new AnyTimeKeyBind(Keyboard.KEY_F9);
+    AnyTimeKeyBind toggleConsole = new AnyTimeKeyBind(Keyboard.KEY_F9);
 
     public static void initializeToolkit()
     {
@@ -91,7 +91,7 @@ public class LiteModMusicPlayer implements Tickable
         if (showConsole)
         {
             ScaledResolution res = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
-            log.draw(new Quad(5, 5, (res.getScaledWidth()-10)/3, (res.getScaledHeight()-10)/3));
+            log.draw(new Quad(5, 5, (res.getScaledWidth() - 10) / 3, (res.getScaledHeight() - 10) / 3));
         }
 
         if (!disableKeys)
@@ -140,6 +140,27 @@ public class LiteModMusicPlayer implements Tickable
         }
     }
 
+    private void loadPlaylist()
+    {
+        try
+        {
+            if (playlistLocation.exists())
+            {
+                File[] found = core.getFileLoader().getFilesInFolder(playlistLocation, true, new FileTypeFilter(".json"));
+                for (File file : found)
+                {
+                    Playlist result = musicHandler.registerPlaylistFromFile(file);
+                    if (result != null)
+                        log.addLine("Found playlist: \"" + result.getName() + "\".");
+                    else log.addLine("Failed to load playlist from: \"" + file.getName() + "\".");
+                }
+            } else playlistLocation.mkdir();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     private void saveConfig()
     {
         if (configFile != null)
@@ -147,6 +168,47 @@ public class LiteModMusicPlayer implements Tickable
             if (!configFile.exists())
                 FileUtils.createFile(configFile);
             JsonUtils.writeToFile(configFile, config);
+        }
+    }
+
+    private void savePlaylist()
+    {
+        List<Playlist> lists = musicHandler.getPlaylists();
+        for (Playlist playlist : lists)
+        {
+            try
+            {
+                String json = playlist.toJson();
+                int id = playlist.getId();
+                File playlistFile = new File(playlistLocation, id + ".json");
+                core.getFileLoader().writeToFile(playlistFile, json);
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void saveAll()
+    {
+        saveConfig();
+        savePlaylist();
+    }
+
+    private void clearAll()
+    {
+        clearCoverCache();
+    }
+
+    private void clearCoverCache()
+    {
+//        coverLocation.delete();
+        try
+        {
+            org.apache.commons.io.FileUtils.deleteDirectory(coverLocation);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -158,6 +220,7 @@ public class LiteModMusicPlayer implements Tickable
         core.registerIcon(Icons.search, "search");
         core.registerIcon(Icons.right_arrow, "right_arrow");
         configFile = new File(configPath, "musicplayer.json");
+        playlistLocation = new File(LiteLoader.getGameDirectory(), "playlist");
         coverLocation = new File(LiteLoader.getGameDirectory(), "musiccovers");
         if (!coverLocation.exists())
             coverLocation.mkdir();
@@ -167,19 +230,7 @@ public class LiteModMusicPlayer implements Tickable
         log.zOffset = 1;
         log.addLine("Initialized Music Player mod successfully.");
         musicHandler = new MusicHandler(config.auto_play, new File(System.getProperty("user.home"), "Music"));
-        Playlist playlistOne = musicHandler.createNewPlaylist("Playlist 1");
-        playlistOne.addAll(musicHandler.getAllAlbums().get(0).getMusicList());
-        musicHandler.createNewPlaylist("Another playlist");
-        /*testerList = new Playlist("TestList", musicHandler.getAllMusic());
-//        JsonUtils.writeToFile(new File(configPath, "playlist.json"), testerList.toJson());
-        try
-        {
-            core.getFileLoader().writeToFile(new File(configPath, "playlist.json"), testerList.toJson());
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }*/
-        testerList = musicHandler.loadPlaylistFromFile(new File(configPath, "playlist.json"));
+        loadPlaylist();
         overlay = new Overlay();
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
         {
@@ -187,12 +238,10 @@ public class LiteModMusicPlayer implements Tickable
             public void run()
             {
                 saveAll();
+                if (config.clear_cover_cache_on_shutdown)
+                    clearAll();
             }
         }));
-    }
-
-    private void saveAll(){
-
     }
 
     @Override

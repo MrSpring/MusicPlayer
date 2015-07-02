@@ -20,6 +20,11 @@ public class FileUtils
         }
     }
 
+    public static String getFileExtension(File file, boolean keepDot)
+    {
+        return getFileExtension(file.getName(), keepDot);
+    }
+
     public static String getFileExtension(String fileName, boolean keepDot)
     {
         int lastDot = fileName.lastIndexOf('.');

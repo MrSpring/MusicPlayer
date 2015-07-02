@@ -11,6 +11,7 @@ import java.util.*;
 public class Playlist extends MusicCollection
 {
     String name;
+    int id;
 
     public Playlist(String name, List<Music> music)
     {
@@ -64,8 +65,10 @@ public class Playlist extends MusicCollection
 
     public String toJson()
     {
+        if (id == 0) id = hashCode();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("name", getName());
+        map.put("id", getId());
         List<Music> musicList = getMusicList();
         List<Integer> list = new ArrayList<Integer>();
         for (Music music : musicList)
@@ -77,5 +80,16 @@ public class Playlist extends MusicCollection
     public void addAll(List<Music> musicList)
     {
         getMusicList().addAll(musicList);
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public Playlist setId(int id)
+    {
+        this.id = id;
+        return this;
     }
 }

@@ -78,26 +78,41 @@ public class MusicHandler
         }
     }
 
-    public Playlist loadPlaylistFromFile(File file)
+    public Playlist createPlaylistFromFile(File file)
     {
         try
         {
             Map<String, Object> json = JsonUtils.loadFromJson(file, HashMap.class);
             if (json != null)
             {
+                System.out.println("Created map.");
                 String name = (String) json.get("name");
+                System.out.println("Got a name: "+name);
+                Double dId = (Double) json.get("id");
+                int id = dId.intValue();
+                System.out.println("Got an id: "+id);
                 List<Double> music = (List<Double>) json.get("music");
                 List<Music> musicList = new ArrayList<Music>();
-                for (Double id : music)
-                    if (idLookup.containsKey(id.intValue()))
-                        musicList.add(idLookup.get(id.intValue()));
-                return new Playlist(name, musicList);
+                for (Double songId : music)
+                    if (idLookup.containsKey(songId.intValue()))
+                        musicList.add(idLookup.get(songId.intValue()));
+                Playlist newPlaylist = new Playlist(name, musicList).setId(id);
+                System.out.println("Playlist created...");
+                return newPlaylist;
             } else return null;
         } catch (Exception e)
         {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Playlist registerPlaylistFromFile(File file)
+    {
+        Playlist fromFile = createPlaylistFromFile(file);
+        if (fromFile != null)
+            registerPlaylist(fromFile);
+        return fromFile;
     }
 
     public Playlist createNewPlaylist(String name)
@@ -138,7 +153,7 @@ public class MusicHandler
         for (File file : foundFiles)
         {
 //            System.out.println("Found music file: " + file.getPath());
-            LiteModMusicPlayer.log.addLine("Found music file: " + file.getPath());
+            LiteModMusicPlayer.log.addLine("Found music file: " + file.getName());
             allMusic.add(new Music(file));
         }
     }
