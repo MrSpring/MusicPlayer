@@ -1,4 +1,6 @@
-package dk.mrspring.music.util;
+package dk.mrspring.music.util.filter;
+
+import dk.mrspring.music.util.FileUtils;
 
 import java.io.File;
 import java.io.FileFilter;

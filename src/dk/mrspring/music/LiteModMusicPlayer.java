@@ -11,6 +11,7 @@ import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.*;
+import dk.mrspring.music.util.filter.FileTypeFilter;
 import javafx.embed.swing.JFXPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
