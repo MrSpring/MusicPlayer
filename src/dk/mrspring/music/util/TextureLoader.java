@@ -76,20 +76,6 @@ public class TextureLoader
         buffer.flip();
 
         return new ByteBufferedImage(buffer, image.getWidth(), image.getHeight());
-
-        /*int textureId = glGenTextures();
-
-        glBindTexture(GL_TEXTURE_2D, textureId);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-
-        return textureId;*/
     }
 
     public static int injectTexture(ByteBufferedImage image)
@@ -108,27 +94,4 @@ public class TextureLoader
 
         return textureId;
     }
-
-    /*String fileName = this.getArtist() + "_" + this.getTitle() + ".png";
-    File file = new File(LiteModMCPlayer.coverLocation.getAbsolutePath() + "/" + fileName);
-
-    if (file.exists())
-    {
-        this.cover = ImageIO.read(file);
-        this.textureId = TextureLoader.loadTexture(this.cover);
-    } else
-    {
-        AudioFile f = AudioFileIO.read(this.baseFile);
-        TagField coverArtField = f.getTag().getFirstField(FieldKey.COVER_ART);
-        if (coverArtField != null)
-        {
-            FrameBodyAPIC bodyAPIC = (FrameBodyAPIC) ((ID3v23Frame) coverArtField).getBody();
-            byte[] rawImage = (byte[]) bodyAPIC.getObjectValue(DataTypes.OBJ_PICTURE_DATA);
-            BufferedImage bufferedImage = ImageIO.read(ImageIO.createImageInputStream(new ByteArrayInputStream(rawImage)));
-            file.createNewFile();
-            this.cover = bufferedImage;
-            ImageIO.write(bufferedImage, "png", file);
-            this.textureId = TextureLoader.loadTexture(this.cover);
-        }
-    }*/
 }
