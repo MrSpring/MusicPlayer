@@ -3,6 +3,7 @@ package dk.mrspring.music;
 import dk.mrspring.llcore.Color;
 import dk.mrspring.music.overlay.OverlayPosition;
 import dk.mrspring.music.util.FileSorter;
+import dk.mrspring.music.util.Miscellaneous;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -37,46 +38,21 @@ public class Config
     public int console_scroll_down_key = Keyboard.KEY_NEXT;
     public boolean clear_cover_cache_on_shutdown = false;
 
-    private static float clamp01(float current)
-    {
-        return current > 1F ? 1F : (current < 0 ? 0 : current);
-    }
-
-    private static double min(double current, double min)
-    {
-        return current < min ? min : current;
-    }
-
-    private static long min(long current, long min)
-    {
-        return current < min ? min : current;
-    }
-
-    private static int min(int current, int min)
-    {
-        return current < min ? min : current;
-    }
-
-    private static int clamp(int current, int min, int max)
-    {
-        return current > max ? max : (current < min ? min : current);
-    }
-
     public void validateConfig()
     {
         Config defaultConfig = new Config();
 
         if (overlay_start_color == null) overlay_start_color = defaultConfig.overlay_start_color;
         if (overlay_end_color == null) overlay_end_color = defaultConfig.overlay_end_color;
-        overlay_start_alpha = clamp01(overlay_start_alpha);
-        overlay_end_alpha = clamp01(overlay_end_alpha);
-        resume_time_millis = min(resume_time_millis, 0);
-        show_next_peek_time_millis = min(show_next_peek_time_millis, 0);
+        overlay_start_alpha = Miscellaneous.clamp01(overlay_start_alpha);
+        overlay_end_alpha = Miscellaneous.clamp01(overlay_end_alpha);
+        resume_time_millis = Miscellaneous.min(resume_time_millis, 0);
+        show_next_peek_time_millis = Miscellaneous.min(show_next_peek_time_millis, 0);
         if (cover_size < 0) cover_size = defaultConfig.cover_size;
         if (overlay_position == null) overlay_position = defaultConfig.overlay_position;
-        overlay_size_easing_speed = clamp01(overlay_size_easing_speed);
-        overlay_next_up_easing_speed = clamp01(overlay_next_up_easing_speed);
-        gui_mm_list_entry_size = clamp(gui_mm_list_entry_size, 0, 100);
+        overlay_size_easing_speed = Miscellaneous.clamp01(overlay_size_easing_speed);
+        overlay_next_up_easing_speed = Miscellaneous.clamp01(overlay_next_up_easing_speed);
+        gui_mm_list_entry_size = Miscellaneous.clamp(gui_mm_list_entry_size, 0, 100);
         if (file_sort_type == null) file_sort_type = defaultConfig.file_sort_type;
     }
 }

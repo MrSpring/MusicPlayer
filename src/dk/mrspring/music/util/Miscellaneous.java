@@ -7,6 +7,31 @@ import dk.mrspring.music.LiteModMusicPlayer;
  */
 public class Miscellaneous
 {
+    public static float clamp01(float current)
+    {
+        return current > 1F ? 1F : (current < 0 ? 0 : current);
+    }
+
+    public static double min(double current, double min)
+    {
+        return current < min ? min : current;
+    }
+
+    public static long min(long current, long min)
+    {
+        return current < min ? min : current;
+    }
+
+    public static int min(int current, int min)
+    {
+        return current < min ? min : current;
+    }
+
+    public static int clamp(int current, int min, int max)
+    {
+        return current > max ? max : (current < min ? min : current);
+    }
+
     public static float smoothDamp(float target, float current, float easing)
     {
         if (easing < 1 && !LiteModMusicPlayer.config.disable_animations && current != target)
