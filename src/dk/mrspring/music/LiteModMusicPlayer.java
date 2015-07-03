@@ -42,8 +42,6 @@ public class LiteModMusicPlayer implements Tickable
     public static boolean disableKeys = false;
     public static boolean showConsole = false;
 
-    public static Playlist testerList;
-
     AnyTimeKeyBind reloadConfig = new AnyTimeKeyBind(Keyboard.KEY_F5);
     AnyTimeKeyBind expandMiniPlayer = new AnyTimeKeyBind(Keyboard.KEY_P);
     AnyTimeKeyBind showNextUp = new AnyTimeKeyBind(Keyboard.KEY_O);

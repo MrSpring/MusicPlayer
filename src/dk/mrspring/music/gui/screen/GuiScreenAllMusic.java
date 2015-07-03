@@ -31,7 +31,6 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
 {
     private int maxCoverSize = 150;
     private int minCoverSize = 40;
-    private double progress = 0D;
 
     public GuiScreenAllMusic(net.minecraft.client.gui.GuiScreen previousScreen)
     {
@@ -45,7 +44,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
 
         Config config = LiteModMusicPlayer.config;
 
-        this.enableRepeats().hideBottomBar();
+        this.enableRepeats().hideBottomBar().hideTopBar();
 
         int sidePanelSize = config.gui_mm_side_panel_size;
 
@@ -62,7 +61,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         newPanel.setX(sidePanelSize);
         newPanel.setY(0);
         newPanel.setWidth(width - sidePanelSize);
-        newPanel.setHeight(height - getTopBarHeight()-getBottomBarHeight());
+        newPanel.setHeight(height - getTopBarHeight() - getBottomBarHeight());
         this.replaceGui("panel", newPanel);
     }
 
@@ -102,41 +101,56 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         float iconSize = getTopBarHeight() - 18;
         helper.drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
-        IResizable resizable = (IResizable) getGui("panel");
-        double target = 0;
-        if (resizable instanceof GuiPlaylist)
-        {
-            GuiPlaylist playlist = (GuiPlaylist) resizable;
-            if (playlist.isMovingInDeleteZone())
-                target = 1D;
-            this.progress = Miscellaneous.smoothDamp(target, progress, 0.4);
-            playlist.setHeight(height - getTopBarHeight() - getBottomBarHeight());
-        } else this.progress = Miscellaneous.smoothDamp(target, progress, 0.4);
+        IPanel panel = (IPanel) getGui("panel");
+//        IResizable resizable = (IResizable) getGui("panel");
+//        double target = 0;
+//        if (resizable instanceof GuiPlaylist)
+//        {
+//            GuiPlaylist playlist = (GuiPlaylist) resizable;
+//            if (playlist.isMovingInDeleteZone())
+//                target = 1D;
+//            this.progress = Miscellaneous.smoothDamp(target, progress, 0.4);
+//            playlist.setHeight(height - getTopBarHeight() - getBottomBarHeight());
+//        } else this.progress = Miscellaneous.smoothDamp(target, progress, 0.4);
 
-        this.setBottomBarHeight(getTopBarHeight() + (int) (25 * progress));
-        this.setBottomBarColor(Color.morph(Color.BLACK, Color.RED, (float) progress));
+//        this.setBottomBarHeight(30/* + (int) (25 * progress)*/);
+        this.setBottomBarColor(panel.getBottomBarColor()/*Color.morph(Color.BLACK, Color.RED, (float) progress)*/);
+        this.setTopBarColor(panel.getTopBarColor());
 
         int panelWidth = ((SidePanel) this.getGui("side_panel")).w;
-        int bottomHeight = (int) (25 * progress);
+        int bottomHeight = 30 + panel.getBottomBarOffset();
+        int topHeight = 30 + panel.getTopBarOffset();
 
-        helper.drawShape(new Quad(panelWidth, height - 29 - bottomHeight, width - panelWidth, bottomHeight).setAlpha(0.5F).setColor(this.getBottomBarColor()));
-        helper.drawShape(new Quad(panelWidth, height - 30 - bottomHeight, width - panelWidth, 1));
+        setBottomBarHeight(bottomHeight);
+        setTopBarHeight(topHeight);
 
-        helper.drawShape(new Quad(0, height - 29, width, 29).setAlpha(0.5F).setColor(this.getBottomBarColor()));
+        helper.drawShape(new Quad(panelWidth, height - bottomHeight, width - panelWidth, bottomHeight).setAlpha(0.5F).setColor(this.getBottomBarColor()));
+        helper.drawShape(new Quad(panelWidth, height - bottomHeight, width - panelWidth, 1));
+
+        helper.drawShape(new Quad(0, height - 29, panelWidth, 29).setAlpha(0.5F).setColor(this.getBottomBarColor()));
         helper.drawShape(new Quad(0, height - 30, panelWidth, 1));
-        super.drawScreen(mouseX, mouseY, partialTicks);
 
-        if (resizable instanceof GuiPlaylist)
-        {
-            GuiPlaylist playlist = (GuiPlaylist) resizable;
-            float bigIconExtra = 10;
-            float size = 20 + (float) (bigIconExtra * progress);
-            float xPos = panelWidth + ((width - panelWidth) / 2);
-            helper.drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(xPos - (size / 2), height - getTopBarHeight() - (getBottomBarHeight() / 2) - (size / 2) - (int) (progress * 6D), size, size));
 
-            if (getBottomBarHeight() > 35)
-                helper.drawText(TranslateHelper.translateFormat("gui.playlist_editor.remove", playlist.getPlaylist().getName()), new Vector(xPos, height - getTopBarHeight() - (getBottomBarHeight() / 2) + 3 + (size / 2)), 0xFFFFFF, true, width - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
-        }
+        helper.drawShape(new Quad(panelWidth, 0, width - panelWidth, topHeight).setAlpha(0.5F).setColor(getTopBarColor()));
+        helper.drawShape(new Quad(panelWidth, topHeight - 1, width - panelWidth, 1));
+
+        helper.drawShape(new Quad(0, 0, panelWidth, 29).setAlpha(0.5F).setColor(getTopBarColor()));
+        helper.drawShape(new Quad(0, 29, panelWidth, 1));
+
+        GL11.glTranslatef(0, getTopBarHeight(), 0);
+        super.drawScreen(mouseX, mouseY-30, partialTicks);
+
+//        if (panel instanceof GuiPlaylist)
+//        {
+//            GuiPlaylist playlist = (GuiPlaylist) panel;
+//            float bigIconExtra = 10;
+//            float size = 20 + (float) (bigIconExtra * progress);
+//            float xPos = panelWidth + ((width - panelWidth) / 2);
+//            helper.drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(xPos - (size / 2), height - getTopBarHeight() - (getBottomBarHeight() / 2) - (size / 2) - (int) (progress * 6D), size, size));
+//
+//            if (getBottomBarHeight() > 35)
+//                helper.drawText(TranslateHelper.translateFormat("gui.playlist_editor.remove", playlist.getPlaylist().getName()), new Vector(xPos, height - getTopBarHeight() - (getBottomBarHeight() / 2) + 3 + (size / 2)), 0xFFFFFF, true, width - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
+//        }
 
         helper.drawIcon(LiteModMusicPlayer.core.getIcon("search"), new Quad(width - iconSize - 5 - (width / 3), -getTopBarHeight() + 8, iconSize, iconSize));
     }
@@ -160,7 +174,13 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
 
     public interface IPanel extends IGui, IResizable
     {
+        public int getBottomBarOffset();
 
+        public int getTopBarOffset();
+
+        public Color getBottomBarColor();
+
+        public Color getTopBarColor();
     }
 
     private class ArtistPanel extends GuiArtistList implements IPanel
@@ -182,6 +202,30 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                 );
                 return true;
             } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
+        }
+
+        @Override
+        public int getBottomBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public int getTopBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public Color getBottomBarColor()
+        {
+            return Color.BLACK;
+        }
+
+        @Override
+        public Color getTopBarColor()
+        {
+            return Color.BLACK;
         }
     }
 
@@ -205,6 +249,30 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
         }
 
+        @Override
+        public int getBottomBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public int getTopBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public Color getBottomBarColor()
+        {
+            return Color.BLACK;
+        }
+
+        @Override
+        public Color getTopBarColor()
+        {
+            return Color.BLACK;
+        }
+
         // TODO: onElementClicked right-click
     }
 
@@ -213,6 +281,30 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         public AllAlbumsPanel(List<Album> allMusic)
         {
             super(0, 0, 100, 100, allMusic);
+        }
+
+        @Override
+        public int getBottomBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public int getTopBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public Color getBottomBarColor()
+        {
+            return Color.BLACK;
+        }
+
+        @Override
+        public Color getTopBarColor()
+        {
+            return Color.BLACK;
         }
 
         // TODO: onElementClicked right-click
@@ -225,14 +317,76 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             super(0, 0, 100, 100, allMusic);
         }
 
+        @Override
+        public int getBottomBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public int getTopBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public Color getBottomBarColor()
+        {
+            return Color.BLACK;
+        }
+
+        @Override
+        public Color getTopBarColor()
+        {
+            return Color.BLACK;
+        }
+
         // TODO: onElementClicked right-click
     }
 
     private class PlaylistPanel extends GuiPlaylist implements IPanel
     {
+        double target = 0D;
+        double progress = 0D;
+
         public PlaylistPanel(Playlist music)
         {
             super(0, 0, 100, 100, music);
+        }
+
+        @Override
+        public void draw(Minecraft minecraft, int mouseX, int mouseY)
+        {
+            super.draw(minecraft, mouseX, mouseY);
+
+            if (isMovingInDeleteZone())
+                target = 1D;
+            else target = 0D;
+            progress = Miscellaneous.smoothDamp(target, progress, 0.4D);
+        }
+
+        @Override
+        public int getBottomBarOffset()
+        {
+            return (int) (25 * progress);
+        }
+
+        @Override
+        public int getTopBarOffset()
+        {
+            return 0;
+        }
+
+        @Override
+        public Color getBottomBarColor()
+        {
+            return Color.morph(Color.BLACK, Color.RED, (float) progress);
+        }
+
+        @Override
+        public Color getTopBarColor()
+        {
+            return Color.BLACK;
         }
     }
 
