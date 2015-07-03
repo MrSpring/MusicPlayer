@@ -10,7 +10,7 @@ import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.interfaces.IResizable;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.player.Playlist;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -226,7 +226,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
             int offset = -scroll;
             for (int i = 0; i < musicList.size(); i++)
             {
-                if (GuiHelper.isMouseInBounds(mouseX, mouseY, x + _entryWidth - 27, y + offset, _entryWidth, _entryHeight))
+                if (GuiUtils.isMouseInBounds(mouseX, mouseY, x + _entryWidth - 27, y + offset, _entryWidth, _entryHeight))
                 {
                     this.moving = i;
                     moveXStart = mouseX - x;
@@ -284,7 +284,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     @Override
     public void handleMouseWheel(int mouseX, int mouseY, int dWheelRaw)
     {
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, width, height))
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, width, height))
         {
             int mouseWheel = dWheelRaw;
             mouseWheel /= 4;

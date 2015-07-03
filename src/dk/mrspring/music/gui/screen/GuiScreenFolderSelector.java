@@ -1,12 +1,8 @@
 package dk.mrspring.music.gui.screen;
 
-import dk.mrspring.llcore.Color;
-import dk.mrspring.llcore.Quad;
-import dk.mrspring.llcore.Vector;
-import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.GuiFileExplorer;
 import dk.mrspring.music.gui.GuiSimpleButton;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -41,7 +37,7 @@ public class GuiScreenFolderSelector extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         previousScreen.drawScreen(-1000, -1000, partialTicks);
-        GuiHelper.drawRainbowSquare(progress, 0, 0, width, height);
+        GuiUtils.drawRainbowSquare(progress, 0, 0, width, height);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
@@ -51,6 +47,6 @@ public class GuiScreenFolderSelector extends GuiScreen
     public void updateScreen()
     {
         super.updateScreen();
-        GuiHelper.increaseProgress(progress, 2);
+        GuiUtils.increaseProgress(progress, 2);
     }
 }

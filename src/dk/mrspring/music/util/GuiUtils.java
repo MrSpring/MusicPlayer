@@ -8,7 +8,7 @@ import dk.mrspring.music.LiteModMusicPlayer;
 /**
  * Created by MrSpring on 09-11-2014 for In-Game File Explorer.
  */
-public class GuiHelper
+public class GuiUtils
 {
     public static final int MAX_PROGRESS = 255 * 6;
 

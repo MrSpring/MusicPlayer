@@ -6,7 +6,7 @@ import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import dk.mrspring.music.util.TranslateHelper;
 import net.minecraft.client.Minecraft;
 
@@ -85,7 +85,7 @@ public class GuiSimpleButton implements IGui
     @Override
     public void draw(Minecraft minecraft, int mouseX, int mouseY)
     {
-        wasMouseHoveringLastFrame = GuiHelper.isMouseInBounds(mouseX, mouseY, this.x, this.y, this.width, this.height);
+        wasMouseHoveringLastFrame = GuiUtils.isMouseInBounds(mouseX, mouseY, this.x, this.y, this.width, this.height);
         if (wasMouseHoveringLastFrame)
             alphaTarget = 10;
         else alphaTarget = 0;
@@ -174,7 +174,7 @@ public class GuiSimpleButton implements IGui
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, width, height) && isEnabled)
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, width, height) && isEnabled)
         {
             alphaProgress = 9;
             return true;

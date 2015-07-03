@@ -4,7 +4,7 @@ import dk.mrspring.llcore.Color;
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.LiteModMusicPlayer;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.opengl.GL11;
 
@@ -49,7 +49,7 @@ public class MenuItemSubMenu extends MenuItemButton
     public void draw(int mouseX, int mouseY, int buttonWidth)
     {
         expanded = mouseX < buttonWidth ?
-                GuiHelper.isMouseInBounds(mouseX, mouseY, 0, 0, buttonWidth, getHeight()) :
+                GuiUtils.isMouseInBounds(mouseX, mouseY, 0, 0, buttonWidth, getHeight()) :
                 expanded;
 
         super.draw(mouseX, mouseY, buttonWidth);
@@ -66,7 +66,7 @@ public class MenuItemSubMenu extends MenuItemButton
                 IMenuItem item = items.get(i);
                 int itemHeight = item.getHeight();
                 int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
-                boolean hovering = GuiHelper.isMouseInBounds(localMouseX, localMouseY, 0, 0, width, itemHeight);
+                boolean hovering = GuiUtils.isMouseInBounds(localMouseX, localMouseY, 0, 0, width, itemHeight);
                 Color color = hovering ? Color.BLUE : Color.BLACK;
                 helper.drawShape(new Quad(-2, 0, width + 4, itemHeight).setColor(color).setAlpha(0.5F));
 //            if (item instanceof MenuItemSubMenu)
@@ -97,7 +97,7 @@ public class MenuItemSubMenu extends MenuItemButton
         for (IMenuItem item : items)
         {
             int itemHeight = item.getHeight();
-            if (GuiHelper.isMouseInBounds(mouseX - buttonWidth, mouseY - yOffset, 0, 0, width, itemHeight))
+            if (GuiUtils.isMouseInBounds(mouseX - buttonWidth, mouseY - yOffset, 0, 0, width, itemHeight))
                 return true;
             yOffset += itemHeight;
         }

@@ -3,7 +3,7 @@ package dk.mrspring.music.gui;
 import dk.mrspring.llcore.*;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -81,14 +81,14 @@ public class GuiDropDownList implements IGui
         ListElement selectedElement = getSelectedElement();
         if (!expanded)
         {
-            if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, selectedElement.getHeight()))
+            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, selectedElement.getHeight()))
             {
                 expanded = true;
                 return true;
             } else return false;
         } else
         {
-            if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, selectedElement.getHeight()))
+            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, selectedElement.getHeight()))
             {
                 expanded = false;
                 return true;
@@ -101,7 +101,7 @@ public class GuiDropDownList implements IGui
                     {
                         ListElement element = elements.get(i);
                         int elementHeight = element.getHeight();
-                        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y + offset, w, elementHeight))
+                        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y + offset, w, elementHeight))
                         {
                             this.selected = i;
                             this.expanded = false;
@@ -175,7 +175,7 @@ public class GuiDropDownList implements IGui
         public int draw(int mouseX, int mouseY, int x, int y, int w)
         {
             DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-            if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, height))
+            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, height))
             {
                 alphaTarget = 10;
             } else alphaTarget = 0;

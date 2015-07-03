@@ -5,7 +5,7 @@ import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -70,7 +70,7 @@ public class Menu implements IGui
             IMenuItem item = items.get(i);
             int itemHeight = item.getHeight();
             int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
-            boolean hovering = GuiHelper.isMouseInBounds(localMouseX, localMouseY, 0, 0, size.w, itemHeight);
+            boolean hovering = GuiUtils.isMouseInBounds(localMouseX, localMouseY, 0, 0, size.w, itemHeight);
             Color color = hovering ? Color.BLUE : Color.BLACK;
             helper.drawShape(new Quad(-2, 0, size.w + 4, itemHeight).setColor(color).setAlpha(0.5F));
 //            if (item instanceof MenuItemSubMenu)
@@ -94,7 +94,7 @@ public class Menu implements IGui
 
     public boolean isMouseHovering(int mouseX, int mouseY)
     {
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, size.asQuad()))
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, size.asQuad()))
             return true;
         else {
             for (IMenuItem item : items)
@@ -126,7 +126,7 @@ public class Menu implements IGui
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
         if (onClick == null)
-            return GuiHelper.isMouseInBounds(mouseX, mouseY, size.asQuad());
+            return GuiUtils.isMouseInBounds(mouseX, mouseY, size.asQuad());
         else
         {
             for (IMenuItem item : items)

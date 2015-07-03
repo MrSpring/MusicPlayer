@@ -7,7 +7,7 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.interfaces.IResizable;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -194,7 +194,7 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
             int entryHeight = getEntryHeight(currentColumn, music);
             // Mouse check
             int entryX = currentColumn * _entryWidth, entryY = currentYOffset;
-            if (GuiHelper.isMouseInBounds(relMouseX, relMouseY, entryX, entryY, _entryWidth, entryHeight))
+            if (GuiUtils.isMouseInBounds(relMouseX, relMouseY, entryX, entryY, _entryWidth, entryHeight))
                 if (this.onElementClicked(relMouseX - entryX, relMouseY - entryY, mouseX, mouseY, mouseButton, music))
                     return true;
             if (entryHeight > rowHeight)
@@ -232,7 +232,7 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
     @Override
     public void handleMouseWheel(int mouseX, int mouseY, int dWheelRaw)
     {
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, width, height))
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, width, height))
         {
             int mouseWheel = dWheelRaw;
             mouseWheel /= 4;

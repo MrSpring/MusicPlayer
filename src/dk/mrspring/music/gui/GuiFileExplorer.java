@@ -6,7 +6,7 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.util.FileSorter;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import dk.mrspring.music.util.TranslateHelper;
 import net.minecraft.client.Minecraft;
 
@@ -245,7 +245,7 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, h))
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h))
         {
             if (this.openFile.mouseDown(mouseX, mouseY, mouseButton))
                 return this.openSelectedFile();
@@ -498,7 +498,7 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
     @Override
     public void handleMouseWheel(int mouseX, int mouseY, int dWheelRaw)
     {
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, h))
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h))
         {
             int mouseWheel = dWheelRaw;
             mouseWheel /= 4;

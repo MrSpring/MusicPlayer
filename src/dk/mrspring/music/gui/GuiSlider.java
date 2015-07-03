@@ -6,11 +6,9 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IDelayedDraw;
 import dk.mrspring.music.gui.interfaces.IDrawable;
 import dk.mrspring.music.gui.interfaces.IGui;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-
-import java.text.DecimalFormat;
 
 /**
  * Created by MrSpring on 09-11-2014 for In-Game File Explorer.
@@ -60,7 +58,7 @@ public class GuiSlider implements IGui, IDelayedDraw
         float progress = (((float) this.getValue()) / this.maximum);
         sliderXPos += progress * this.width - (sliderWidth * progress);
         LiteModMusicPlayer.core.getDrawingHelper().drawButtonThingy(new Quad(sliderXPos, sliderYPos, sliderWidth, sliderHeight), 0, false);
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, width, height))
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, width, height))
             alphaTarget = 10;
         else alphaTarget = 0;
 
@@ -85,7 +83,7 @@ public class GuiSlider implements IGui, IDelayedDraw
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, width, height) && mouseButton == 0)
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, width, height) && mouseButton == 0)
         {
             dragging = true;
             return true;

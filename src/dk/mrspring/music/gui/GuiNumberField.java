@@ -5,7 +5,7 @@ import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
@@ -100,7 +100,7 @@ public class GuiNumberField implements IGui
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        setFocused(GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, h));
+        setFocused(GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h));
         return isFocused();
     }
 

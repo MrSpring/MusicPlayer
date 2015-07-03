@@ -99,7 +99,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        GuiHelper.drawRainbowSquare(progress, 0, 0, width, height);
+        GuiUtils.drawRainbowSquare(progress, 0, 0, width, height);
 
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         float iconSize = getTopBarHeight() - 18;
@@ -163,14 +163,14 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
     public void updateScreen()
     {
         super.updateScreen();
-        progress = GuiHelper.increaseProgress(progress, 3);
+        progress = GuiUtils.increaseProgress(progress, 3);
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         int clickZone = getTopBarHeight() - 12;
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, width - clickZone - 2 - (width / 3), 5, clickZone, clickZone))
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, width - clickZone - 2 - (width / 3), 5, clickZone, clickZone))
             ((GuiCustomTextField) this.getGui("search_bar")).setFocus(true);
         else super.mouseClicked(mouseX, mouseY - 30, mouseButton);
     }
@@ -487,7 +487,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
 
             GLClippingPlanes.glDisableClipping();
             helper.drawShape(new Quad(x + w - 1, y, 1, h));
-            if (GuiHelper.isMouseInBounds(mouseX, mouseY, x + w - 3, y, 5, h) || resizing)
+            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x + w - 3, y, 5, h) || resizing)
             {
                 int iconWidth = 10;
 
@@ -531,7 +531,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         @Override
         public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
         {
-            if (GuiHelper.isMouseInBounds(mouseX, mouseY, x + w - 3, y, 5, h))
+            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x + w - 3, y, 5, h))
             {
                 this.dragXOffset = mouseX - x - w;
                 return resizing = true;

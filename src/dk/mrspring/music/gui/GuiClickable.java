@@ -2,7 +2,7 @@ package dk.mrspring.music.gui;
 
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IResizable;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -35,7 +35,7 @@ public class GuiClickable implements IGui, IResizable
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        return GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, h);
+        return GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h);
     }
 
     @Override

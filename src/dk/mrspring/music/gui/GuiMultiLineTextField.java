@@ -7,7 +7,7 @@ import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
-import dk.mrspring.music.util.GuiHelper;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.input.Keyboard;
@@ -130,7 +130,7 @@ public class GuiMultiLineTextField implements IGui, IMouseListener
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        this.focused = GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, h);
+        this.focused = GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h);
         this.flashCount = 0;
         return focused;
     }
@@ -271,7 +271,7 @@ public class GuiMultiLineTextField implements IGui, IMouseListener
     @Override
     public void handleMouseWheel(int mouseX, int mouseY, int dWheelRaw)
     {
-        if (GuiHelper.isMouseInBounds(mouseX, mouseY, x, y, w, h))
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h))
         {
             int mouseWheel = dWheelRaw;
             mouseWheel /= 4;
