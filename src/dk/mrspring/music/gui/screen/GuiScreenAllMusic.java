@@ -29,12 +29,13 @@ import java.util.List;
  */
 public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.IPanelContainer
 {
+    int progress = 0;
     private int maxCoverSize = 150;
     private int minCoverSize = 40;
 
     public GuiScreenAllMusic(net.minecraft.client.gui.GuiScreen previousScreen)
     {
-        super("All Music", previousScreen);
+        super("Music Manager", previousScreen);
     }
 
     @Override
@@ -98,6 +99,8 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        GuiHelper.drawRainbowSquare(progress, 0, 0, width, height);
+
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         float iconSize = getTopBarHeight() - 18;
         helper.drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
@@ -137,8 +140,9 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         helper.drawShape(new Quad(0, 0, panelWidth, 29).setAlpha(0.5F).setColor(getTopBarColor()));
         helper.drawShape(new Quad(0, 29, panelWidth, 1));
 
+        this.drawCenteredTitle();
         GL11.glTranslatef(0, getTopBarHeight(), 0);
-        super.drawScreen(mouseX, mouseY-30, partialTicks);
+        super.drawScreen(mouseX, mouseY - 30, partialTicks);
 
 //        if (panel instanceof GuiPlaylist)
 //        {
@@ -156,12 +160,19 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
     }
 
     @Override
+    public void updateScreen()
+    {
+        super.updateScreen();
+        progress = GuiHelper.increaseProgress(progress, 3);
+    }
+
+    @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         int clickZone = getTopBarHeight() - 12;
         if (GuiHelper.isMouseInBounds(mouseX, mouseY, width - clickZone - 2 - (width / 3), 5, clickZone, clickZone))
             ((GuiCustomTextField) this.getGui("search_bar")).setFocus(true);
-        else super.mouseClicked(mouseX, mouseY, mouseButton);
+        else super.mouseClicked(mouseX, mouseY - 30, mouseButton);
     }
 
     @Override
