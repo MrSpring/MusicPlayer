@@ -6,6 +6,7 @@ import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.screen.GuiScreen;
+import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -131,7 +132,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
                 this.drawCard(new Quad(0, 0, overlayWidth, cardHeight));
             int sideXOffset = (width - getOverlayWidth()) / 2;
             int topYOffset = height / 3;
-            card.draw(mc, mouseX-sideXOffset, mouseY-topYOffset-listHeight);
+            card.draw(mc, mouseX - sideXOffset, mouseY - topYOffset - listHeight);
             GL11.glPopMatrix();
 
             GL11.glTranslatef(0, cardHeight + 10, 0);
@@ -142,12 +143,13 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
 
         if ((height / 3) < listHeight)
         {
-            double progress = Math.min(1, ((double) height / 3) / (double) (listHeight));
-            int scrollBarHeight = (int) (progress * ((height / 3) - 6));
-            progress = ((double) scroll) / ((double) getMaxScroll());
-            int scrollBarY = (height / 3) + (int) ((((height / 3) - 20) - scrollBarHeight) * progress);
-            helper.drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 4, height / 3 - 1, 6, height / 3 - 18).setColor(Color.BLACK).setAlpha(0.75F));
-            helper.drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 5, scrollBarY, 4, scrollBarHeight));
+            GuiUtils.drawScrollbar(width / 2 + (getOverlayWidth() / 2) + 4, height / 3 - 1, 7, height / 3 - 18, scroll, getMaxScroll(), listHeight);
+//            double progress = Math.min(1, ((double) height / 3) / (double) (listHeight));
+//            int scrollBarHeight = (int) (progress * ((height / 3) - 6));
+//            progress = ((double) scroll) / ((double) getMaxScroll());
+//            int scrollBarY = (height / 3) + (int) ((((height / 3) - 20) - scrollBarHeight) * progress);
+//            helper.drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 4, height / 3 - 1, 6, height / 3 - 18).setColor(Color.BLACK).setAlpha(0.75F));
+//            helper.drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 5, scrollBarY, 4, scrollBarHeight));
         }
 
         helper.setZIndex(0);
@@ -190,7 +192,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         int topYOffset = height / 3;
         for (Card card : cardList)
             if (card.mouseDown(mouseX - sideXOffset, mouseY - topYOffset - scroll, mouseButton)) return;
-            else topYOffset += card.getHeight()+10;
+            else topYOffset += card.getHeight() + 10;
     }
 
     @Override
