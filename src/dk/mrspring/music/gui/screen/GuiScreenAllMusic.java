@@ -9,6 +9,7 @@ import dk.mrspring.music.Config;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.*;
 import dk.mrspring.music.gui.interfaces.IGui;
+import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.interfaces.IResizable;
 import dk.mrspring.music.gui.menu.MenuItemButton;
 import dk.mrspring.music.gui.screen.overlay.CardMusic;
@@ -401,14 +402,19 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         }
     }
 
-    public class SidePanel implements IGui
+    public class SidePanel implements IGui, IMouseListener
     {
         int x, y, w, h;
         int dragXOffset = -1;
+        int scroll = 0;
+        float scrollAlphaProgress = 0F;
+        boolean scrolling = false;
         boolean resizing = false;
         GuiSimpleButton[] buttons;
         GuiSimpleButton[] playlists;
         GuiSimpleButton newPlaylist;
+        int prevListHeight = 0;
+        private int _minWidth = 40;
 
         public SidePanel(int x, int y, int w, int h)
         {
@@ -444,15 +450,16 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         {
             if (resizing)
             {
-                this.w = (mouseX - x) - dragXOffset;
-                this.w = Math.min(width - maxCoverSize - 10, w);
-                this.w = Math.max(20, w);
+                this.w = Miscellaneous.clamp((mouseX - x) - dragXOffset, _minWidth, width - maxCoverSize - 10);
                 updatePanelWidth(w);
             }
 
             GL11.glPushMatrix();
             GLClippingPlanes.glEnableVerticalClipping(0, h);
             GLClippingPlanes.glEnableHorizontalClipping(x, x + w);
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, -scroll, 0);
 
             DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 
@@ -485,7 +492,27 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             newPlaylist.setY(y + yOffset);
             newPlaylist.draw(minecraft, mouseX, mouseY);
 
+            prevListHeight = yOffset + newPlaylist.getHeight();
+
+            GL11.glPopMatrix();
             GLClippingPlanes.glDisableClipping();
+
+            if (scrollAlphaProgress > 0F && hasScroll())
+            {
+                float alpha = Miscellaneous.clamp01(scrollAlphaProgress * 4);
+
+                int scrollBarWidth = 5;
+                double progress = ((double) h) / (double) (prevListHeight + 10);
+                int scrollBarHeight = (int) (progress * (h - 2));
+                progress = ((double) scroll) / ((double) getMaxScroll());
+                int scrollBarY = y + 1 + (int) (((h - 2) - scrollBarHeight) * progress);
+                helper.drawShape(new Quad(w - scrollBarWidth - 2 - 1, y, scrollBarWidth + 2, h).setColor(Color.BLACK).setAlpha(alpha * 0.5F));
+                helper.drawShape(new Quad(w - scrollBarWidth - 2, scrollBarY + 1, scrollBarWidth, scrollBarHeight - 2).setAlpha(alpha));
+                helper.drawShape(new Quad(w - scrollBarWidth - 1, scrollBarY, scrollBarWidth - 2, 1).setAlpha(alpha));
+                helper.drawShape(new Quad(w - scrollBarWidth - 1, scrollBarY + scrollBarHeight - 1, scrollBarWidth - 2, 1).setAlpha(alpha));
+//                helper.drawShape(new Quad(0, 0, 10, 50).setAlpha(alpha));
+            }
+
             helper.drawShape(new Quad(x + w - 1, y, 1, h));
             if (GuiUtils.isMouseInBounds(mouseX, mouseY, x + w - 3, y, 5, h) || resizing)
             {
@@ -501,6 +528,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                 helper.drawShape(new Quad(mouseX + (iconWidth / 2), mouseY - 12, mouseX + (iconWidth / 2) + 3, mouseY - 10, mouseX + (iconWidth / 2) + 3, mouseY - 9, mouseX + (iconWidth / 2), mouseY - 7));
                 helper.setZIndex(0);
             }
+
             GL11.glPopMatrix();
         }
 
@@ -526,6 +554,12 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             if (playlists.length != LiteModMusicPlayer.musicHandler.getPlaylists().size()) playlistButtons();
             for (GuiSimpleButton button : this.playlists) if (button != null) button.update();
             newPlaylist.update();
+            if (scrolling)
+            {
+                System.out.println("Setting to one");
+                scrollAlphaProgress = 1F;
+                scrolling = false;
+            } else scrollAlphaProgress = Miscellaneous.smoothDamp(0F, scrollAlphaProgress, 0.2F);
         }
 
         @Override
@@ -592,6 +626,36 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         public void handleKeyTyped(int keyCode, char character)
         {
 
+        }
+
+        private boolean hasScroll()
+        {
+            return prevListHeight > h + 10;
+        }
+
+        private int getMaxScroll()
+        {
+            return prevListHeight - h + 10;
+        }
+
+        @Override
+        public void handleMouseWheel(int mouseX, int mouseY, int dWheelRaw)
+        {
+            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, width, height))
+            {
+                int mouseWheel = dWheelRaw;
+                mouseWheel /= 4;
+                if (mouseWheel != 0)
+                    this.addScroll(-mouseWheel);
+            }
+        }
+
+        private void addScroll(int scroll)
+        {
+            int newScroll = Miscellaneous.clamp(this.scroll+scroll, 0, this.hasScroll() ? getMaxScroll() : 0);
+            if (this.scroll != newScroll)
+                scrolling = true;
+            this.scroll = newScroll;
         }
     }
 }

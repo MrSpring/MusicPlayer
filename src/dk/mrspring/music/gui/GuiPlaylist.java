@@ -210,8 +210,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
     private void clampScroll()
     {
-        scroll = Math.min(scroll, this.hasScroll() ? getMaxScroll() : 0);
-        scroll = Math.max(scroll, 0);
+        scroll = Miscellaneous.clamp(scroll, 0, this.hasScroll() ? getMaxScroll() : 0);
     }
 
     @Override
