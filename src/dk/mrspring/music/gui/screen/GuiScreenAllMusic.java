@@ -7,17 +7,19 @@ import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.Config;
 import dk.mrspring.music.LiteModMusicPlayer;
-import dk.mrspring.music.gui.*;
+import dk.mrspring.music.gui.GuiCustomTextField;
+import dk.mrspring.music.gui.GuiSimpleButton;
+import dk.mrspring.music.gui.GuiSlider;
+import dk.mrspring.music.gui.GuiSquareList;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.interfaces.IResizable;
-import dk.mrspring.music.gui.menu.MenuItemButton;
-import dk.mrspring.music.gui.screen.overlay.CardMusic;
 import dk.mrspring.music.gui.screen.overlay.CardNewPlaylist;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
-import dk.mrspring.music.player.Music;
+import dk.mrspring.music.gui.screen.panel.*;
 import dk.mrspring.music.player.Playlist;
-import dk.mrspring.music.util.*;
+import dk.mrspring.music.util.GuiUtils;
+import dk.mrspring.music.util.Miscellaneous;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -28,7 +30,7 @@ import java.util.List;
 /**
  * Created by Konrad on 26-05-2015.
  */
-public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.IPanelContainer
+public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
 {
     int progress = 0;
     private int maxCoverSize = 150;
@@ -37,6 +39,12 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
     public GuiScreenAllMusic(net.minecraft.client.gui.GuiScreen previousScreen)
     {
         super("Music Manager", previousScreen);
+    }
+
+    @Override
+    public Minecraft getMinecraft()
+    {
+        return mc;
     }
 
     @Override
@@ -64,6 +72,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         newPanel.setY(0);
         newPanel.setWidth(width - sidePanelSize);
         newPanel.setHeight(height - getTopBarHeight() - getBottomBarHeight());
+        newPanel.setParent(this);
         this.replaceGui("panel", newPanel);
     }
 
@@ -183,224 +192,6 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         super.guiClicked(identifier, gui, mouseX, mouseY, mouseButton);
         if (identifier.equals("back"))
             mc.displayGuiScreen(previousScreen);
-    }
-
-    public interface IPanel extends IGui, IResizable
-    {
-        public int getBottomBarOffset();
-
-        public int getTopBarOffset();
-
-        public Color getBottomBarColor();
-
-        public Color getTopBarColor();
-    }
-
-    private class ArtistPanel extends GuiArtistList implements IPanel
-    {
-        public ArtistPanel(Artist artist, Showing type)
-        {
-            super(0, 0, 100, 100, artist, type);
-        }
-
-        @Override
-        protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Object clicked)
-        {
-            if (mouseButton == 1)
-            {
-                String text = clicked instanceof Album ? ((Album) clicked).getAlbumName() : (clicked instanceof Music ? ((Music) clicked).getName() : "");
-                openMenu(mouseX, mouseY,
-                        new MenuItemButton("IT'S WORKING!!!", mc.fontRendererObj, 0),
-                        new MenuItemButton(text, mc.fontRendererObj, 1)
-                );
-                return true;
-            } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
-        }
-
-        @Override
-        public int getBottomBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public int getTopBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public Color getBottomBarColor()
-        {
-            return Color.BLACK;
-        }
-
-        @Override
-        public Color getTopBarColor()
-        {
-            return Color.BLACK;
-        }
-    }
-
-    private class AllMusicPanel extends GuiAllMusicList implements IPanel
-    {
-        public AllMusicPanel(List<Music> allMusic)
-        {
-            super(0, 0, 100, 100, allMusic);
-        }
-
-        @Override
-        protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Music clicked)
-        {
-            System.out.println("Clicked");
-            if (mouseButton == 0)
-            {
-                OverlayScreen overlay = new OverlayScreen("Music Details", GuiScreenAllMusic.this);
-                overlay.addCard(new CardMusic(overlay, clicked));
-                mc.displayGuiScreen(overlay);
-                return true;
-            } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
-        }
-
-        @Override
-        public int getBottomBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public int getTopBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public Color getBottomBarColor()
-        {
-            return Color.BLACK;
-        }
-
-        @Override
-        public Color getTopBarColor()
-        {
-            return Color.BLACK;
-        }
-
-        // TODO: onElementClicked right-click
-    }
-
-    private class AllAlbumsPanel extends GuiAllAlbumsList implements IPanel
-    {
-        public AllAlbumsPanel(List<Album> allMusic)
-        {
-            super(0, 0, 100, 100, allMusic);
-        }
-
-        @Override
-        public int getBottomBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public int getTopBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public Color getBottomBarColor()
-        {
-            return Color.BLACK;
-        }
-
-        @Override
-        public Color getTopBarColor()
-        {
-            return Color.BLACK;
-        }
-
-        // TODO: onElementClicked right-click
-    }
-
-    private class AllArtistPanel extends GuiAllArtistsList implements IPanel
-    {
-        public AllArtistPanel(List<Artist> allMusic)
-        {
-            super(0, 0, 100, 100, allMusic);
-        }
-
-        @Override
-        public int getBottomBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public int getTopBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public Color getBottomBarColor()
-        {
-            return Color.BLACK;
-        }
-
-        @Override
-        public Color getTopBarColor()
-        {
-            return Color.BLACK;
-        }
-
-        // TODO: onElementClicked right-click
-    }
-
-    private class PlaylistPanel extends GuiPlaylist implements IPanel
-    {
-        double target = 0D;
-        double progress = 0D;
-
-        public PlaylistPanel(Playlist music)
-        {
-            super(0, 0, 100, 100, music);
-        }
-
-        @Override
-        public void draw(Minecraft minecraft, int mouseX, int mouseY)
-        {
-            super.draw(minecraft, mouseX, mouseY);
-
-            if (isMovingInDeleteZone())
-                target = 1D;
-            else target = 0D;
-            progress = Miscellaneous.smoothDamp(target, progress, 0.4D);
-        }
-
-        @Override
-        public int getBottomBarOffset()
-        {
-            return (int) (25 * progress);
-        }
-
-        @Override
-        public int getTopBarOffset()
-        {
-            return 0;
-        }
-
-        @Override
-        public Color getBottomBarColor()
-        {
-            return Color.morph(Color.BLACK, Color.RED, (float) progress);
-        }
-
-        @Override
-        public Color getTopBarColor()
-        {
-            return Color.BLACK;
-        }
     }
 
     public class SidePanel implements IGui, IMouseListener
@@ -572,7 +363,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                 else if (buttons[1].mouseDown(mouseX, mouseY, mouseButton))
                     openPanel(new AllAlbumsPanel(LiteModMusicPlayer.musicHandler.getAllAlbums()));
                 else if (buttons[2].mouseDown(mouseX, mouseY, mouseButton))
-                    openPanel(new AllArtistPanel(LiteModMusicPlayer.musicHandler.getAllArtists()));
+                    openPanel(new AllArtistsPanel(LiteModMusicPlayer.musicHandler.getAllArtists()));
                 else
                 {
                     for (int i = 0; i < playlists.length; i++)
