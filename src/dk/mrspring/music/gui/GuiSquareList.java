@@ -91,9 +91,6 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
         int totalHeight = 0;
         for (T music : this.showing)
         {
-//            if (filter != null)
-//                if (!filter.filter(music))
-//                    continue;
             if (!filter(music, currentFilter))
                 continue;
             int entryHeight = drawEntry(currentColumn, minecraft, helper, music);
