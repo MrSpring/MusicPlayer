@@ -501,19 +501,9 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             {
                 double zI = helper.getZIndex();
                 helper.setZIndex(zI + 5);
-                float alpha = Miscellaneous.clamp01(scrollAlphaProgress*4);
-
-                int scrollBarWidth = 5;
-                double progress = ((double) h) / (double) (prevListHeight + 10);
-                int scrollBarHeight = (int) (progress * (h - 2));
-                progress = ((double) scroll) / ((double) getMaxScroll());
-                int scrollBarY = y + 1 + (int) (((h - 2) - scrollBarHeight) * progress);
-                helper.drawShape(new Quad(w - scrollBarWidth - 2 - 1, y, scrollBarWidth + 2, h).setColor(Color.BLACK).setAlpha(alpha * 0.5F));
-                helper.drawShape(new Quad(w - scrollBarWidth - 2, scrollBarY + 1, scrollBarWidth, scrollBarHeight - 2).setAlpha(alpha));
-                helper.drawShape(new Quad(w - scrollBarWidth - 1, scrollBarY, scrollBarWidth - 2, 1).setAlpha(alpha));
-                helper.drawShape(new Quad(w - scrollBarWidth - 1, scrollBarY + scrollBarHeight - 1, scrollBarWidth - 2, 1).setAlpha(alpha));
+                float alpha = Miscellaneous.clamp01(scrollAlphaProgress * 4);
+                GuiUtils.drawScrollbar(w - 8, y, 7, h, scroll, getMaxScroll(), prevListHeight - 10,alpha);
                 helper.setZIndex(zI);
-//                helper.drawShape(new Quad(0, 0, 10, 50).setAlpha(alpha));
             }
 
             helper.drawShape(new Quad(x + w - 1, y, 1, h));

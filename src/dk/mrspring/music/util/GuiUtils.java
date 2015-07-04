@@ -1,6 +1,7 @@
 package dk.mrspring.music.util;
 
 import dk.mrspring.llcore.Color;
+import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
@@ -11,6 +12,26 @@ import dk.mrspring.music.LiteModMusicPlayer;
 public class GuiUtils
 {
     public static final int MAX_PROGRESS = 255 * 6;
+
+    public static void drawScrollbar(int x, int y, int width, int height, int scroll, int maxScroll, int listHeight)
+    {
+        drawScrollbar(x, y, width, height, scroll, maxScroll, listHeight, 1F);
+    }
+
+    public static void drawScrollbar(int x, int y, int width, int height, int scroll, int maxScroll, int listHeight, float alpha)
+    {
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+
+        int scrollBarWidth = width - 2;
+        double progress = ((double) height) / (double) (listHeight);
+        int scrollBarHeight = (int) (progress * (height - 2));
+        progress = ((double) scroll) / ((double) maxScroll);
+        int scrollBarY = y + 1 + (int) (((height - 2) - scrollBarHeight) * progress);
+        helper.drawShape(new Quad(x, y, width, height).setColor(Color.BLACK).setAlpha(alpha * 0.5F));
+        helper.drawShape(new Quad(x + 1, scrollBarY + 1, scrollBarWidth, scrollBarHeight - 2).setAlpha(alpha));
+        helper.drawShape(new Quad(x + 2, scrollBarY, scrollBarWidth - 2, 1).setAlpha(alpha));
+        helper.drawShape(new Quad(x + 2, scrollBarY + scrollBarHeight - 1, scrollBarWidth - 2, 1).setAlpha(alpha));
+    }
 
     public static void drawRainbowSquare(int progress, float x, float y, float width, float height)
     {
