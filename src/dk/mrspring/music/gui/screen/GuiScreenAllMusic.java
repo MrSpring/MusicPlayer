@@ -173,7 +173,8 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         int clickZone = getTopBarHeight() - 12;
         if (GuiUtils.isMouseInBounds(mouseX, mouseY, width - clickZone - 2 - (width / 3), 5, clickZone, clickZone))
             ((GuiCustomTextField) this.getGui("search_bar")).setFocus(true);
-        else super.mouseClicked(mouseX, mouseY - 30, mouseButton);
+        else if (!getGui("side_panel").mouseDown(mouseX, mouseY - 30, mouseButton))
+            super.mouseClicked(mouseX, mouseY - 30, mouseButton);
     }
 
     @Override
@@ -508,18 +509,18 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
             }
 
             helper.drawShape(new Quad(x + w - 1, y, 1, h));
-            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x + w - 3, y, 5, h) || resizing)
+            if (GuiUtils.isMouseInBounds(mouseX, mY, x + w - 3, y, 5, h) || resizing)
             {
                 int iconWidth = 10;
 
                 helper.setZIndex(10D);
-                helper.drawShape(new Quad(mouseX - (iconWidth / 2) + 1, mouseY - 10 + 1, iconWidth, 1).setColor(Color.DK_GREY));
-                helper.drawShape(new Quad(mouseX - (iconWidth / 2) - 3 + 1, mouseY - 10 + 1, mouseX - (iconWidth / 2) + 1, mouseY - 12 + 1, mouseX - (iconWidth / 2) + 1, mouseY - 7 + 1, mouseX - (iconWidth / 2) - 3 + 1, mouseY - 9 + 1).setColor(Color.DK_GREY));
-                helper.drawShape(new Quad(mouseX + (iconWidth / 2) + 1, mouseY - 12 + 1, mouseX + (iconWidth / 2) + 3 + 1, mouseY - 10 + 1, mouseX + (iconWidth / 2) + 3 + 1, mouseY - 9 + 1, mouseX + (iconWidth / 2) + 1, mouseY - 7 + 1).setColor(Color.DK_GREY));
+                helper.drawShape(new Quad(mouseX - (iconWidth / 2) + 1, mY - 10 + 1, iconWidth, 1).setColor(Color.DK_GREY));
+                helper.drawShape(new Quad(mouseX - (iconWidth / 2) - 3 + 1, mY - 10 + 1, mouseX - (iconWidth / 2) + 1, mY - 12 + 1, mouseX - (iconWidth / 2) + 1, mY - 7 + 1, mouseX - (iconWidth / 2) - 3 + 1, mY - 9 + 1).setColor(Color.DK_GREY));
+                helper.drawShape(new Quad(mouseX + (iconWidth / 2) + 1, mY - 12 + 1, mouseX + (iconWidth / 2) + 3 + 1, mY - 10 + 1, mouseX + (iconWidth / 2) + 3 + 1, mY - 9 + 1, mouseX + (iconWidth / 2) + 1, mY - 7 + 1).setColor(Color.DK_GREY));
 
-                helper.drawShape(new Quad(mouseX - (iconWidth / 2), mouseY - 10, iconWidth, 1));
-                helper.drawShape(new Quad(mouseX - (iconWidth / 2) - 3, mouseY - 10, mouseX - (iconWidth / 2), mouseY - 12, mouseX - (iconWidth / 2), mouseY - 7, mouseX - (iconWidth / 2) - 3, mouseY - 9));
-                helper.drawShape(new Quad(mouseX + (iconWidth / 2), mouseY - 12, mouseX + (iconWidth / 2) + 3, mouseY - 10, mouseX + (iconWidth / 2) + 3, mouseY - 9, mouseX + (iconWidth / 2), mouseY - 7));
+                helper.drawShape(new Quad(mouseX - (iconWidth / 2), mY - 10, iconWidth, 1));
+                helper.drawShape(new Quad(mouseX - (iconWidth / 2) - 3, mY - 10, mouseX - (iconWidth / 2), mY - 12, mouseX - (iconWidth / 2), mY - 7, mouseX - (iconWidth / 2) - 3, mY - 9));
+                helper.drawShape(new Quad(mouseX + (iconWidth / 2), mY - 12, mouseX + (iconWidth / 2) + 3, mY - 10, mouseX + (iconWidth / 2) + 3, mY - 9, mouseX + (iconWidth / 2), mY - 7));
                 helper.setZIndex(0);
             }
 

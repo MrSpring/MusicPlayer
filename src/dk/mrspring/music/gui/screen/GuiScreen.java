@@ -447,7 +447,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     {
         return bottomBarColor;
     }
-    
+
     public Color getTopBarColor(){
         return topBarColor;
     }
