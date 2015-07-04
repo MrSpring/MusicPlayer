@@ -134,12 +134,6 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
         if (hasScroll())
         {
             _entryWidth = this.width - _scrollBarWidth;
-
-//            double progress = ((double) height) / (double) (getListHeight() + _scrollMaxOffset);
-//            int scrollBarHeight = (int) (progress * (height - 6));
-//            progress = ((double) scroll) / ((double) getMaxScroll());
-//            int scrollBarY = y + 3 + (int) (((height - 6) - scrollBarHeight) * progress);
-//            helper.drawShape(new Quad(width - _scrollBarWidth, scrollBarY, _scrollBarWidth - 3, scrollBarHeight));
             GuiUtils.drawScrollbar(width - _scrollBarWidth, y, _scrollBarWidth, height, scroll, getMaxScroll(), getListHeight());
         } else _entryWidth = this.width;
 
