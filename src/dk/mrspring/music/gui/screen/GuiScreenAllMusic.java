@@ -446,8 +446,9 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         }
 
         @Override
-        public void draw(Minecraft minecraft, int mouseX, int mouseY)
+        public void draw(Minecraft minecraft, int mouseX, int mY)
         {
+            int mouseY = mY + scroll;
             if (resizing)
             {
                 this.w = Miscellaneous.clamp((mouseX - x) - dragXOffset, _minWidth, width - maxCoverSize - 10);
@@ -502,7 +503,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                 double zI = helper.getZIndex();
                 helper.setZIndex(zI + 5);
                 float alpha = Miscellaneous.clamp01(scrollAlphaProgress * 4);
-                GuiUtils.drawScrollbar(w - 8, y, 7, h, scroll, getMaxScroll(), prevListHeight - 10,alpha);
+                GuiUtils.drawScrollbar(w - 8, y, 7, h, scroll, getMaxScroll(), prevListHeight - 10, alpha);
                 helper.setZIndex(zI);
             }
 
@@ -556,8 +557,9 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
         }
 
         @Override
-        public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
+        public boolean mouseDown(int mouseX, int mY, int mouseButton)
         {
+            int mouseY = mY + scroll;
             if (GuiUtils.isMouseInBounds(mouseX, mouseY, x + w - 3, y, 5, h))
             {
                 this.dragXOffset = mouseX - x - w;
