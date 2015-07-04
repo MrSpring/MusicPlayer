@@ -499,7 +499,9 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
 
             if (scrollAlphaProgress > 0F && hasScroll())
             {
-                float alpha = Miscellaneous.clamp01(scrollAlphaProgress * 4);
+                double zI = helper.getZIndex();
+                helper.setZIndex(zI + 5);
+                float alpha = Miscellaneous.clamp01(scrollAlphaProgress*4);
 
                 int scrollBarWidth = 5;
                 double progress = ((double) h) / (double) (prevListHeight + 10);
@@ -510,6 +512,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
                 helper.drawShape(new Quad(w - scrollBarWidth - 2, scrollBarY + 1, scrollBarWidth, scrollBarHeight - 2).setAlpha(alpha));
                 helper.drawShape(new Quad(w - scrollBarWidth - 1, scrollBarY, scrollBarWidth - 2, 1).setAlpha(alpha));
                 helper.drawShape(new Quad(w - scrollBarWidth - 1, scrollBarY + scrollBarHeight - 1, scrollBarWidth - 2, 1).setAlpha(alpha));
+                helper.setZIndex(zI);
 //                helper.drawShape(new Quad(0, 0, 10, 50).setAlpha(alpha));
             }
 
@@ -652,7 +655,7 @@ public class GuiScreenAllMusic extends GuiScreen// implements GuiScreenAllMusic.
 
         private void addScroll(int scroll)
         {
-            int newScroll = Miscellaneous.clamp(this.scroll+scroll, 0, this.hasScroll() ? getMaxScroll() : 0);
+            int newScroll = Miscellaneous.clamp(this.scroll + scroll, 0, this.hasScroll() ? getMaxScroll() : 0);
             if (this.scroll != newScroll)
                 scrolling = true;
             this.scroll = newScroll;
