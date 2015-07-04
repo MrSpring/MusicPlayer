@@ -30,7 +30,9 @@ public class GuiUtils
         helper.drawShape(new Quad(x, y, width, height).setColor(Color.BLACK).setAlpha(alpha * 0.5F));
         helper.drawShape(new Quad(x + 1, scrollBarY + 1, scrollBarWidth, scrollBarHeight - 2).setAlpha(alpha));
         helper.drawShape(new Quad(x + 2, scrollBarY, scrollBarWidth - 2, 1).setAlpha(alpha));
-        helper.drawShape(new Quad(x + 2, scrollBarY + scrollBarHeight - 1, scrollBarWidth - 2, 1).setAlpha(alpha));
+        helper.drawShape(new Quad(x + 2, scrollBarY + scrollBarHeight - 1, scrollBarWidth - 2, 1).setAlpha(alpha).setColor(Color.LT_GREY));
+        helper.drawShape(new Quad(x + width - 2, scrollBarY + scrollBarHeight - 2, 1, 1).setAlpha(alpha).setColor(Color.LT_GREY));
+        helper.drawShape(new Quad(x + 1, scrollBarY + scrollBarHeight - 2, 1, 1).setAlpha(alpha).setColor(Color.LT_GREY));
     }
 
     public static void drawRainbowSquare(int progress, float x, float y, float width, float height)
