@@ -11,6 +11,7 @@ import dk.mrspring.music.gui.interfaces.IResizable;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.GuiUtils;
+import dk.mrspring.music.util.Miscellaneous;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -110,6 +111,8 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     {
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 
+        helper.drawShape(new Quad(mouseX - 5, mouseY - y + scroll, 10, _entryHeight));
+
         GL11.glPushMatrix();
 
         GL11.glTranslatef(x, y, 0);
@@ -118,7 +121,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
         if (musicList.size() == 0)
         {
-            helper.drawText("Empty...\nExplore your library, and find some music to add!", new Vector(width/2,height/2), 0xFFFFFF, true, width, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
+            helper.drawText("Empty...\nExplore your library, and find some music to add!", new Vector(width / 2, height / 2), 0xFFFFFF, true, width, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
             GL11.glPopMatrix();
             GL11.glPopMatrix();
             return;
@@ -177,7 +180,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
         if (moving != -1 && mouseY < y + height)
         {
             double oldZ = helper.getZIndex();
-            helper.setZIndex(oldZ+10);
+            helper.setZIndex(oldZ + 10);
             Music music = list.get(moving);
             drawMusic(3, Math.max(y, mouseY - moveYStart), _entryWidth, _entryHeight, music);
             helper.setZIndex(oldZ);
@@ -241,8 +244,6 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     @Override
     public void mouseUp(int mouseX, int mouseY, int mouseButton)
     {
-        // TODO: Move music from moving to rel. mouse
-
         if (moving != -1)
         {
             if (this.isMovingInDeleteZone())
@@ -251,16 +252,11 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
             {
 
                 int relMouseY = mouseY - y + scroll;
-                for (int i = 0; i < musicList.size() + 1; i++)
-                {
-                    if ((i * _entryHeight) + (_entryHeight / 2) > relMouseY - moveYStart)
-                    {
-                        System.out.println("1: " + ((i * _entryHeight) + (_entryHeight / 2)) + ", 2: " + (relMouseY - moveYStart));
-                        Music removed = musicList.remove(moving);
-                        musicList.add(i/* > 0 ? i - 1 : 0*/, removed);
-                        break;
-                    }
-                }
+                int m = (relMouseY - 30 - moveYStart);
+                int i = m / _entryHeight + (m % _entryHeight > (_entryHeight / 2) ? 1 : 0);
+                i = Miscellaneous.clamp(i, 0, musicList.size() - 1);
+                Music moved = musicList.remove(moving);
+                musicList.add(i, moved);
             }
             moving = -1;
             moveXStart = -1;
