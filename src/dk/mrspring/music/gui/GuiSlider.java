@@ -15,7 +15,7 @@ import net.minecraft.client.gui.FontRenderer;
  */
 public class GuiSlider implements IGui, IDelayedDraw
 {
-    int x, y, width, height; // TODO: Rewrite again
+    int x, y, width, height;
     int value;
     int maximum = 100, minimum = 0;
     boolean dragging = false;
