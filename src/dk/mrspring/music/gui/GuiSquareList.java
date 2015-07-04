@@ -2,7 +2,6 @@ package dk.mrspring.music.gui;
 
 import com.mumfrey.liteloader.gl.GLClippingPlanes;
 import dk.mrspring.llcore.DrawingHelper;
-import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
@@ -25,7 +24,7 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
     int _entrySpacing = 3;
     int _entryWidthTarget = 100;
     int _scrollMaxOffset = 20;
-    int _scrollBarWidth = 10;
+    int _scrollBarWidth = 7;
     int scroll = 0;
     int listHeight = 0;
     //    MusicFilter filter = new AnyFilter("");
@@ -84,13 +83,7 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
         int columns = listWidth / _entryWidthTarget;
         _entryWidth = listWidth / columns;
         if (hasScroll())
-        {
-            double progress = ((double) height) / (double) (getRenderedListHeight() + _scrollMaxOffset);
-            int scrollBarHeight = (int) (progress * (height - 6));
-            progress = ((double) scroll) / ((double) getMaxScroll());
-            int scrollBarY = y + 3 + (int) (((height - 6) - scrollBarHeight) * progress);
-            helper.drawShape(new Quad(width - _scrollBarWidth, scrollBarY, _scrollBarWidth - 3, scrollBarHeight));
-        }
+            GuiUtils.drawScrollbar(width - _scrollBarWidth, y, _scrollBarWidth, height, scroll, getMaxScroll(), getRenderedListHeight() + _scrollMaxOffset);
         float remaining = listWidth % columns;
         GL11.glTranslatef(remaining / 2F, -scroll, 0);
         int currentColumn = 0;
