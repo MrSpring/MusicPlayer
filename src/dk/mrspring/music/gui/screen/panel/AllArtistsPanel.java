@@ -2,6 +2,7 @@ package dk.mrspring.music.gui.screen.panel;
 
 import dk.mrspring.llcore.Color;
 import dk.mrspring.music.gui.GuiAllArtistsList;
+import dk.mrspring.music.gui.GuiArtistList;
 import dk.mrspring.music.util.Artist;
 
 import java.util.List;
@@ -46,6 +47,17 @@ public class AllArtistsPanel extends GuiAllArtistsList implements IPanel
     public Color getTopBarColor()
     {
         return Color.BLACK;
+    }
+
+    @Override
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int globalMouseX, int globalMouseY, int mouseButton, Artist clicked)
+    {
+        System.out.println("Clicked");
+        if (mouseButton == 0)
+        {
+            parent.openPanel(new ArtistPanel(clicked, GuiArtistList.Showing.ALBUMS));
+            return true;
+        } else return false;
     }
 
     // TODO: onElementClicked right-click

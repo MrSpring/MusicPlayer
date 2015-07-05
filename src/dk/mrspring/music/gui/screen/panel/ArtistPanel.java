@@ -21,6 +21,18 @@ public class ArtistPanel extends GuiArtistList implements IPanel
     }
 
     @Override
+    public void setY(int y)
+    {
+        super.setY(y - getTopBarOffset());
+    }
+
+    @Override
+    public void setHeight(int height)
+    {
+        super.setHeight(height + getTopBarOffset());
+    }
+
+    @Override
     protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Object clicked)
     {
         if (mouseButton == 1 && parent != null)
@@ -44,7 +56,10 @@ public class ArtistPanel extends GuiArtistList implements IPanel
     @Override
     public int getTopBarOffset()
     {
-        return 0;
+        int heightOfList = typeList.getHeight() + 4;
+        System.out.println("heightOfList = " + heightOfList);
+        return Math.max(30, typeList.getHeight()+4);
+//        return 3;
     }
 
     @Override

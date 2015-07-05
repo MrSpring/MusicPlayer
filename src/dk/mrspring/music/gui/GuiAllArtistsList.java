@@ -32,7 +32,11 @@ public class GuiAllArtistsList extends GuiSquareList<Artist>
     @Override
     public int getEntryHeight(int currentColumn, Artist thing)
     {
-        return 0;
+        Minecraft minecraft = Minecraft.getMinecraft();
+        String text = TranslateHelper.translateFormat("gui.artist_list.entry_text", thing.getArtistName());
+        text = text.replaceAll("(?i)(" + currentFilter + ")", "\u00a7e$1\u00a7r");
+        MultilineTextRender render = new MultilineTextRender(text, minecraft.fontRendererObj, _entryWidth - 6 - (2 * _entrySpacing), true, 5);
+        return _entryWidth + render.getTotalHeight() + 3;
     }
 
     @Override

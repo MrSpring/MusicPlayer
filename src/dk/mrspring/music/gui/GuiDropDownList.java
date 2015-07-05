@@ -153,6 +153,16 @@ public class GuiDropDownList implements IGui
         this.x = x;
     }
 
+    public void setWidth(int width)
+    {
+        this.w = width;
+    }
+
+    public int getHeight()
+    {
+        return h;
+    }
+
     public static class ListElement
     {
         String text;

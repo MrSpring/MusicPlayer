@@ -57,12 +57,25 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
         this.enableRepeats().hideBottomBar().hideTopBar();
 
         int sidePanelSize = config.gui_mm_side_panel_size;
+        this.bypassInit(true);
 
         this.addGuiElement("search_bar", new GuiCustomTextField((width / 3) * 2, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, "").setGhost("Search"));
         this.addGuiElement("size_slider", new GuiSlider(3, -getTopBarHeight() + 3, width / 3, getTopBarHeight() - 6, config.gui_mm_list_entry_size).setShowHover(false));
         this.addGuiElement("back", new GuiSimpleButton(3, height - getBottomBarHeight() - getTopBarHeight() + 3, 60, getTopBarHeight() - 6, "Back"));
         openPanel(new AllMusicPanel(LiteModMusicPlayer.musicHandler.getAllMusic()));//(new ArtistPanel(LiteModMusicPlayer.musicHandler.getAllArtists().get(1), GuiArtistList.Showing.ALBUMS));
         this.addGuiElement("side_panel", new SidePanel(0, 0, sidePanelSize, height - getTopBarHeight() - getBottomBarHeight()));
+    }
+
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc, width, height);
+        GuiCustomTextField searchBar = (GuiCustomTextField) getGui("search_bar");
+        searchBar.setX(width / 3 * 2);
+        searchBar.setW(width / 3);
+        GuiSlider slider = (GuiSlider) getGui("size_slider");
+        slider.setX(0);
+        slider.setW(width / 3);
     }
 
     public void openPanel(IPanel newPanel)
@@ -101,18 +114,12 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
     }
 
     @Override
-    public int getBottomBarHeight()
-    {
-        return super.getBottomBarHeight();
-    }
-
-    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         GuiUtils.drawRainbowSquare(progress, 0, 0, width, height);
 
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-        float iconSize = getTopBarHeight() - 18;
+        float iconSize = 30 - 18;
         helper.drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
         IPanel panel = (IPanel) getGui("panel");
 //        IResizable resizable = (IResizable) getGui("panel");
@@ -137,6 +144,11 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
         setBottomBarHeight(bottomHeight);
         setTopBarHeight(topHeight);
 
+        panel.setX(panelWidth);
+        panel.setY(topHeight - 30);
+        panel.setWidth(width - panelWidth);
+        panel.setHeight(height - getTopBarHeight() - getBottomBarHeight());
+
         helper.drawShape(new Quad(panelWidth, height - bottomHeight, width - panelWidth, bottomHeight).setAlpha(0.5F).setColor(this.getBottomBarColor()));
         helper.drawShape(new Quad(panelWidth, height - bottomHeight, width - panelWidth, 1));
 
@@ -151,8 +163,10 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
         helper.drawShape(new Quad(0, 29, panelWidth, 1));
 
         this.drawCenteredTitle();
-        GL11.glTranslatef(0, getTopBarHeight(), 0);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(0, 30, 0);
         super.drawScreen(mouseX, mouseY - 30, partialTicks);
+        GL11.glPopMatrix();
 
 //        if (panel instanceof GuiPlaylist)
 //        {
@@ -166,7 +180,13 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
 //                helper.drawText(TranslateHelper.translateFormat("gui.playlist_editor.remove", playlist.getPlaylist().getName()), new Vector(xPos, height - getTopBarHeight() - (getBottomBarHeight() / 2) + 3 + (size / 2)), 0xFFFFFF, true, width - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
 //        }
 
-        helper.drawIcon(LiteModMusicPlayer.core.getIcon("search"), new Quad(width - iconSize - 5 - (width / 3), -getTopBarHeight() + 8, iconSize, iconSize));
+        helper.drawIcon(LiteModMusicPlayer.core.getIcon("search"), new Quad(width - iconSize - 5 - (width / 3), 8, iconSize, iconSize));
+    }
+
+    @Override
+    public void drawCenteredTitle()
+    {
+        super.drawCenteredTitle();
     }
 
     @Override

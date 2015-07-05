@@ -10,5 +10,7 @@ public interface IPanelContainer
 {
     public void openMenu(int x, int y, IMenuItem... items);
 
+    public void openPanel(IPanel newPanel);
+
     public Minecraft getMinecraft();
 }

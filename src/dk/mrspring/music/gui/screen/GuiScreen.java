@@ -139,7 +139,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     {
         String translatedTitle = TranslateHelper.translate(this.getTitle());
 
-        int textPosY = this.topBarHeight / 2 - 6;
+        int textPosY = 10;
 
         if (this.drawSubTitle())
             textPosY -= 4;

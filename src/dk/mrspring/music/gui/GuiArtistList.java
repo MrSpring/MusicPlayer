@@ -3,13 +3,13 @@ package dk.mrspring.music.gui;
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
+import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.overlay.MultilineTextRender;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.util.Album;
 import dk.mrspring.music.util.Artist;
 import dk.mrspring.music.util.TranslateHelper;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class GuiArtistList extends GuiSquareList<Object>
 {
     Artist artist;
     Showing type;
-    GuiDropDownList typeList;
+    protected GuiDropDownList typeList;
     int dropDownListHeight = 30;
 
     public GuiArtistList(int x, int y, int w, int h, Artist artist, Showing type)
@@ -28,9 +28,34 @@ public class GuiArtistList extends GuiSquareList<Object>
         super(x, y, w, h, (List<Object>) (type == Showing.ALBUMS ? artist.getAlbums() : artist.getAllMusic()));
         this.type = type;
         this.artist = artist;
-        this.typeList = new GuiDropDownList(x, y, w / 3, dropDownListHeight, 0,
+        this.typeList = new GuiDropDownList(x+3, y, w / 3, dropDownListHeight, 0,
                 new GuiDropDownList.ListElement(Showing.ALBUMS.getRenderString(), Showing.ALBUMS),
                 new GuiDropDownList.ListElement(Showing.MUSIC.getRenderString(), Showing.MUSIC));
+    }
+
+    @Override
+    public void setX(int x)
+    {
+        super.setX(x);
+        typeList.setX(x+3);
+    }
+
+    @Override
+    public void setY(int y)
+    {
+        super.setY(y);
+        typeList.setY(y);
+    }
+
+    @Override
+    public void setWidth(int width)
+    {
+        super.setWidth(width);
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+        double zI = helper.getZIndex();
+        helper.setZIndex(zI + 5);
+        typeList.setWidth(width / 3);
+        helper.setZIndex(zI);
     }
 
     public void updateList()
@@ -60,6 +85,7 @@ public class GuiArtistList extends GuiSquareList<Object>
     public void draw(Minecraft minecraft, int mouseX, int mouseY)
     {
         typeList.draw(minecraft, mouseX, mouseY);
+        LiteModMusicPlayer.core.getDrawingHelper().drawText("Artist:\n\u00a7l\u00a7n"+artist.getArtistName(), new Vector(x+(width()/5*3), y+3),0xFFFFFF,true,-1, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.TOP);
         super.draw(minecraft, mouseX, mouseY);
     }
 
@@ -171,7 +197,7 @@ public class GuiArtistList extends GuiSquareList<Object>
 
         public String getRenderString()
         {
-            return TranslateHelper.translate("gui.artist_list." + render + ".name").replace("\\n", "\n").replace("§", "\u00a7");
+            return TranslateHelper.translate("gui.artist_list." + render + ".name").replace("\\n", "\n").replace("ï¿½", "\u00a7");
         }
     }
 }

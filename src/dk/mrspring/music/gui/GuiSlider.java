@@ -143,4 +143,24 @@ public class GuiSlider implements IGui, IDelayedDraw
         LiteModMusicPlayer.core.getDrawingHelper().drawButtonThingy(new Quad(mouseX, mouseY - 16, lineWidth, 16), 0, false);
         LiteModMusicPlayer.core.getDrawingHelper().drawText(line, new Vector(mouseX + 4, mouseY - 12), 0xFFFFFF, true, -1, dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.LEFT, dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.TOP);
     }
+
+    public void setX(int x)
+    {
+        this.x = x;
+    }
+
+    public void setW(int w)
+    {
+        this.width = w;
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public void setWidth(int width)
+    {
+        this.width = width;
+    }
 }
