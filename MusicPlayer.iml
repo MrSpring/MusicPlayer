@@ -25,5 +25,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="lastfm-java" exported="" />
+    <orderEntry type="module" module-name="MrSpringUpdateChecker" exported="" />
   </component>
 </module>

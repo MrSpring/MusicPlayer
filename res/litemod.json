@@ -1,0 +1,9 @@
+{
+  "name": "MC Music Player",
+  "mcversion": "1.8",
+  "revision": "1",
+  "author": "Mr. Spring",
+  "classTransformerClasses": [
+    "dk.mrspring.music.asm.Transformer"
+  ]
+}

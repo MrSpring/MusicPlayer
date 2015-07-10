@@ -12,6 +12,8 @@ import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.*;
 import dk.mrspring.music.util.filter.FileTypeFilter;
+import dk.mrspring.updater.core.UpdateChecker;
+import dk.mrspring.updator.gui.GuiScreenUpdater;
 import javafx.embed.swing.JFXPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -113,7 +115,7 @@ public class LiteModMusicPlayer implements Tickable
                 minecraft.displayGuiScreen(/*new GuiScreenFolderSelector(minecraft.currentScreen)*/new GuiScreenAllMusic(minecraft.currentScreen));
         }
 
-        if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen))
+        if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen) && !(minecraft.currentScreen instanceof GuiScreenUpdater))
             overlay.draw(musicHandler, minecraft);
     }
 
@@ -214,6 +216,10 @@ public class LiteModMusicPlayer implements Tickable
     @Override
     public void init(File configPath)
     {
+        UpdateChecker.getInstance().setMCVersion(Minecraft.getMinecraft().getVersion());
+        UpdateChecker.getInstance().registerUpdateMod("tkm", "Kitchen", "1.3.11");
+        UpdateChecker.getInstance().registerUpdateMod("igfe", "In-Game File Explorer", "0.1.0-BETA");
+        UpdateChecker.getInstance().registerUpdateMod("musicplayer", getName(), getVersion());
         core = new LLCore("music_player");
         core.registerIcon(Icons.trash, "trash_can");
         core.registerIcon(Icons.search, "search");
