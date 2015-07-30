@@ -179,7 +179,7 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
         int currentColumn = 0;
         int rowHeight = 0;
         int currentYOffset = 0;
-        int relMouseX = mouseX - x, relMouseY = mouseY - y;
+        int relMouseX = mouseX - x, relMouseY = mouseY - y + scroll;
         for (T music : this.showing)
         {
             if (!filter(music, currentFilter))
