@@ -47,4 +47,6 @@ gui.explorer.use_folder=Use This Folder
 
 gui.overlay_screen.close_hint=Click anywhere here to close...
 
+gui.music_details.album.list_entry=%1$s §7- %2$s
+
 playlist.queue.name=Queue

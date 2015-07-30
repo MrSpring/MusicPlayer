@@ -11,6 +11,7 @@ import dk.mrspring.music.player.Music;
 import dk.mrspring.music.util.ArtistInfoCall;
 import dk.mrspring.music.util.GuiUtils;
 import dk.mrspring.music.util.Miscellaneous;
+import dk.mrspring.music.util.TranslateHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.opengl.GL11;
@@ -98,16 +99,23 @@ public class CardMusic extends Card
             this.drawing = toDraw;
             this.renderer = renderer;
             this.width = width;
-            textRender = new TextRender(toDraw.getName() + " - §7" + toDraw.getArtist(), renderer, width);
+            textRender = new TextRender(getRenderString(), renderer, width);
             this.height = textRender.getTotalHeight() + 12;
             textRender.setWrapLength(width - height);
         }
 
         void recalculateSize()
         {
-            textRender = new TextRender(drawing.getName() + " - §7" + drawing.getArtist(), renderer, width);
+            textRender = new TextRender(getRenderString(), renderer, width);
             this.height = textRender.getTotalHeight();
             textRender.setWrapLength(width - height);
+        }
+
+        private String getRenderString()
+        {
+//            return drawing.getName() + " - §7" + drawing.getArtist();
+            return TranslateHelper.translateFormat("gui.music_details.album.list_entry",
+                    drawing.getName(), drawing.getArtist());
         }
 
         public int getHeight()
@@ -120,6 +128,7 @@ public class CardMusic extends Card
             drawing.bindCover();
             this.width = width;
             this.textRender.setWrapLength(width - height);
+            this.height = textRender.getTotalHeight() + 12;
             int size = height;
             helper.drawTexturedShape(new Quad(3, 3, size - 5, size - 5));
             textRender.render(helper, size, height / 2, textColor, true, VerticalTextAlignment.LEFT, CENTER);
