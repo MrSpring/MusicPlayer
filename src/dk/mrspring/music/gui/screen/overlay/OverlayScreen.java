@@ -198,7 +198,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         int sideXOffset = (width - getOverlayWidth()) / 2;
-        if (mouseX < sideXOffset || mouseX > width - sideXOffset)
+        if (mouseX < sideXOffset || mouseX > width - sideXOffset + 10)
         {
             this.closeOverlay();
             LiteModMusicPlayer.config.show_overlay_screen_close_hint = false;
