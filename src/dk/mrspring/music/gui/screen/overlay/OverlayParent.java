@@ -20,4 +20,6 @@ public interface OverlayParent
     Minecraft getMinecraft();
 
     void closeOverlay();
+
+    void clampScroll();
 }

@@ -1,6 +1,5 @@
 package dk.mrspring.music.gui.screen.overlay;
 
-import com.mumfrey.liteloader.LiteMod;
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment;
 import dk.mrspring.llcore.Quad;
@@ -9,8 +8,8 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.overlay.MultilineTextRender;
 import dk.mrspring.music.overlay.TextRender;
 import dk.mrspring.music.player.Music;
-import dk.mrspring.music.util.Album;
 import dk.mrspring.music.util.ArtistInfoCall;
+import dk.mrspring.music.util.GuiUtils;
 import dk.mrspring.music.util.Miscellaneous;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -18,7 +17,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.*;
+import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.CENTER;
+import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.TOP;
 
 /**
  * Created by Konrad on 18-06-2015.
@@ -151,6 +151,18 @@ public class CardMusic extends Card
                 int width = parent.getOverlayWidth() - 4;
                 views[i] = new MusicView(width, music, Minecraft.getMinecraft().fontRendererObj);
             }
+        }
+
+        @Override
+        public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
+        {
+            int height = getHeight();
+            if (!expanded && GuiUtils.isMouseInBounds(mouseX, mouseY, 0, height - 15, parent.getOverlayWidth(), 15))
+            {
+                expanded = !expanded;
+                parent.clampScroll();
+                return true;
+            } else return super.mouseDown(mouseX, mouseY, mouseButton);
         }
 
         private boolean collapse()

@@ -206,7 +206,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         }
         int topYOffset = height / 3;
         for (Card card : cardList)
-            if (card.mouseDown(mouseX - sideXOffset, mouseY - topYOffset - scroll, mouseButton)) return;
+            if (card.mouseDown(mouseX - sideXOffset, mouseY - topYOffset + scroll, mouseButton)) return;
             else topYOffset += card.getHeight() + 10;
     }
 
@@ -237,7 +237,8 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         overlaying.setWorldAndResolution(mc, width, height);
     }
 
-    private void clampScroll()
+    @Override
+    public void clampScroll()
     {
         scroll = Math.min(scroll, this.hasScroll() ? getMaxScroll() : 0);
         scroll = Math.max(scroll, 0);
