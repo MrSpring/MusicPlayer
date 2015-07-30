@@ -111,7 +111,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     {
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 
-        helper.drawShape(new Quad(mouseX - 5, mouseY - y + scroll, 10, _entryHeight));
+//        helper.drawShape(new Quad(mouseX - 5, mouseY - y + scroll, 10, _entryHeight));
 
         GL11.glPushMatrix();
 

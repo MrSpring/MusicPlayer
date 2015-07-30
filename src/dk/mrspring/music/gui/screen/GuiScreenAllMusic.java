@@ -76,6 +76,10 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
         GuiSlider slider = (GuiSlider) getGui("size_slider");
         slider.setX(0);
         slider.setW(width / 3);
+        GuiSimpleButton back = (GuiSimpleButton) getGui("back");
+        back.setY(height - 30 - 30 + 3);
+        SidePanel sidePanel = (SidePanel) getGui("side_panel");
+        sidePanel.h=height-30-30;
     }
 
     public void openPanel(IPanel newPanel)
