@@ -451,7 +451,7 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
         @Override
         public void handleMouseWheel(int mouseX, int mouseY, int dWheelRaw)
         {
-            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, width, height))
+            if (GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h))
             {
                 int mouseWheel = dWheelRaw;
                 mouseWheel /= 4;
