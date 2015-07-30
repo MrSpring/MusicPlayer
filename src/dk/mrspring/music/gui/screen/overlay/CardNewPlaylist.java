@@ -1,12 +1,15 @@
 package dk.mrspring.music.gui.screen.overlay;
 
-import com.mumfrey.liteloader.gl.GLClippingPlanes;
 import dk.mrspring.llcore.DrawingHelper;
+import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.GuiCustomTextField;
 import dk.mrspring.music.gui.GuiSimpleButton;
 import dk.mrspring.music.player.Playlist;
 import net.minecraft.client.Minecraft;
+import org.lwjgl.opengl.GL11;
+
+import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.TOP;
 
 /**
  * Created by MrSpring on 02-07-2015 for MC Music Player.
@@ -74,14 +77,25 @@ public class CardNewPlaylist extends Card
         @Override
         public int getHeight()
         {
-            return nameField.getH() + 20;
+            return nameField.getH() + 55;
         }
 
         @Override
         public void draw(Minecraft minecraft, int mouseX, int mouseY)
         {
-            GLClippingPlanes.glDisableClipping();
-            nameField.setW(parent.getOverlayWidth());
+            int width = parent.getOverlayWidth();
+            GL11.glPushMatrix();
+            GL11.glTranslatef(width / 2, 0, 0);
+            float s = 2F;
+            GL11.glScalef(s, s, s);
+            LiteModMusicPlayer.core.getDrawingHelper().drawText("New Playlist", new Vector(0, 3), 0xFFFFFF, true, width / (int) s, DrawingHelper.VerticalTextAlignment.CENTER, TOP);
+            GL11.glPopMatrix();
+            int p = 30;
+            int oWidth = parent.getOverlayWidth();
+            LiteModMusicPlayer.core.getDrawingHelper().drawHorizontalLine(new Vector(p / 3, 35), oWidth - (p/3*2), 1, true);
+            nameField.setW(oWidth - p);
+            nameField.setX(p / 2);
+            nameField.setY(45);
             DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
             double z = helper.getZIndex();
             helper.setZIndex(z + 10);
@@ -164,11 +178,11 @@ public class CardNewPlaylist extends Card
             if (button.mouseDown(mouseX, mouseY, mouseButton))
             {
                 Playlist newPlaylist = new Playlist(nameField.getText());
-                if (onCreated!=null)
+                if (onCreated != null)
                     onCreated.onCreated(newPlaylist);
                 parent.closeOverlay();
                 return true;
-            }else return false;
+            } else return false;
         }
 
         @Override
