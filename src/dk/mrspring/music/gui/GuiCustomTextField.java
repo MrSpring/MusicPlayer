@@ -70,7 +70,7 @@ public class GuiCustomTextField implements IGui
 
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 //        minecraft.fontRendererObj.drawString(getText(), x + PADDING - scroll, textY, 0xFFFFFF, false);
-        helper.drawText(getText(), new Vector(x + PADDING, y + (h / 2)), 0xFFFFFF, false, -1, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
+        helper.drawText(getText(), new Vector(x + PADDING - scroll, y + (h / 2)), 0xFFFFFF, false, -1, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
 
         GLClippingPlanes.glDisableClipping();
 
