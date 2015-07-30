@@ -366,7 +366,6 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
             newPlaylist.update();
             if (scrolling)
             {
-                System.out.println("Setting to one");
                 scrollAlphaProgress = 1F;
                 scrolling = false;
             } else scrollAlphaProgress = Miscellaneous.smoothDamp(0F, scrollAlphaProgress, 0.2F);

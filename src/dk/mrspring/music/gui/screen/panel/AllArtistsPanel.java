@@ -52,7 +52,6 @@ public class AllArtistsPanel extends GuiAllArtistsList implements IPanel
     @Override
     protected boolean onElementClicked(int relMouseX, int relMouseY, int globalMouseX, int globalMouseY, int mouseButton, Artist clicked)
     {
-        System.out.println("Clicked");
         if (mouseButton == 0)
         {
             parent.openPanel(new ArtistPanel(clicked, GuiArtistList.Showing.ALBUMS));

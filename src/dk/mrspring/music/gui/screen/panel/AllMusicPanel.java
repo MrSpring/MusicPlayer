@@ -1,10 +1,14 @@
 package dk.mrspring.music.gui.screen.panel;
 
 import dk.mrspring.llcore.Color;
+import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.GuiAllMusicList;
+import dk.mrspring.music.gui.menu.MenuItemButton;
+import dk.mrspring.music.gui.menu.MenuItemSubMenu;
 import dk.mrspring.music.gui.screen.overlay.CardMusic;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.player.Music;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.List;
 public class AllMusicPanel extends GuiAllMusicList implements IPanel
 {
     IPanelContainer parent;
+    long lastClick = 0;
 
     public AllMusicPanel(List<Music> allMusic)
     {
@@ -24,12 +29,22 @@ public class AllMusicPanel extends GuiAllMusicList implements IPanel
     @Override
     protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Music clicked)
     {
-        System.out.println("Clicked");
         if (mouseButton == 0)
         {
-            OverlayScreen overlay = new OverlayScreen("Music Details", (GuiScreen) parent);
-            overlay.addCard(new CardMusic(overlay, clicked));
-            parent.getMinecraft().displayGuiScreen(overlay);
+            long currentTime = System.currentTimeMillis();
+            long diff = currentTime - lastClick;
+            if (diff < LiteModMusicPlayer.config.double_click_time)
+            {
+                OverlayScreen overlay = new OverlayScreen("Music Details", (GuiScreen) parent);
+                overlay.addCard(new CardMusic(overlay, clicked));
+                parent.getMinecraft().displayGuiScreen(overlay);
+            }
+            lastClick = currentTime;
+            return true;
+
+        } else if (mouseButton == 1)
+        {
+            FontRenderer mc = parent.getMinecraft().fontRendererObj;
             return true;
         } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
     }

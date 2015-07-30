@@ -269,17 +269,14 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
                             openFile.enable();
                             if (this.lastClicked != null && lastClicked == guiFile)
                             {
-                                System.out.println("Equal");
                                 long currentTime = System.currentTimeMillis();
                                 long difference = currentTime - timeAtLastFileClick;
-                                System.out.println("difference = " + difference);
                                 if (difference <= 1000)
                                 {
                                     openSelectedFile();
                                 } else timeAtLastFileClick = currentTime;
                             } else
                             {
-                                System.out.println(lastClicked==null);
                                 timeAtLastFileClick = System.currentTimeMillis();
                                 lastClicked = (GuiFile) guiFile;
                             }

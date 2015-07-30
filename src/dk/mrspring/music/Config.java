@@ -38,6 +38,7 @@ public class Config
     public int console_scroll_down_key = Keyboard.KEY_NEXT;
     public boolean clear_cover_cache_on_shutdown = false;
     public boolean show_overlay_screen_close_hint = true;
+    public long double_click_time = 500;
 
     public void validateConfig()
     {
@@ -55,5 +56,6 @@ public class Config
         overlay_next_up_easing_speed = Miscellaneous.clamp01(overlay_next_up_easing_speed);
         gui_mm_list_entry_size = Miscellaneous.clamp(gui_mm_list_entry_size, 0, 100);
         if (file_sort_type == null) file_sort_type = defaultConfig.file_sort_type;
+        if (double_click_time < 0) double_click_time = 500;
     }
 }

@@ -98,7 +98,6 @@ public class CardNewPlaylist extends Card
         @Override
         public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
         {
-            System.out.println("Mouse X: " + mouseX + ", Mouse Y: " + mouseY);
             return nameField.mouseDown(mouseX, mouseY, mouseButton);
         }
 

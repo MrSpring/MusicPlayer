@@ -56,10 +56,7 @@ public class ArtistPanel extends GuiArtistList implements IPanel
     @Override
     public int getTopBarOffset()
     {
-        int heightOfList = typeList.getHeight() + 4;
-        System.out.println("heightOfList = " + heightOfList);
         return Math.max(30, typeList.getHeight()+4);
-//        return 3;
     }
 
     @Override
