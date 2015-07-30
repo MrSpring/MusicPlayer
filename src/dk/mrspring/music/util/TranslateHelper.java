@@ -1,5 +1,6 @@
 package dk.mrspring.music.util;
 
+import com.mumfrey.liteloader.core.LiteLoader;
 import net.minecraft.util.StatCollector;
 
 /**
@@ -9,11 +10,15 @@ public class TranslateHelper
 {
     public static String translate(String toTranslate)
     {
-        return StatCollector.translateToLocal(toTranslate);
+        String translated = StatCollector.translateToLocal(toTranslate);
+        if (LiteLoader.isDevelopmentEnvironment()) translated = translated.replace("§", "\u00a7");
+        return translated.replace("\\n", "\n");
     }
 
     public static String translateFormat(String toTranslate, Object... format)
     {
-        return StatCollector.translateToLocalFormatted(toTranslate, format).replace("§","\u00a7").replace("\\n", "\n");/*.replace("§", *//*"\u00a7"*//*"text");*/
+        String translated = StatCollector.translateToLocalFormatted(toTranslate, format);
+        if (LiteLoader.isDevelopmentEnvironment()) translated = translated.replace("§", "\u00a7");
+        return translated.replace("\\n", "\n");
     }
 }
