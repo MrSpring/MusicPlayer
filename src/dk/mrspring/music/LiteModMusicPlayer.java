@@ -10,7 +10,10 @@ import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.overlay.Overlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.player.Playlist;
-import dk.mrspring.music.util.*;
+import dk.mrspring.music.util.AnyTimeKeyBind;
+import dk.mrspring.music.util.FileUtils;
+import dk.mrspring.music.util.Icons;
+import dk.mrspring.music.util.JsonUtils;
 import dk.mrspring.music.util.filter.FileTypeFilter;
 import dk.mrspring.updater.core.UpdateChecker;
 import dk.mrspring.updator.gui.GuiScreenUpdater;
@@ -40,7 +43,7 @@ public class LiteModMusicPlayer implements Tickable
     public static Overlay overlay;
     public static ConsoleOutput log;
 
-    public static String apiKey = "api";
+    public static String apiKey = "77fdf3c6e86950cb4baf5c41218bdc33";
 
     public static boolean disableKeys = false;
     public static boolean showConsole = false;

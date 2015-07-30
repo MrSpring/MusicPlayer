@@ -2,6 +2,7 @@ package dk.mrspring.music.gui;
 
 import com.mumfrey.liteloader.gl.GLClippingPlanes;
 import dk.mrspring.llcore.Color;
+import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
@@ -97,7 +98,7 @@ public class GuiMultiLineTextField implements IGui, IMouseListener
 
         GLClippingPlanes.glEnableClipping(x, x + w, y + padding, y + h - padding);
 
-        lines = LiteModMusicPlayer.core.getDrawingHelper().drawText(text, new Vector(x + padding + xOffset, y + padding + yOffset), 0xFFFFFF, true, w - (padding * 2) - xOffset, dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.LEFT, dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.TOP);
+        lines = LiteModMusicPlayer.core.getDrawingHelper().drawText(text, new Vector(x + padding + xOffset, y + padding + yOffset), 0xFFFFFF, true, w - (padding * 2) - xOffset, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.TOP).lines;
         GLClippingPlanes.glDisableClipping();
         String cutLine = line.substring(0, cursorRelativePos);
         int cursorXOffset = minecraft.fontRendererObj.getStringWidth(cutLine) + xOffset;

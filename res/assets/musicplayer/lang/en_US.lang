@@ -45,4 +45,6 @@ gui.explorer.new_file_name=Enter file name...
 gui.explorer.open_directory=Open Directory
 gui.explorer.use_folder=Use This Folder
 
+gui.overlay_screen.close_hint=Click anywhere here to close...
+
 playlist.queue.name=Queue

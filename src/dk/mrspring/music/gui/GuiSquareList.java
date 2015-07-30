@@ -80,11 +80,11 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
         GL11.glTranslatef(x + getXListOffset(), y + getYListOffset(), 0);
         GLClippingPlanes.glEnableVerticalClipping(0, height);
         int listWidth = width - (this.hasScroll() ? _scrollBarWidth : 0);
-        System.out.println(listWidth);
+//        System.out.println(listWidth);
         int columns = listWidth / _entryWidthTarget;
-        System.out.println(columns);
+//        System.out.println(columns);
         _entryWidth = listWidth / columns;
-        System.out.println(_entryWidth);
+//        System.out.println(_entryWidth);
         if (hasScroll())
             GuiUtils.drawScrollbar(width - _scrollBarWidth, y, _scrollBarWidth, height, scroll, getMaxScroll(), getRenderedListHeight() + _scrollMaxOffset);
         float remaining = listWidth % columns;

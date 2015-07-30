@@ -1,9 +1,6 @@
 package dk.mrspring.music.gui;
 
-import dk.mrspring.llcore.Color;
-import dk.mrspring.llcore.Icon;
-import dk.mrspring.llcore.Quad;
-import dk.mrspring.llcore.Vector;
+import dk.mrspring.llcore.*;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.util.GuiUtils;
@@ -104,9 +101,9 @@ public class GuiSimpleButton implements IGui
         String translatedText = TranslateHelper.translate(this.text);
 
         int textY = (this.height / 2) + y, textX = (this.width / 2) + x;
-        int lines = LiteModMusicPlayer.core.getDrawingHelper().drawText(translatedText, new Vector(textX, textY), textColor, true, width - 6, dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.CENTER, dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.CENTER);
+        DrawingHelper.TextRenderResult result = LiteModMusicPlayer.core.getDrawingHelper().drawText(translatedText, new Vector(textX, textY), textColor, true, width - 6, dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.CENTER, dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.CENTER);
         if (autoHeight)
-            this.setHeight(lines * 9 + 6);
+            this.setHeight(result.getTotalHeight() + 6);
     }
 
     public GuiSimpleButton hideBackground()

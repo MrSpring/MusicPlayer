@@ -7,6 +7,7 @@ import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.util.GuiUtils;
+import dk.mrspring.music.util.TranslateHelper;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -104,7 +105,6 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-
         GL11.glPushMatrix();
         this.overlaying.drawScreen(-1000, -1000, partialTicks);
         GL11.glPopMatrix();
@@ -119,8 +119,17 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
             helper.drawText(title, new Vector(width / 2, 30), getInvertedTextColor(),
                     true, width - 10, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.TOP);
 
+        int xOffset = (width - getOverlayWidth()) / 2;
+
+        if (LiteModMusicPlayer.config.show_overlay_screen_close_hint)
+        {
+            helper.drawText(TranslateHelper.translate("gui.overlay_screen.close_hint"),
+                    new Vector(xOffset / 2, height / 2), 0xFFFFFF, true, xOffset,
+                    DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
+        }
+
         GL11.glPushMatrix();
-        GL11.glTranslatef(width / 2 - (getOverlayWidth() / 2), height / 3 - scroll, 0);
+        GL11.glTranslatef(xOffset, height / 3 - scroll, 0);
 
         int listHeight = 0;
         for (Card card : cardList)
@@ -189,6 +198,12 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         int sideXOffset = (width - getOverlayWidth()) / 2;
+        if (mouseX < sideXOffset || mouseX > width - sideXOffset)
+        {
+            this.closeOverlay();
+            LiteModMusicPlayer.config.show_overlay_screen_close_hint = false;
+            return;
+        }
         int topYOffset = height / 3;
         for (Card card : cardList)
             if (card.mouseDown(mouseX - sideXOffset, mouseY - topYOffset - scroll, mouseButton)) return;

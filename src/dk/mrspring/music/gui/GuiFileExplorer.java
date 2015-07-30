@@ -127,7 +127,7 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
         if (showPath)
         {
             String openFile = getCurrentAbsolutePath();
-            listHeight -= (9 * helper.drawText(TranslateHelper.translate("gui.explorer.open_directory") + ":\n\u00a77" + openFile, new Vector(x + 3, y + listHeight - 6), 0xFFFFFF, true, width, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER)) + 4;
+            listHeight -= (helper.drawText(TranslateHelper.translate("gui.explorer.open_directory") + ":\n\u00a77" + openFile, new Vector(x + 3, y + listHeight - 6), 0xFFFFFF, true, width, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER).getTotalHeight()) + 4;
         }
 
         if (showBackground)

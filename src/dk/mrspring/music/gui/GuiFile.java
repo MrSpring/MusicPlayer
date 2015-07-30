@@ -191,8 +191,8 @@ public class GuiFile extends GuiFileBase
             rendering += "\n\u00a77" + getLastEditDate().toString();
         if (LiteModMusicPlayer.config.show_file_size_below_name && !getFile().isDirectory())
             rendering += "\n\u00a77" + getFileSize().toString();
-        int lines = helper.drawText(rendering, new Vector(x + (int) iconSize + 3, y + (h / 2)), 0xFFFFFF, true, w - (int) iconSize - 6, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
-        this.h = lines * 9 + ((int) iconSize - 9);
+        DrawingHelper.TextRenderResult result = helper.drawText(rendering, new Vector(x + (int) iconSize + 3, y + (h / 2)), 0xFFFFFF, true, w - (int) iconSize - 6, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
+        this.h = result.getTotalHeight() + ((int) iconSize - 9);
 
         helper.drawShape(new Quad(x + iconSize - 2, y + 1, 1, h - 2).setColor(Color.LT_GREY));
         helper.drawShape(new Quad(x + iconSize - 1, y + 1, 1, h - 2).setColor(Color.WHITE));
