@@ -61,7 +61,7 @@ public class GuiScreenMusicHome extends GuiScreen // TODO: Remove
 //            IOption option = options.get(i);
 //            this.addGuiElement("option:" + i, new GuiSimpleButton((width / 2) - offset + (buttonWidth * i) + padding, (height / 2) - (buttonHeight / 2) + padding - barOffset, buttonWidth - (2 * padding), buttonHeight - (2 * padding), "Stuff: " + i));
 //        }
-        this.addGuiElement("menu", new Menu(5, 5, width, height,
+        /*this.addGuiElement("menu", new Menu(5, 5, width, height,
                 new MenuItemButton("Do stuff...", mc.fontRendererObj, 0),
                 new MenuItemButton("Do some other stuff...", mc.fontRendererObj, 1),
                 new MenuItemSubMenu("Make new this:", mc.fontRendererObj,
@@ -88,7 +88,7 @@ public class GuiScreenMusicHome extends GuiScreen // TODO: Remove
                         )
                 ),
                 new MenuItemButton("Something after the sub-menu thing", mc.fontRendererObj, 5)
-        ));
+        ));*/
     }
 
     @Override

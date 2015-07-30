@@ -20,9 +20,9 @@ public class MenuItemSubMenu extends MenuItemButton
     boolean expanded = false;
     int width = 0;
 
-    public MenuItemSubMenu(String text, FontRenderer renderer, IMenuItem... items)
+    public MenuItemSubMenu(String text, FontRenderer renderer, Object id, IMenuItem... items)
     {
-        super(text, renderer, null);
+        super(text, renderer, id);
 
         this.items = Arrays.asList(items);
     }
@@ -68,15 +68,16 @@ public class MenuItemSubMenu extends MenuItemButton
                 int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
                 boolean hovering = GuiUtils.isMouseInBounds(localMouseX, localMouseY, 0, 0, width, itemHeight);
                 Color color = hovering ? Color.BLUE : Color.BLACK;
-                helper.drawShape(new Quad(-2, 0, width + 4, itemHeight).setColor(color).setAlpha(0.5F));
+                float a = 0.75F;
+                helper.drawShape(new Quad(-2, 0, width + 4, itemHeight).setColor(color).setAlpha(a));
 //            if (item instanceof MenuItemSubMenu)
-//                helper.drawShape(new Quad(0, 0, width, itemHeight).setColor(Color.BLACK).setAlpha(0.5F));
+//                helper.drawShape(new Quad(0, 0, width, itemHeight).setColor(Color.BLACK).setAlpha(a));
                 if (i == 0)
-                    helper.drawShape(new Quad(-1, -1, width + 2, 1).setColor(color).setAlpha(0.5F));
+                    helper.drawShape(new Quad(-1, -1, width + 2, 1).setColor(color).setAlpha(a));
                 else if (i == items.size() - 1)
                     helper
-                            .drawShape(new Quad(-2, itemHeight, width + 4, 1).setColor(color).setAlpha(0.5F))
-                            .drawShape(new Quad(-1, itemHeight + 1, width + 2, 1).setColor(color).setAlpha(0.5F));
+                            .drawShape(new Quad(-2, itemHeight, width + 4, 1).setColor(color).setAlpha(a))
+                            .drawShape(new Quad(-1, itemHeight + 1, width + 2, 1).setColor(color).setAlpha(a));
                 drawOutline(helper, -1, 0, width + 2, itemHeight);
                 GL11.glPushMatrix();
                 item.draw(localMouseX, localMouseY, width);

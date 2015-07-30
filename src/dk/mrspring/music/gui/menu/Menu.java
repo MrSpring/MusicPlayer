@@ -72,15 +72,16 @@ public class Menu implements IGui
             int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
             boolean hovering = GuiUtils.isMouseInBounds(localMouseX, localMouseY, 0, 0, size.w, itemHeight);
             Color color = hovering ? Color.BLUE : Color.BLACK;
-            helper.drawShape(new Quad(-2, 0, size.w + 4, itemHeight).setColor(color).setAlpha(0.5F));
+            float a = 0.75F;
+            helper.drawShape(new Quad(-2, 0, size.w + 4, itemHeight).setColor(color).setAlpha(a));
 //            if (item instanceof MenuItemSubMenu)
 //                helper.drawShape(new Quad(0, 0, size.w, itemHeight).setColor(Color.BLACK).setAlpha(0.5F));
             if (i == 0)
-                helper.drawShape(new Quad(-1, -1, size.w + 2, 1).setColor(color).setAlpha(0.5F));
+                helper.drawShape(new Quad(-1, -1, size.w + 2, 1).setColor(color).setAlpha(a));
             else if (i == items.size() - 1)
                 helper
-                        .drawShape(new Quad(-2, itemHeight, size.w + 4, 1).setColor(color).setAlpha(0.5F))
-                        .drawShape(new Quad(-1, itemHeight + 1, size.w + 2, 1).setColor(color).setAlpha(0.5F));
+                        .drawShape(new Quad(-2, itemHeight, size.w + 4, 1).setColor(color).setAlpha(a))
+                        .drawShape(new Quad(-1, itemHeight + 1, size.w + 2, 1).setColor(color).setAlpha(a));
             drawOutline(helper, -1, 0, size.w + 2, itemHeight);
             GL11.glPushMatrix();
             item.draw(localMouseX, localMouseY, size.w);
@@ -96,7 +97,8 @@ public class Menu implements IGui
     {
         if (GuiUtils.isMouseInBounds(mouseX, mouseY, size.asQuad()))
             return true;
-        else {
+        else
+        {
             for (IMenuItem item : items)
             {
                 int relMouseX = mouseX - size.x, relMouseY = mouseY - size.y;
