@@ -162,6 +162,12 @@ public class Menu implements IGui
 
     }
 
+    public Menu setAction(MenuAction action)
+    {
+        this.onClick = action;
+        return this;
+    }
+
     public interface MenuAction
     {
         /**

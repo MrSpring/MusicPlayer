@@ -1,6 +1,7 @@
 package dk.mrspring.music.gui.screen.panel;
 
 import dk.mrspring.music.gui.menu.IMenuItem;
+import dk.mrspring.music.gui.menu.Menu;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -8,9 +9,9 @@ import net.minecraft.client.Minecraft;
  */
 public interface IPanelContainer
 {
-    public void openMenu(int x, int y, IMenuItem... items);
+    void openMenu(int x, int y, Menu.MenuAction action, IMenuItem... items);
 
-    public void openPanel(IPanel newPanel);
+    void openPanel(IPanel newPanel);
 
-    public Minecraft getMinecraft();
+    Minecraft getMinecraft();
 }

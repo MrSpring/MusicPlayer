@@ -14,6 +14,7 @@ import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.*;
  */
 public class MenuItemButton extends IndexedMenuItem
 {
+    // TODO: Fix long names
     String drawing;
     TextRender render;
     GuiClickable clickListener;

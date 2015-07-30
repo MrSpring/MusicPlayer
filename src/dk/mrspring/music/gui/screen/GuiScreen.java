@@ -53,11 +53,11 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         return openMenu;
     }
 
-    public void openMenu(int mouseX, int mouseY, IMenuItem... items)
+    public void openMenu(int mouseX, int mouseY, Menu.MenuAction action, IMenuItem... items)
     {
         if (items != null && items.length > 0)
         {
-            this.openMenu = new Menu(mouseX, mouseY, width, height, items);
+            this.openMenu = new Menu(mouseX, mouseY, width, height, items).setAction(action);
         }
     }
 

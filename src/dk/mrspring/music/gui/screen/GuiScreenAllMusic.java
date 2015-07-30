@@ -14,6 +14,7 @@ import dk.mrspring.music.gui.GuiSquareList;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.interfaces.IResizable;
+import dk.mrspring.music.gui.menu.IMenuItem;
 import dk.mrspring.music.gui.screen.overlay.CardNewPlaylist;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.gui.screen.panel.*;
