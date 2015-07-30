@@ -230,6 +230,13 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         this.clampScroll();
     }
 
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc, width, height);
+        overlaying.setWorldAndResolution(mc, width, height);
+    }
+
     private void clampScroll()
     {
         scroll = Math.min(scroll, this.hasScroll() ? getMaxScroll() : 0);
