@@ -39,10 +39,10 @@ public class ArtistPanel extends GuiArtistList implements IPanel
         {
             String text = clicked instanceof Album ? ((Album) clicked).getAlbumName() : (clicked instanceof Music ? ((Music) clicked).getName() : "");
             Minecraft mc = parent.getMinecraft();
-            parent.openMenu(mouseX, mouseY,
-                    new MenuItemButton("IT'S WORKING!!!", mc.fontRendererObj, 0),
-                    new MenuItemButton(text, mc.fontRendererObj, 1)
-            );
+//            parent.openMenu(mouseX, mouseY,
+//                    new MenuItemButton("IT'S WORKING!!!", mc.fontRendererObj, 0),
+//                    new MenuItemButton(text, mc.fontRendererObj, 1)
+//            );
             return true;
         } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
     }

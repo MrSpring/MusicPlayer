@@ -29,7 +29,7 @@ public class MenuItemButton extends IndexedMenuItem
     @Override
     public void initializeSize()
     {
-        clickListener = new GuiClickable(0, 0, render.getLongestLine() + 6, getMinWidth());
+        clickListener = new GuiClickable(0, 0, render.getLongestLine() + 6, getHeight());
     }
 
     @Override

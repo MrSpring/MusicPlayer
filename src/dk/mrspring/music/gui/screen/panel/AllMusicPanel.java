@@ -5,6 +5,7 @@ import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.GuiAllMusicList;
 import dk.mrspring.music.gui.menu.*;
 import dk.mrspring.music.gui.screen.overlay.CardMusic;
+import dk.mrspring.music.gui.screen.overlay.CardNewPlaylist;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.player.Playlist;
@@ -21,13 +22,17 @@ public class AllMusicPanel extends GuiAllMusicList implements IPanel
     IPanelContainer parent;
     long lastClick = 0;
 
+    private static final int PLAY_NEXT_INDEX = 0;
+    private static final int ADD_TO_QUEUE_INDEX = 1;
+    private static final int ADD_TO_PLAYLIST_INDEX = 2;
+
     public AllMusicPanel(List<Music> allMusic)
     {
         super(0, 0, 100, 100, allMusic);
     }
 
     @Override
-    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, Music clicked)
+    protected boolean onElementClicked(int relMouseX, int relMouseY, int mouseX, int mouseY, int mouseButton, final Music clicked)
     {
         if (mouseButton == 0)
         {
@@ -59,7 +64,50 @@ public class AllMusicPanel extends GuiAllMusicList implements IPanel
                         @Override
                         public void onAction(IMenuItem... pressedItems)
                         {
-
+                            if (pressedItems.length > 0 && pressedItems[0] != null &&
+                                    pressedItems[0] instanceof IndexedMenuItem)
+                            {
+                                IndexedMenuItem clickedItem = (IndexedMenuItem) pressedItems[0];
+                                System.out.println(clickedItem.getClass().getName());
+                                int clickedIndex = (Integer) clickedItem.getIdentifier();
+                                switch (clickedIndex)
+                                {
+                                    case PLAY_NEXT_INDEX:
+                                        System.out.println("Play next");
+                                        LiteModMusicPlayer.musicHandler.getQueue().addNext(clicked);
+                                        break;
+                                    case ADD_TO_QUEUE_INDEX:
+                                        System.out.println("Add to queue");
+                                        LiteModMusicPlayer.musicHandler.getQueue().add(clicked);
+                                        break; // TODO: Add to queue
+                                    case ADD_TO_PLAYLIST_INDEX:
+                                        System.out.println("Something playlist");
+                                        if (!(clickedItem instanceof MenuItemSubMenu) || !(pressedItems.length > 1 &&
+                                                pressedItems[1] instanceof IndexedMenuItem))
+                                            break;
+                                        System.out.println("Something playlist");
+                                        Object id = ((IndexedMenuItem) pressedItems[1]).getIdentifier();
+                                        if (id instanceof Integer)
+                                        {
+                                            OverlayScreen overlay = new OverlayScreen("Create Playlist", (GuiScreen) parent);
+                                            overlay.addCard(new CardNewPlaylist(overlay, new CardNewPlaylist.PlaylistCreated()
+                                            {
+                                                @Override
+                                                public void onCreated(Playlist created)
+                                                {
+                                                    created.add(clicked);
+                                                }
+                                            }));
+                                        } else if (id instanceof Playlist)
+                                            ((Playlist) id).add(clicked);
+                                        break;
+                                }
+                                /*if (pressedItems[0] != null && pressedItems[0] instanceof MenuItemSubMenu)
+                                {
+                                    MenuItemSubMenu subMenu = (MenuItemSubMenu) pressedItems[0];
+                                    subMenu
+                                }*/
+                            }
                         }
                     },
                     new MenuItemButton("Play Next", mc, 0),

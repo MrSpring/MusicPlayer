@@ -87,4 +87,10 @@ public class Queue extends Playlist
             return getMusicList().get(1);
         else return getCurrent();
     }
+
+    public Queue addNext(Music clicked)
+    {
+        this.add(1, clicked);
+        return this;
+    }
 }

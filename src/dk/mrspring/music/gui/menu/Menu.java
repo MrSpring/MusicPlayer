@@ -131,14 +131,14 @@ public class Menu implements IGui
             return GuiUtils.isMouseInBounds(mouseX, mouseY, size.asQuad());
         else
         {
+            int relMouseY = mouseY - size.y, relMouseX = mouseX - size.x;
             for (IMenuItem item : items)
             {
-                int relMouseY = mouseY - size.y, relMouseX = mouseX - size.x;
                 if (item.mouseDown(relMouseX, relMouseY, mouseButton))
                 {
                     onClick.onAction(item.getClickedItems(relMouseX, relMouseY, mouseButton));
                     return true;
-                }
+                } else relMouseY -= item.getHeight();
             }
             return false;
         }
