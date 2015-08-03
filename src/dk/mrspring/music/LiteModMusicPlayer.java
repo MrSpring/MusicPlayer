@@ -7,7 +7,7 @@ import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.gui.screen.GuiScreenAllMusic;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
-import dk.mrspring.music.overlay.Overlay;
+import dk.mrspring.music.overlay.PlayerOverlay;
 import dk.mrspring.music.player.MusicHandler;
 import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.AnyTimeKeyBind;
@@ -40,7 +40,7 @@ public class LiteModMusicPlayer implements Tickable
     public static File coverLocation;
     public static File playlistLocation;
     public static Config config;
-    public static Overlay overlay;
+    public static PlayerOverlay playerOverlay;
     public static ConsoleOutput log;
 
     public static String apiKey = "77fdf3c6e86950cb4baf5c41218bdc33";
@@ -103,9 +103,9 @@ public class LiteModMusicPlayer implements Tickable
             if (reloadConfig.isClicked())
                 loadConfigFile();
             if (expandMiniPlayer.isClicked())
-                overlay.toggleExpanded();
+                playerOverlay.toggleExpanded();
             if (showNextUp.isClicked())
-                overlay.showNext();
+                playerOverlay.showNext();
 
             if (previous.isClicked())
                 musicHandler.playPrevious();
@@ -119,7 +119,7 @@ public class LiteModMusicPlayer implements Tickable
         }
 
         if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen) && !(minecraft.currentScreen instanceof GuiScreenUpdater))
-            overlay.draw(musicHandler, minecraft);
+            playerOverlay.draw(musicHandler, minecraft);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class LiteModMusicPlayer implements Tickable
         log.addLine("Initialized Music Player mod successfully.");
         musicHandler = new MusicHandler(config.auto_play, new File(System.getProperty("user.home"), "Music"));
         loadPlaylist();
-        overlay = new Overlay();
+        playerOverlay = new PlayerOverlay();
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
         {
             @Override

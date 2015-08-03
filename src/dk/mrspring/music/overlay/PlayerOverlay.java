@@ -21,7 +21,7 @@ import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment;
 /**
  * Created by Konrad on 27-04-2015.
  */
-public class Overlay
+public class PlayerOverlay
 {
     double nextUpProgress = 0F, sizeProgress = 0F;
 
