@@ -2,6 +2,7 @@ package dk.mrspring.music.util;
 
 import dk.mrspring.music.player.Music;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,5 +26,9 @@ public class MusicCollection
     {
         this.musicList = newMusicList;
         return this;
+    }
+
+    public Iterator<Music> getIterator(){
+        return musicList.iterator();
     }
 }
