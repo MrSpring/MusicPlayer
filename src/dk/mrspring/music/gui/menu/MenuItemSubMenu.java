@@ -48,21 +48,6 @@ public class MenuItemSubMenu extends MenuItemButton
     }
 
     @Override
-    public IMenuItem[] getClickedItems(int mouseX, int mouseY, int width)
-    {
-        IMenuItem[] one = new IMenuItem[]{this};
-        IMenuItem[] two = null;
-        for (IMenuItem item : items)
-            if (item.isMouseHovering(mouseX, mouseY, width))
-            {
-                two = item.getClickedItems(mouseX, mouseY, width);
-                break;
-            }
-        if (two != null && two.length > 0) one = Miscellaneous.merge(one, two);
-        return one.length > 1 ? one : null;
-    }
-
-    @Override
     public void draw(int mouseX, int mouseY, int buttonWidth)
     {
         expanded = mouseX < buttonWidth ?
@@ -104,20 +89,6 @@ public class MenuItemSubMenu extends MenuItemButton
         }
     }
 
-    /*@Override
-    public boolean isMouseHovering(int mouseX, int mouseY, int buttonWidth)
-    {
-        return super.isMouseHovering()
-        *//*if (!expanded || mouseX < width) return super.isMouseHovering(mouseX, mouseY, width);
-        int yOffset = 0;
-        for (IMenuItem item : items)
-        {
-            if (item.isMouseHovering(mouseX - buttonWidth, mouseY - yOffset, width)) return true;
-            else yOffset += item.getHeight();
-        }
-        return super.isMouseHovering(mouseX, mouseY, buttonWidth);*//*
-    }*/
-
     private void drawOutline(DrawingHelper helper, int x, int y, int w, int h)
     {
         helper.drawShape(new Quad(x, y, w, 1));
@@ -125,6 +96,22 @@ public class MenuItemSubMenu extends MenuItemButton
 
         helper.drawShape(new Quad(x, y, 1, h));
         helper.drawShape(new Quad(x + w - 1, y, 1, h));
+    }
+
+    @Override
+    public IMenuItem[] getClickedItems(int mouseX, int mouseY, int width)
+    {
+        IMenuItem[] one = new IMenuItem[]{this};
+        IMenuItem[] two = null;
+        int yOffset = 0;
+        for (IMenuItem item : items)
+            if (item.isMouseHovering(mouseX - width, mouseY - yOffset, width))
+            {
+                two = item.getClickedItems(mouseX - width, mouseY - yOffset, width);
+                break;
+            } else yOffset += item.getHeight();
+        if (two != null && two.length > 0) one = Miscellaneous.merge(one, two);
+        return one.length > 1 ? one : null;
     }
 
     @Override
