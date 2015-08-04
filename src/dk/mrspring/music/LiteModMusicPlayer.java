@@ -4,6 +4,8 @@ import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
 import dk.mrspring.llcore.LLCore;
 import dk.mrspring.llcore.Quad;
+import dk.mrspring.music.effect.EffectHandler;
+import dk.mrspring.music.effect.EffectMessage;
 import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.gui.screen.GuiScreenAllMusic;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
@@ -42,6 +44,7 @@ public class LiteModMusicPlayer implements Tickable
     public static Config config;
     public static PlayerOverlay playerOverlay;
     public static ConsoleOutput log;
+    public static EffectHandler effects;
 
     public static String apiKey = "77fdf3c6e86950cb4baf5c41218bdc33";
 
@@ -120,6 +123,8 @@ public class LiteModMusicPlayer implements Tickable
 
         if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen) && !(minecraft.currentScreen instanceof GuiScreenUpdater))
             playerOverlay.draw(musicHandler, minecraft);
+
+        effects.draw();
     }
 
     @Override
@@ -240,6 +245,7 @@ public class LiteModMusicPlayer implements Tickable
         musicHandler = new MusicHandler(config.auto_play, new File(System.getProperty("user.home"), "Music"));
         loadPlaylist();
         playerOverlay = new PlayerOverlay();
+        effects = new EffectHandler();
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
         {
             @Override
