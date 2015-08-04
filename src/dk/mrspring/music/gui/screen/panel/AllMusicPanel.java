@@ -9,6 +9,7 @@ import dk.mrspring.music.gui.screen.overlay.CardNewPlaylist;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.player.Playlist;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -79,7 +80,7 @@ public class AllMusicPanel extends GuiAllMusicList implements IPanel
                                     case ADD_TO_QUEUE_INDEX:
                                         System.out.println("Add to queue");
                                         LiteModMusicPlayer.musicHandler.getQueue().add(clicked);
-                                        break; // TODO: Add to queue
+                                        break;
                                     case ADD_TO_PLAYLIST_INDEX:
                                         System.out.println("Something playlist");
                                         if (!(clickedItem instanceof MenuItemSubMenu) || !(pressedItems.length > 1 &&
@@ -89,6 +90,7 @@ public class AllMusicPanel extends GuiAllMusicList implements IPanel
                                         Object id = ((IndexedMenuItem) pressedItems[1]).getIdentifier();
                                         if (id instanceof Integer)
                                         {
+                                            System.out.println("Creating new Playlist");
                                             OverlayScreen overlay = new OverlayScreen("Create Playlist", (GuiScreen) parent);
                                             overlay.addCard(new CardNewPlaylist(overlay, new CardNewPlaylist.PlaylistCreated()
                                             {
@@ -96,10 +98,15 @@ public class AllMusicPanel extends GuiAllMusicList implements IPanel
                                                 public void onCreated(Playlist created)
                                                 {
                                                     created.add(clicked);
+                                                    LiteModMusicPlayer.musicHandler.registerPlaylist(created);
                                                 }
                                             }));
+                                            Minecraft.getMinecraft().displayGuiScreen(overlay);
                                         } else if (id instanceof Playlist)
+                                        {
+                                            System.out.println("Adding to playlist: "+((Playlist)id).getName());
                                             ((Playlist) id).add(clicked);
+                                        }
                                         break;
                                 }
                                 /*if (pressedItems[0] != null && pressedItems[0] instanceof MenuItemSubMenu)
