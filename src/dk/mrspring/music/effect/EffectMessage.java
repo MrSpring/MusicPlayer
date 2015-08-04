@@ -10,12 +10,12 @@ import org.lwjgl.opengl.GL11;
  */
 public class EffectMessage extends Effect
 {
-    int ticks = 0;
-    int maxTicks = 80;
-    int maxHeight = 20;
-    int stopHeight = maxHeight + 20;
-    int scaleTicks = 10;
-    double riseMultiplier = 0.6D;
+    private int ticks = 0;
+    public int maxTicks = 80;
+    public int maxHeight = 20;
+    public int stopHeight = maxHeight + 20;
+    public int scaleTicks = 10;
+    public double riseMultiplier = 0.6D;
     String message = "";
 
     public EffectMessage(EffectHandler handler, String message)
@@ -39,7 +39,7 @@ public class EffectMessage extends Effect
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         int width = handler.getScreenWidth();
         GL11.glPushMatrix();
-        GL11.glTranslatef(width / 2, yPreOffset + (((float) heightProgress) / 2F), 0);
+        GL11.glTranslatef(width / 2, handler.getScreenHeight() - (yPreOffset + (((float) heightProgress) / 2F)), 0);
         GL11.glScalef(scale, scale, scale);
         DrawingHelper.TextRenderResult result = helper.drawCenteredText(message, new Vector(/*width / 2*/0, 0), 0xFFFFFF, width, DrawingHelper.HorizontalTextAlignment.BOTTOM);
         helper.drawButtonThingy(result.asQuad().expand(5F), 0F, true);
