@@ -3,9 +3,11 @@ package dk.mrspring.music.gui.screen.overlay;
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
+import dk.mrspring.music.effect.EffectMessage;
 import dk.mrspring.music.gui.GuiCustomTextField;
 import dk.mrspring.music.gui.GuiSimpleButton;
 import dk.mrspring.music.player.Playlist;
+import dk.mrspring.music.util.TranslateHelper;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -92,7 +94,7 @@ public class CardNewPlaylist extends Card
             GL11.glPopMatrix();
             int p = 30;
             int oWidth = parent.getOverlayWidth();
-            LiteModMusicPlayer.core.getDrawingHelper().drawHorizontalLine(new Vector(p / 3, 35), oWidth - (p/3*2), 1, true);
+            LiteModMusicPlayer.core.getDrawingHelper().drawHorizontalLine(new Vector(p / 3, 35), oWidth - (p / 3 * 2), 1, true);
             nameField.setW(oWidth - p);
             nameField.setX(p / 2);
             nameField.setY(45);
@@ -181,6 +183,11 @@ public class CardNewPlaylist extends Card
                 if (onCreated != null)
                     onCreated.onCreated(newPlaylist);
                 parent.closeOverlay();
+                String message =
+                        TranslateHelper.translateFormat("gui.message.on_playlist_created", newPlaylist.getName());
+                EffectMessage messageEffect = new EffectMessage(LiteModMusicPlayer.effects, message);
+                messageEffect.stopHeight = 1;
+                LiteModMusicPlayer.effects.addEffect(messageEffect);
                 return true;
             } else return false;
         }

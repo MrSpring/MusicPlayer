@@ -68,17 +68,14 @@ public class MenuUtils
                                     {
                                         created.add(clicked);
                                         LiteModMusicPlayer.musicHandler.registerPlaylist(created);
-                                        String playlistName = created.getName(), message = TranslateHelper.
-                                                translateFormat("gui.message.on_playlist_created", playlistName);
-                                        EffectMessage messageEffect = new EffectMessage
-                                                (LiteModMusicPlayer.effects, message);
-                                        messageEffect.stopHeight = 1;
-                                        LiteModMusicPlayer.effects.addEffect(messageEffect);
                                     }
                                 }));
                                 Minecraft.getMinecraft().displayGuiScreen(overlay);
                             } else if (id instanceof Playlist)
-                                ((Playlist) id).add(clicked);
+                            {
+                                Playlist addingTo = ((Playlist) id);
+                                addingTo.add(clicked);
+                            }
                             break;
                     }
                 }
@@ -89,6 +86,12 @@ public class MenuUtils
                 new MenuItemButton("Add to Queue", mc, 1),
                 new MenuItemSpacer(),
                 new MenuItemSubMenu("Add to Playlist...", mc, 2, playlistItems));
+    }
+
+    private static String t(String translating, Object... format)
+    {
+        if (format == null || format.length == 0) return TranslateHelper.translate(translating);
+        else return TranslateHelper.translateFormat(translating, format);
     }
 
     public static class MenuResult
