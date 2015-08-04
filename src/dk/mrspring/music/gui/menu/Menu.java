@@ -187,6 +187,39 @@ public class Menu implements IGui
         void onAction(IMenuItem... pressedItems);
     }
 
+    public static abstract class MenuActionParent implements MenuAction
+    {
+        MenuAction childAction;
+
+        public MenuActionParent(MenuAction action)
+        {
+            this.setChildAction(action);
+        }
+
+        public void setChildAction(MenuAction childAction)
+        {
+            this.childAction = childAction;
+        }
+
+        public void runChildAction(IMenuItem... items)
+        {
+            this.childAction.onAction(items);
+        }
+
+        public IMenuItem[] offset(int amount, IMenuItem... original)
+        {
+            return Arrays.copyOfRange(original, amount, original.length);
+        }
+
+        /*@Override
+        public void onAction(IMenuItem... pressedItems)
+        {
+            childAction.onAction(pressedItems);
+        }
+
+        public abstract void onParentAction(IMenuItem... pressedItems);*/
+    }
+
     public class Size
     {
         public int x, y, w, h;

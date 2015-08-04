@@ -1,7 +1,6 @@
 package dk.mrspring.music.util;
 
 import dk.mrspring.music.LiteModMusicPlayer;
-import dk.mrspring.music.effect.EffectMessage;
 import dk.mrspring.music.gui.menu.*;
 import dk.mrspring.music.gui.screen.overlay.CardNewPlaylist;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
@@ -25,16 +24,8 @@ public class MenuUtils
     public static MenuResult createMusicMenu(final Music clicked, final GuiScreen previous)
     {
         FontRenderer mc = Minecraft.getMinecraft().fontRendererObj;
-        List<Playlist> playlistList = LiteModMusicPlayer.musicHandler.getPlaylists();
-        IMenuItem[] playlistItems = new IMenuItem[playlistList.size() + 2];
-        playlistItems[0] = new MenuItemButton("Create New Playlist", mc, 0);
-        playlistItems[1] = new MenuItemSpacer();
-        for (int i = 0; i < playlistList.size(); i++)
-        {
-            Playlist playlist = playlistList.get(i);
-            playlistItems[i + 2] = new MenuItemButton(playlist.getName(), mc, playlist);
-        }
-        Menu.MenuAction action = new Menu.MenuAction()
+        MenuResult playlistItemResults = getAddToPlaylistMenu(clicked, previous);
+        Menu.MenuAction action = new Menu.MenuActionParent(playlistItemResults.action)
         {
             @Override
             public void onAction(IMenuItem... pressedItems)
@@ -57,25 +48,7 @@ public class MenuUtils
                             if (!(clickedItem instanceof MenuItemSubMenu) || !(pressedItems.length > 1 &&
                                     pressedItems[1] instanceof IndexedMenuItem))
                                 break;
-                            Object id = ((IndexedMenuItem) pressedItems[1]).getIdentifier();
-                            if (id instanceof Integer)
-                            {
-                                OverlayScreen overlay = new OverlayScreen("Create Playlist", previous);
-                                overlay.addCard(new CardNewPlaylist(overlay, new CardNewPlaylist.PlaylistCreated()
-                                {
-                                    @Override
-                                    public void onCreated(Playlist created)
-                                    {
-                                        created.add(clicked);
-                                        LiteModMusicPlayer.musicHandler.registerPlaylist(created);
-                                    }
-                                }));
-                                Minecraft.getMinecraft().displayGuiScreen(overlay);
-                            } else if (id instanceof Playlist)
-                            {
-                                Playlist addingTo = ((Playlist) id);
-                                addingTo.add(clicked);
-                            }
+                            runChildAction(offset(1, pressedItems));
                             break;
                     }
                 }
@@ -85,7 +58,48 @@ public class MenuUtils
         return new MenuResult(action, new MenuItemButton("Play Next", mc, 0),
                 new MenuItemButton("Add to Queue", mc, 1),
                 new MenuItemSpacer(),
-                new MenuItemSubMenu("Add to Playlist...", mc, 2, playlistItems));
+                new MenuItemSubMenu("Add to Playlist...", mc, 2, playlistItemResults.items));
+    }
+
+    public static MenuResult getAddToPlaylistMenu(final Music adding, final GuiScreen previous)
+    {
+        FontRenderer mc = Minecraft.getMinecraft().fontRendererObj;
+        List<Playlist> playlistList = LiteModMusicPlayer.musicHandler.getPlaylists();
+        IMenuItem[] playlistItems = new IMenuItem[playlistList.size() + 2];
+        playlistItems[0] = new MenuItemButton("Create New Playlist", mc, 0);
+        playlistItems[1] = new MenuItemSpacer();
+        for (int i = 0; i < playlistList.size(); i++)
+        {
+            Playlist playlist = playlistList.get(i);
+            playlistItems[i + 2] = new MenuItemButton(playlist.getName(), mc, playlist);
+        }
+        Menu.MenuAction action = new Menu.MenuAction()
+        {
+            @Override
+            public void onAction(IMenuItem... pressedItems)
+            {
+                Object id = ((IndexedMenuItem) pressedItems[0]).getIdentifier();
+                if (id instanceof Integer)
+                {
+                    OverlayScreen overlay = new OverlayScreen("Create Playlist", previous);
+                    overlay.addCard(new CardNewPlaylist(overlay, new CardNewPlaylist.PlaylistCreated()
+                    {
+                        @Override
+                        public void onCreated(Playlist created)
+                        {
+                            created.add(adding);
+                            LiteModMusicPlayer.musicHandler.registerPlaylist(created);
+                        }
+                    }));
+                    Minecraft.getMinecraft().displayGuiScreen(overlay);
+                } else if (id instanceof Playlist)
+                {
+                    Playlist addingTo = ((Playlist) id);
+                    addingTo.add(adding);
+                }
+            }
+        };
+        return new MenuResult(action, playlistItems);
     }
 
     private static String t(String translating, Object... format)
