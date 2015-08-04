@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 public class GuiClickable implements IGui, IResizable
 {
     int x, y, w, h;
+    int button = -1;
 
     public GuiClickable(int x, int y, int w, int h)
     {
@@ -35,7 +36,7 @@ public class GuiClickable implements IGui, IResizable
     @Override
     public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
     {
-        return GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h);
+        return (button == -1 || mouseButton == button) && isHovering(mouseX, mouseY);
     }
 
     @Override
@@ -102,5 +103,10 @@ public class GuiClickable implements IGui, IResizable
     public int width()
     {
         return w;
+    }
+
+    public boolean isHovering(int mouseX, int mouseY)
+    {
+        return GuiUtils.isMouseInBounds(mouseX, mouseY, x, y, w, h);
     }
 }

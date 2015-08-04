@@ -5,6 +5,7 @@ import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.util.GuiUtils;
+import dk.mrspring.music.util.Miscellaneous;
 import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.opengl.GL11;
 
@@ -18,6 +19,7 @@ public class MenuItemSubMenu extends MenuItemButton
 {
     List<IMenuItem> items;
     boolean expanded = false;
+    long hoverStart = 0;
     int width = 0;
 
     public MenuItemSubMenu(String text, FontRenderer renderer, Object id, IMenuItem... items)
@@ -46,6 +48,21 @@ public class MenuItemSubMenu extends MenuItemButton
     }
 
     @Override
+    public IMenuItem[] getClickedItems(int mouseX, int mouseY, int width)
+    {
+        IMenuItem[] one = new IMenuItem[]{this};
+        IMenuItem[] two = null;
+        for (IMenuItem item : items)
+            if (item.isMouseHovering(mouseX, mouseY, width))
+            {
+                two = item.getClickedItems(mouseX, mouseY, width);
+                break;
+            }
+        if (two != null && two.length > 0) one = Miscellaneous.merge(one, two);
+        return one.length > 1 ? one : null;
+    }
+
+    @Override
     public void draw(int mouseX, int mouseY, int buttonWidth)
     {
         expanded = mouseX < buttonWidth ?
@@ -66,12 +83,10 @@ public class MenuItemSubMenu extends MenuItemButton
                 IMenuItem item = items.get(i);
                 int itemHeight = item.getHeight();
                 int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
-                boolean hovering = GuiUtils.isMouseInBounds(localMouseX, localMouseY, 0, 0, width, itemHeight);
+                boolean hovering = item.isMouseHovering(localMouseX, localMouseY, width);//GuiUtils.isMouseInBounds(localMouseX, localMouseY, 0, 0, width, itemHeight);
                 Color color = hovering ? Color.BLUE : Color.BLACK;
                 float a = 0.75F;
                 helper.drawShape(new Quad(-2, 0, width + 4, itemHeight).setColor(color).setAlpha(a));
-//            if (item instanceof MenuItemSubMenu)
-//                helper.drawShape(new Quad(0, 0, width, itemHeight).setColor(Color.BLACK).setAlpha(a));
                 if (i == 0)
                     helper.drawShape(new Quad(-1, -1, width + 2, 1).setColor(color).setAlpha(a));
                 else if (i == items.size() - 1)
@@ -89,21 +104,19 @@ public class MenuItemSubMenu extends MenuItemButton
         }
     }
 
-    @Override
+    /*@Override
     public boolean isMouseHovering(int mouseX, int mouseY, int buttonWidth)
     {
-        if (!expanded)
-            return super.isMouseHovering(mouseX, mouseY, width);
+        return super.isMouseHovering()
+        *//*if (!expanded || mouseX < width) return super.isMouseHovering(mouseX, mouseY, width);
         int yOffset = 0;
         for (IMenuItem item : items)
         {
-            int itemHeight = item.getHeight();
-            if (GuiUtils.isMouseInBounds(mouseX - buttonWidth, mouseY - yOffset, 0, 0, width, itemHeight))
-                return true;
-            yOffset += itemHeight;
+            if (item.isMouseHovering(mouseX - buttonWidth, mouseY - yOffset, width)) return true;
+            else yOffset += item.getHeight();
         }
-        return super.isMouseHovering(mouseX, mouseY, buttonWidth);
-    }
+        return super.isMouseHovering(mouseX, mouseY, buttonWidth);*//*
+    }*/
 
     private void drawOutline(DrawingHelper helper, int x, int y, int w, int h)
     {
@@ -115,8 +128,25 @@ public class MenuItemSubMenu extends MenuItemButton
     }
 
     @Override
-    public boolean mouseDown(int relMouseX, int relMouseY, int mouseButton)
+    public boolean mouseDown(int mouseX, int mouseY, int mouseButton, int buttonWidth)
     {
-        return expanded = super.mouseDown(relMouseX, relMouseY, mouseButton);
+//        if (expanded)
+//        {
+//        }
+        if (!expanded || mouseX < buttonWidth) return super.mouseDown(mouseX, mouseY, mouseButton, buttonWidth);
+        int yOffset = 0;
+        for (IMenuItem item : items)
+        {
+            if (item.mouseDown(mouseX - buttonWidth, mouseY - yOffset, mouseButton, width)) return true;
+            else yOffset += item.getHeight();
+        }
+        return false;
+        /*if (super.mouseDown(relMouseX, relMouseY, mouseButton, width))
+        {
+            return true;
+        } else
+        {
+
+        }*/
     }
 }

@@ -57,7 +57,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     {
         if (items != null && items.length > 0)
         {
-            this.openMenu = new Menu(mouseX, mouseY, width, height, items).setAction(action);
+            this.openMenu = new Menu(this, mouseX, mouseY, width, height, items).setAction(action);
         }
     }
 
@@ -215,8 +215,8 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
 
         if (this.showBottomBar)
         {
-            helper.drawShape(new Quad(0, height - getTopBarHeight()- getBottomBarHeight() + 1, width, getBottomBarHeight() - 1).setColor(bottomBarColor).setAlpha(0.5F));
-            helper.drawShape(new Quad(0, height - getTopBarHeight()-getBottomBarHeight(), width, 1).setColor(Color.WHITE));
+            helper.drawShape(new Quad(0, height - getTopBarHeight() - getBottomBarHeight() + 1, width, getBottomBarHeight() - 1).setColor(bottomBarColor).setAlpha(0.5F));
+            helper.drawShape(new Quad(0, height - getTopBarHeight() - getBottomBarHeight(), width, 1).setColor(Color.WHITE));
         }
 
         /*if (this.useDefaultDoneButton)
@@ -341,8 +341,15 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
                 mouseYOffset += topBarHeight;
 
             if (this.openMenu != null)
-                this.openMenu.mouseDown(mouseX, mouseY - mouseYOffset, mouseButton);
-            this.closeMenu();
+                if (this.openMenu.mouseDown(mouseX, mouseY - mouseYOffset, mouseButton))
+                {
+                    System.out.println("mouse down true");
+                    return;
+                }
+                else {
+                    System.out.println("mouse down false");
+                    closeMenu();
+                }
             for (Map.Entry<String, IGui> entry : this.guiHashMap.entrySet())
             {
                 String identifier = entry.getKey();
@@ -448,7 +455,8 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         return bottomBarColor;
     }
 
-    public Color getTopBarColor(){
+    public Color getTopBarColor()
+    {
         return topBarColor;
     }
 

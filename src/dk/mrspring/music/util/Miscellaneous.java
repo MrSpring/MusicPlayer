@@ -2,6 +2,8 @@ package dk.mrspring.music.util;
 
 import dk.mrspring.music.LiteModMusicPlayer;
 
+import java.util.Arrays;
+
 /**
  * Created by Konrad on 26-04-2015.
  */
@@ -71,5 +73,14 @@ public class Miscellaneous
     public static String cleanupHTMLCode(String html)
     {
         return html.replaceAll("\\<.*?>", "").replaceAll("&amp;", "&");
+    }
+
+    public static <T> T[] merge(T[] one, T[] two)
+    {
+        if (one == null) return two;
+        else if (two == null) return one;
+        T[] newArray = Arrays.copyOf(one, one.length + two.length);
+        System.arraycopy(two, 0, newArray, one.length, two.length);
+        return newArray;
     }
 }

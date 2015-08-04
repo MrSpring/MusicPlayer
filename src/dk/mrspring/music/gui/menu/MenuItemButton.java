@@ -1,13 +1,12 @@
 package dk.mrspring.music.gui.menu;
 
-import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.GuiClickable;
 import dk.mrspring.music.overlay.TextRender;
 import net.minecraft.client.gui.FontRenderer;
 
-import static dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.*;
-import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.*;
+import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.TOP;
+import static dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.LEFT;
 
 /**
  * Created by Konrad on 09-06-2015.
@@ -41,6 +40,7 @@ public class MenuItemButton extends IndexedMenuItem
     @Override
     public void draw(int mouseX, int mouseY, int width)
     {
+        this.setWidth(width);
         render.render(LiteModMusicPlayer.core.getDrawingHelper(), 3, 3, 0xFFFFFF, true, LEFT, TOP);
     }
 
@@ -56,7 +56,7 @@ public class MenuItemButton extends IndexedMenuItem
     }
 
     @Override
-    public IMenuItem[] getClickedItems(int mouseX, int mouseY, int mouseButton)
+    public IMenuItem[] getClickedItems(int mouseX, int mouseY, int width)
     {
         return new IMenuItem[]{this};
     }
@@ -68,14 +68,16 @@ public class MenuItemButton extends IndexedMenuItem
     }
 
     @Override
-    public boolean mouseDown(int relMouseX, int relMouseY, int mouseButton)
+    public boolean mouseDown(int relMouseX, int relMouseY, int mouseButton, int width)
     {
+        this.setWidth(width);
         return clickListener.mouseDown(relMouseX, relMouseY, mouseButton);
     }
 
     @Override
     public boolean isMouseHovering(int mouseX, int mouseY, int width)
     {
-        return false;
+        this.setWidth(width);
+        return clickListener.isHovering(mouseX, mouseY);
     }
 }

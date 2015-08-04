@@ -5,6 +5,7 @@ import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
+import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.util.GuiUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
@@ -17,14 +18,16 @@ import java.util.List;
  */
 public class Menu implements IGui
 {
+    GuiScreen parent;
     Size limitations;
     Size size;
     List<IMenuItem> items;
     MenuAction onClick;
 
-    public Menu(int mouseX, int mouseY, int screenWidth, int screenHeight, IMenuItem... items)
+    public Menu(GuiScreen parent, int mouseX, int mouseY, int screenWidth, int screenHeight, IMenuItem... items)
     {
         this.items = Arrays.asList(items);
+        this.parent = parent;
         this.alignWithMouse(mouseX, mouseY, screenWidth, screenHeight);
     }
 
@@ -70,7 +73,7 @@ public class Menu implements IGui
             IMenuItem item = items.get(i);
             int itemHeight = item.getHeight();
             int localMouseX = relMouseX, localMouseY = relMouseY - yOffset;
-            boolean hovering = GuiUtils.isMouseInBounds(localMouseX, localMouseY, 0, 0, size.w, itemHeight);
+            boolean hovering = item.isMouseHovering(localMouseX, localMouseY, size.w);//GuiUtils.isMouseInBounds(localMouseX, localMouseY, 0, 0, size.w, itemHeight);
             Color color = hovering ? Color.BLUE : Color.BLACK;
             float a = 0.75F;
             helper.drawShape(new Quad(-2, 0, size.w + 4, itemHeight).setColor(color).setAlpha(a));
@@ -134,9 +137,15 @@ public class Menu implements IGui
             int relMouseY = mouseY - size.y, relMouseX = mouseX - size.x;
             for (IMenuItem item : items)
             {
-                if (item.mouseDown(relMouseX, relMouseY, mouseButton))
+                if (item.mouseDown(relMouseX, relMouseY, mouseButton, size.w))
                 {
-                    onClick.onAction(item.getClickedItems(relMouseX, relMouseY, mouseButton));
+                    IMenuItem[] items = item.getClickedItems(relMouseX, relMouseY, size.w);
+                    if (items != null && items.length > 0)
+                    {
+                        System.out.println("Action");
+                        onClick.onAction(items);
+                        parent.closeMenu();
+                    }
                     return true;
                 } else relMouseY -= item.getHeight();
             }

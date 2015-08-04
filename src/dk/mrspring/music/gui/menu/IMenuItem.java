@@ -13,14 +13,14 @@ public interface IMenuItem
 
     int getHeight();
 
-    IMenuItem[] getClickedItems(int mouseX, int mouseY, int mouseButton);
+    IMenuItem[] getClickedItems(int mouseX, int mouseY, int width);
 
     /**
      * @return Returns the minimum width this menu item needs.
      */
     int getMinWidth();
 
-    boolean mouseDown(int relMouseX, int relMouseY, int mouseButton);
+    boolean mouseDown(int relMouseX, int relMouseY, int mouseButton, int width);
 
     boolean isMouseHovering(int mouseX, int mouseY, int width);
 }
