@@ -39,7 +39,7 @@ public class Config
     public boolean clear_cover_cache_on_shutdown = false;
     public boolean show_overlay_screen_close_hint = true;
     public long double_click_time = 500;
-    public int message_pupop_time_per_char = 15;
+    public int message_popup_time_per_char = 15;
 
     public void validateConfig()
     {

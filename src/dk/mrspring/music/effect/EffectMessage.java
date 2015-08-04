@@ -22,7 +22,7 @@ public class EffectMessage extends Effect
     {
         super(handler);
         this.message = message != null ? message : "";
-        maxTicks = message.length() * LiteModMusicPlayer.config.message_pupop_time_per_char;
+        maxTicks = message.length() * LiteModMusicPlayer.config.message_popup_time_per_char;
     }
 
     @Override
