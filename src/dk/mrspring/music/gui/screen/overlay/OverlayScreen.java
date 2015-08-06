@@ -5,6 +5,7 @@ import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
+import dk.mrspring.music.gui.GuiSimpleButton;
 import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.util.GuiUtils;
 import dk.mrspring.music.util.TranslateHelper;
@@ -31,6 +32,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     int mouseXAtLastFrame, mouseYAtLastFrame;
     net.minecraft.client.gui.GuiScreen overlaying;
     List<Card> cardList = new ArrayList<Card>();
+    GuiSimpleButton back;
 
     public OverlayScreen(String title, net.minecraft.client.gui.GuiScreen previousScreen, Card... cards)
     {
@@ -91,6 +93,8 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
             card.initGui();
 
         Keyboard.enableRepeatEvents(true);
+
+        back = new GuiSimpleButton(0, 0, 60, 20, TranslateHelper.translate("gui.overlay_screen.back")).setAutoHeight(true);
     }
 
     @Override
@@ -98,6 +102,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     {
         for (Card card : cardList)
             card.update();
+        if (LiteModMusicPlayer.config.show_overlay_screen_back_button) back.update();
     }
 
     @Override
@@ -112,7 +117,8 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
 
         GL11.glPushMatrix();
 
-        helper.setZIndex(10);
+        double oldZ = helper.getZIndex();
+        helper.setZIndex(oldZ + 10);
         helper.drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
 
         if (showTitle)
@@ -161,7 +167,14 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
 //            helper.drawShape(new Quad(width / 2 + (getOverlayWidth() / 2) + 5, scrollBarY, 4, scrollBarHeight));
         }
 
-        helper.setZIndex(0);
+        if (LiteModMusicPlayer.config.show_overlay_screen_back_button)
+        {
+            back.setX((width - getOverlayWidth()) / 2 - back.getWidth() - 5);
+            back.setY(height / 3);
+            back.draw(mc, mouseX, mouseY);
+        }
+
+        helper.setZIndex(oldZ);
         GL11.glPopMatrix();
     }
 
@@ -198,7 +211,9 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         int sideXOffset = (width - getOverlayWidth()) / 2;
-        if (mouseX < sideXOffset || mouseX > width - sideXOffset + 10)
+        if (LiteModMusicPlayer.config.show_overlay_screen_back_button ?
+                back.mouseDown(mouseX, mouseY, mouseButton) :
+                (mouseX < sideXOffset || mouseX > width - sideXOffset + 10))
         {
             this.closeOverlay();
             LiteModMusicPlayer.config.show_overlay_screen_close_hint = false;

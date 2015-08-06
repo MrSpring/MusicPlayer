@@ -47,9 +47,10 @@ gui.explorer.new_file_name=Enter file name...
 gui.explorer.open_directory=Open Directory
 gui.explorer.use_folder=Use This Folder
 
-gui.message.on_playlist_created=Playlist "%1$s" created.
+gui.message.on_playlist_created=Playlist %1$s created.
 
 gui.overlay_screen.close_hint=Click anywhere here to close...
+gui.overlay_screen.back=Close Overlay
 
 gui.music_details.album.list_entry=%1$s §7- %2$s
 
