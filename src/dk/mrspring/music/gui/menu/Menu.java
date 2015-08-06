@@ -210,14 +210,6 @@ public class Menu implements IGui
         {
             return Arrays.copyOfRange(original, amount, original.length);
         }
-
-        /*@Override
-        public void onAction(IMenuItem... pressedItems)
-        {
-            childAction.onAction(pressedItems);
-        }
-
-        public abstract void onParentAction(IMenuItem... pressedItems);*/
     }
 
     public class Size

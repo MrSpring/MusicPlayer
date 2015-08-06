@@ -7,7 +7,9 @@ gui.music.main.subtitle=MANAGE THE MUSIC FOUND BY THE MOD
 gui.music.main.right_click.music.play_now=Play %1$s
 gui.music.main.right_click.music.play_next=Play %1$s next
 gui.music.main.right_click.music.add_to_queue=Add %1$s to Queue
-gui.music.main.right_click.music.add_to_playlist=Add %1$s to...
+gui.music.main.right_click.music.add_to_playlist=Add %1$s to a playlist...
+gui.music.main.right_click.music.add_to_playlist.new=Create new Playlist
+gui.music.main.right_click.music.add_to_playlist.existing=%2$s
 
 gui.music.main.right_click.album.play_now=Play %1$s
 gui.music.main.right_click.album.play_next=Play %1$s next
