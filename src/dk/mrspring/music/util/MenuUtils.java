@@ -145,37 +145,17 @@ public class MenuUtils
         }
         builder.insert(previousLength, " & ");
         return builder.toString();
-        /*if (objects == null || objects.length == 0) return "unknown-empty";
-        String current = name(objects[0]);
-        String translatedBase = t(translating"gui.music.main.right_click.music.play_now");
-        Minecraft mc = Minecraft.getMinecraft();
-        FontRenderer renderer = mc.fontRendererObj;
-        int objectsIndex = 1;
-        ScaledResolution screenSize = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-        int mcDisplayWidth = screenSize.getScaledWidth() - 10;
-        while (renderer.getStringWidth(String.format(translatedBase, current + "...")) < mcDisplayWidth &&
-                objectsIndex < objects.length)
-        {
-            Object currentIndex = objects[objectsIndex];
-            objectsIndex++;
-            String name = name(currentIndex);
-            current += ", " + name;
-        }
-        if (objectsIndex < objects.length) current += "...";
-        return String.format(translatedBase, current);*/
     }
 
     private static String name(Object object)
     {
-        if (object==null) return "unknown-null";
-        else return Music.class.cast(object).getName();//((Music)object).getName();//object.getClass().toString();
-        /*if (object == null) return "unknown-null";
+        if (object == null) return "unknown-null";
         if (object instanceof Music) return ((Music) object).getName();
         if (object instanceof Album) return ((Album) object).getAlbumName();
         if (object instanceof Artist) return ((Artist) object).getArtistName();
         if (object instanceof Playlist) return ((Playlist) object).getName();
         if (object instanceof String) return (String) object;
-        return "unknown-type";*/
+        return "unknown-type";
     }
 
     private static String t(String translating, Object... format)
