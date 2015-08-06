@@ -17,6 +17,7 @@ public class GuiSimpleButton implements IGui
     Icon icon;
 
     boolean wasMouseHoveringLastFrame = false, isEnabled = true, highlight = false, drawBackground = true, autoHeight = false;
+    int heightPadding = 12;
     int alphaProgress = 0;
     int alphaTarget = 0;
 
@@ -34,6 +35,12 @@ public class GuiSimpleButton implements IGui
     public GuiSimpleButton setAutoHeight(boolean auto)
     {
         this.autoHeight = auto;
+        return this;
+    }
+
+    public GuiSimpleButton setAutoHeightPadding(int padding)
+    {
+        this.heightPadding = padding;
         return this;
     }
 
@@ -103,7 +110,7 @@ public class GuiSimpleButton implements IGui
         int textY = (this.height / 2) + y, textX = (this.width / 2) + x;
         DrawingHelper.TextRenderResult result = LiteModMusicPlayer.core.getDrawingHelper().drawText(translatedText, new Vector(textX, textY), textColor, true, width - 6, dk.mrspring.llcore.DrawingHelper.VerticalTextAlignment.CENTER, dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.CENTER);
         if (autoHeight)
-            this.setHeight(result.getTotalHeight() + 6);
+            this.setHeight(result.getTotalHeight() + heightPadding);
     }
 
     public GuiSimpleButton hideBackground()
