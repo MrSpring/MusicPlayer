@@ -1,5 +1,6 @@
 package dk.mrspring.music.player;
 
+import dk.mrspring.music.util.Artist;
 import dk.mrspring.music.util.JsonUtils;
 import dk.mrspring.music.util.MusicCollection;
 
@@ -91,5 +92,24 @@ public class Playlist extends MusicCollection
     {
         this.id = id;
         return this;
+    }
+
+    public void tryAdd(Object[] objects)
+    {
+        for (Object object : objects)
+        {
+            if (object instanceof Music) this.add((Music) object);
+            if (object instanceof MusicCollection)
+            {
+                MusicCollection collection = (MusicCollection) object;
+                for (Music music : collection.getMusicList())
+                    this.add(music);
+            }
+            if (object instanceof Artist)
+            {
+                Artist artist = (Artist) object;
+                this.tryAdd(artist.getAlbums().toArray());
+            }
+        }
     }
 }
