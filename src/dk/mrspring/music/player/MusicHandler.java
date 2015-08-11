@@ -87,10 +87,10 @@ public class MusicHandler
             {
                 System.out.println("Created map.");
                 String name = (String) json.get("name");
-                System.out.println("Got a name: "+name);
+                System.out.println("Got a name: " + name);
                 Double dId = (Double) json.get("id");
                 int id = dId.intValue();
-                System.out.println("Got an id: "+id);
+                System.out.println("Got an id: " + id);
                 List<Double> music = (List<Double>) json.get("music");
                 List<Music> musicList = new ArrayList<Music>();
                 for (Double songId : music)
@@ -230,5 +230,11 @@ public class MusicHandler
     public List<Playlist> getPlaylists()
     {
         return playlists;
+    }
+
+    public MusicHandler removePlaylist(Playlist removing)
+    {
+        if (playlists.contains(removing)) playlists.remove(removing);
+        return this;
     }
 }

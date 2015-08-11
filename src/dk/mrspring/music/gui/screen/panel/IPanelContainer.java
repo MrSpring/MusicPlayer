@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
  */
 public interface IPanelContainer
 {
-    void openMenu(int x, int y, Menu.MenuAction action, IMenuItem... items);
+    void openMenu(Menu.MenuAction action, IMenuItem... items);
 
     void openPanel(IPanel newPanel);
 

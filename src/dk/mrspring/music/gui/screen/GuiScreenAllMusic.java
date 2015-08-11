@@ -203,8 +203,8 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        int clickZone = getTopBarHeight() - 12;
-        if (GuiUtils.isMouseInBounds(mouseX, mouseY, width - clickZone - 2 - (width / 3), 5, clickZone, clickZone))
+        int clickZone = 25;
+        if (GuiUtils.isMouseInBounds(mouseX, mouseY, width - clickZone - (width / 3), 0, clickZone, clickZone))
             ((GuiCustomTextField) this.getGui("search_bar")).setFocus(true);
         else if (!getGui("side_panel").mouseDown(mouseX, mouseY - 30, mouseButton))
             super.mouseClicked(mouseX, mouseY - 30, mouseButton);

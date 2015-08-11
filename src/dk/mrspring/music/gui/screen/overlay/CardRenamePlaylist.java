@@ -14,59 +14,29 @@ import org.lwjgl.opengl.GL11;
 import static dk.mrspring.llcore.DrawingHelper.HorizontalTextAlignment.TOP;
 
 /**
- * Created by MrSpring on 02-07-2015 for MC Music Player.
+ * Created by Konrad on 11-08-2015.
  */
-public class CardNewPlaylist extends Card
+public class CardRenamePlaylist extends Card
 {
-    PlaylistCreated onCreated = null;
+    PlaylistRenamed onRenamed = null;
     GuiCustomTextField nameField;
+    Playlist renaming;
 
-    public CardNewPlaylist(OverlayParent overlayParent, PlaylistCreated onCreated)
+    public CardRenamePlaylist(OverlayParent overlayParent, Playlist renaming)
     {
         super(overlayParent);
 
         parent.addCard(new NameCard(parent));
         parent.addCard(new ButtonCard(parent));
 
-        this.onCreated = onCreated;
-        this.nameField = new GuiCustomTextField(0, 0, 100, 20, "").setGhost("Enter Playlist Name...");
+        this.nameField = new GuiCustomTextField(0, 0, 100, 20, renaming.getName()).setGhost("New Playlist Name...");
+        this.renaming = renaming;
     }
 
-    @Override
-    public int getHeight()
+    public CardRenamePlaylist setOnRenamed(PlaylistRenamed onRenamed)
     {
-        return 0;
-    }
-
-    @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
-    {
-    }
-
-    @Override
-    public void update()
-    {
-    }
-
-    @Override
-    public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
-    {
-        return false;
-    }
-
-    @Override
-    public void mouseUp(int mouseX, int mouseY, int mouseButton)
-    {
-    }
-
-    @Override
-    public void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceClick)
-    {
-    }
-
-    @Override
-    public void handleKeyTyped(int keyCode, char character)
-    {
+        this.onRenamed = onRenamed;
+        return this;
     }
 
     private class NameCard extends Card
@@ -179,12 +149,10 @@ public class CardNewPlaylist extends Card
         {
             if (button.mouseDown(mouseX, mouseY, mouseButton))
             {
-                Playlist newPlaylist = new Playlist(nameField.getText());
-                if (onCreated != null)
-                    onCreated.onCreated(newPlaylist);
+                renaming.setName(nameField.getText());
                 parent.closeOverlay();
                 String message =
-                        TranslateHelper.translateFormat("gui.message.on_playlist_created", newPlaylist.getName());
+                        TranslateHelper.translateFormat("gui.message.on_playlist_renamed", renaming.getName());
                 EffectMessage messageEffect = new EffectMessage(LiteModMusicPlayer.effects, message);
                 messageEffect.stopHeight = 1;
                 LiteModMusicPlayer.effects.addEffect(messageEffect);
@@ -211,8 +179,50 @@ public class CardNewPlaylist extends Card
         }
     }
 
-    public interface PlaylistCreated
+    @Override
+    public int getHeight()
     {
-        void onCreated(Playlist created);
+        return 0;
+    }
+
+    @Override
+    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    {
+
+    }
+
+    @Override
+    public void update()
+    {
+
+    }
+
+    @Override
+    public boolean mouseDown(int mouseX, int mouseY, int mouseButton)
+    {
+        return false;
+    }
+
+    @Override
+    public void mouseUp(int mouseX, int mouseY, int mouseButton)
+    {
+
+    }
+
+    @Override
+    public void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceClick)
+    {
+
+    }
+
+    @Override
+    public void handleKeyTyped(int keyCode, char character)
+    {
+
+    }
+
+    public interface PlaylistRenamed
+    {
+        void onRenamed(Playlist renamed);
     }
 }

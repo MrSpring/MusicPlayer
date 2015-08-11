@@ -7,7 +7,7 @@ gui.music.main.subtitle=MANAGE THE MUSIC FOUND BY THE MOD
 gui.music.main.right_click.music.play_now=Play %1$s
 gui.music.main.right_click.music.play_next=Play %1$s next
 gui.music.main.right_click.music.add_to_queue=Add %1$s to Queue
-gui.music.main.right_click.music.add_to_playlist=Add %1$s to a playlist...
+gui.music.main.right_click.music.add_to_playlist=Add %1$s to...
 gui.music.main.right_click.music.add_to_playlist.new=Create new Playlist
 gui.music.main.right_click.music.add_to_playlist.existing=%2$s
 
@@ -20,6 +20,13 @@ gui.music.main.right_click.artist.play_now=Play %1$s
 gui.music.main.right_click.artist.play_next=Play %1$s next
 gui.music.main.right_click.artist.add_to_queue=Add %1$s to Queue
 gui.music.main.right_click.artist.add_to_playlist=Add %1$s to...
+
+gui.music.main.right_click.playlist.play_now=Play %1$s
+gui.music.main.right_click.playlist.play_next=Play %1$s next
+gui.music.main.right_click.playlist.add_to_queue=Add %1$s to Queue
+gui.music.main.right_click.playlist.add_to_playlist=Add %1$s to...
+gui.music.main.right_click.playlist.rename_playlist=Rename %1$s
+gui.music.main.right_click.playlist.delete_playlist=Delete %1$s
 
 gui.music.main.new_playlist=New Playlist
 gui.music.main.panel.playlist.title=Playlists
@@ -49,6 +56,8 @@ gui.explorer.open_directory=Open Directory
 gui.explorer.use_folder=Use This Folder
 
 gui.message.on_playlist_created=Playlist %1$s created.
+gui.message.on_playlist_renamed=Playlist %1$s renamed.
+gui.message.on_playlist_deleted=Playlist %1$s deleted.
 
 gui.overlay_screen.close_hint=Click anywhere here to close...
 gui.overlay_screen.back=Close Overlay

@@ -53,12 +53,10 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         return openMenu;
     }
 
-    public void openMenu(int mouseX, int mouseY, Menu.MenuAction action, IMenuItem... items)
+    public void openMenu(Menu.MenuAction action, IMenuItem... items)
     {
-        if (items != null && items.length > 0)
-        {
-            this.openMenu = new Menu(this, mouseX, mouseY, width, height, items).setAction(action);
-        }
+        if (items == null || items.length == 0) return;
+        this.openMenu = new Menu(this, mouseXAtLastFrame, mouseYAtLastFrame, width, height, items).setAction(action);
     }
 
     public GuiScreen bypassInit(boolean bypass)
@@ -345,8 +343,8 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
                 {
                     System.out.println("mouse down true");
                     return;
-                }
-                else {
+                } else
+                {
                     System.out.println("mouse down false");
                     closeMenu();
                 }

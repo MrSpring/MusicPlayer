@@ -78,6 +78,11 @@ public class Playlist extends MusicCollection
         return JsonUtils.toJsonCode(map);
     }
 
+    public void addAll(MusicCollection collection)
+    {
+        addAll(collection.getMusicList());
+    }
+
     public void addAll(List<Music> musicList)
     {
         getMusicList().addAll(musicList);
@@ -111,5 +116,10 @@ public class Playlist extends MusicCollection
                 this.tryAdd(artist.getAlbums().toArray());
             }
         }
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 }

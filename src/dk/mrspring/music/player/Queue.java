@@ -1,6 +1,8 @@
 package dk.mrspring.music.player;
 
+import com.google.common.collect.Lists;
 import dk.mrspring.music.LiteModMusicPlayer;
+import dk.mrspring.music.util.MusicCollection;
 import dk.mrspring.music.util.TranslateHelper;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
  */
 public class Queue extends Playlist
 {
+    private MusicCollection playingFrom = null;
+
     public Queue(List<Music> music)
     {
         super("queue", music);
@@ -70,6 +74,12 @@ public class Queue extends Playlist
         return getCurrent();
     }
 
+    public void updateQueue(MusicCollection collection)
+    {
+        playingFrom = collection;
+        updateQueue(collection.getMusicList());
+    }
+
     public void updateQueue(List<Music> newList)
     {
         setMusicList(newList);
@@ -86,6 +96,18 @@ public class Queue extends Playlist
         if (getMusicList().size() > 1)
             return getMusicList().get(1);
         else return getCurrent();
+    }
+
+    public Queue addNext(MusicCollection collection)
+    {
+        return this.addNext(collection.getMusicList());
+    }
+
+    public Queue addNext(List<Music> musicList)
+    {
+        List<Music> reversed = Lists.reverse(musicList);
+        for (Music music : reversed) addNext(music);
+        return this;
     }
 
     public Queue addNext(Music clicked)

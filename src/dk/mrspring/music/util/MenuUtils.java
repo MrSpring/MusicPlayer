@@ -2,7 +2,9 @@ package dk.mrspring.music.util;
 
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.menu.*;
+import dk.mrspring.music.gui.screen.overlay.CardDeletePlaylist;
 import dk.mrspring.music.gui.screen.overlay.CardNewPlaylist;
+import dk.mrspring.music.gui.screen.overlay.CardRenamePlaylist;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.player.Music;
 import dk.mrspring.music.player.Playlist;
@@ -17,15 +19,21 @@ import java.util.List;
  */
 public class MenuUtils
 {
-    private static final int PLAY_NEXT_INDEX = 0;
-    private static final int ADD_TO_QUEUE_INDEX = 1;
-    private static final int ADD_TO_PLAYLIST_INDEX = 2;
+    private static final int PLAY_NOW_INDEX = 0;
+    private static final int PLAY_NEXT_INDEX = 1;
+    private static final int ADD_TO_QUEUE_INDEX = 2;
+    private static final int ADD_TO_PLAYLIST_INDEX = 3;
+    private static final int RENAME_PLAYLIST_INDEX = 4;
+    private static final int DELETE_PLAYLIST_INDEX = 5;
 
+    private static final String PLAY_NOW = "gui.music.main.right_click.music.play_now";
     private static final String PLAY_NEXT = "gui.music.main.right_click.music.play_next";
     private static final String ADD_TO_QUEUE = "gui.music.main.right_click.music.add_to_queue";
     private static final String ADD_TO_PLAYLIST = "gui.music.main.right_click.music.add_to_playlist";
     private static final String ADD_TO_NEW_PLAYLIST = "gui.music.main.right_click.music.add_to_playlist.new";
     private static final String ADD_TO_EXISTING_PLAYLIST = "gui.music.main.right_click.music.add_to_playlist.existing";
+    private static final String RENAME_PLAYLIST = "gui.music.main.right_click.playlist.rename_playlist";
+    private static final String DELETE_PLAYLIST = "gui.music.main.right_click.playlist.delete_playlist";
 
     public static MenuResult createMusicMenu(final GuiScreen previous, final Object... clicked/*final Music clicked*/)
     {
@@ -40,7 +48,6 @@ public class MenuUtils
                         pressedItems[0] instanceof IndexedMenuItem)
                 {
                     IndexedMenuItem clickedItem = (IndexedMenuItem) pressedItems[0];
-                    System.out.println(clickedItem.getClass().getName());
                     int clickedIndex = (Integer) clickedItem.getIdentifier();
                     switch (clickedIndex)
                     {
@@ -61,10 +68,68 @@ public class MenuUtils
             }
         };
 
-        return new MenuResult(action, new MenuItemButton(t(PLAY_NEXT, cmm(clicked)), mc, 0),
-                new MenuItemButton(t(ADD_TO_QUEUE, cmm(clicked)), mc, 1),
+        String cmm = cmm(clicked);
+        return new MenuResult(action, new MenuItemButton(t(PLAY_NEXT, cmm), mc, PLAY_NEXT_INDEX),
+                new MenuItemButton(t(ADD_TO_QUEUE, cmm), mc, ADD_TO_QUEUE_INDEX),
                 new MenuItemSpacer(),
-                new MenuItemSubMenu(t(ADD_TO_PLAYLIST, cmm(clicked)), mc, 2, playlistItemResults.items));
+                new MenuItemSubMenu(t(ADD_TO_PLAYLIST, cmm), mc, ADD_TO_PLAYLIST_INDEX, playlistItemResults.items));
+    }
+
+    public static MenuResult createPlaylistMenu(final GuiScreen previous, final Playlist clicked)
+    {
+        FontRenderer mc = Minecraft.getMinecraft().fontRendererObj;
+        MenuResult playlistItemResults = getAddToPlaylistMenu(previous, clicked);
+        Menu.MenuAction action = new Menu.MenuActionParent(playlistItemResults.action)
+        {
+            @Override
+            public void onAction(IMenuItem... pressedItems)
+            {
+                IndexedMenuItem clickedItem = (IndexedMenuItem) pressedItems[0];
+                int clickedIndex = (Integer) clickedItem.getIdentifier();
+                switch (clickedIndex)
+                {
+                    case PLAY_NOW_INDEX:
+                        LiteModMusicPlayer.musicHandler.getQueue().updateQueue(clicked);
+                        break;
+                    case PLAY_NEXT_INDEX:
+                        LiteModMusicPlayer.musicHandler.getQueue().addNext(clicked);
+                        break;
+                    case ADD_TO_QUEUE_INDEX:
+                        LiteModMusicPlayer.musicHandler.getQueue().addAll(clicked);
+                        break;
+                    case ADD_TO_PLAYLIST_INDEX:
+                        if (!(clickedItem instanceof MenuItemSubMenu) || !(pressedItems.length > 1 &&
+                                pressedItems[1] instanceof IndexedMenuItem))
+                            break;
+                        runChildAction(offset(1, pressedItems));
+                        break;
+                    case RENAME_PLAYLIST_INDEX:
+                    {
+                        OverlayScreen overlay = new OverlayScreen("Rename Playlist", previous);
+                        overlay.addCard(new CardRenamePlaylist(overlay, clicked));
+                        Minecraft.getMinecraft().displayGuiScreen(overlay);
+                        break;
+                    }
+                    case DELETE_PLAYLIST_INDEX:
+                    {
+                        OverlayScreen overlay = new OverlayScreen("Delete Playlist", previous);
+                        overlay.addCard(new CardDeletePlaylist(overlay, clicked));
+                        Minecraft.getMinecraft().displayGuiScreen(overlay);
+                        break;
+                    }
+                }
+            }
+        };
+
+        String cmm = cmm(clicked);
+        return new MenuResult(action, new MenuItemButton(t(PLAY_NOW, cmm), mc, PLAY_NOW_INDEX),
+                new MenuItemButton(t(PLAY_NEXT, cmm), mc, PLAY_NEXT_INDEX),
+                new MenuItemButton(t(ADD_TO_QUEUE, cmm), mc, ADD_TO_QUEUE_INDEX),
+                new MenuItemSpacer(),
+                new MenuItemSubMenu(t(ADD_TO_PLAYLIST, cmm), mc, ADD_TO_PLAYLIST_INDEX, playlistItemResults.items),
+                new MenuItemSpacer(),
+                new MenuItemButton(t(RENAME_PLAYLIST, cmm), mc, RENAME_PLAYLIST_INDEX),
+                new MenuItemButton(t(DELETE_PLAYLIST, cmm), mc, DELETE_PLAYLIST_INDEX));
     }
 
     public static MenuResult getAddToPlaylistMenu(final GuiScreen previous, final Object... adding/*final Music adding*/)

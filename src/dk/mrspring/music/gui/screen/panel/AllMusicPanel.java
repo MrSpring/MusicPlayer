@@ -43,7 +43,7 @@ public class AllMusicPanel extends GuiAllMusicList implements IPanel
         } else if (mouseButton == 1)
         {
             MenuUtils.MenuResult menu = MenuUtils.createMusicMenu((GuiScreen) parent, clicked);
-            parent.openMenu(mouseX, mouseY, menu.action, menu.items);
+            parent.openMenu(menu.action, menu.items);
             return true;
         } else return super.onElementClicked(relMouseX, relMouseY, mouseX, mouseY, mouseButton, clicked);
     }

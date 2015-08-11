@@ -13,6 +13,17 @@ public class GuiUtils
 {
     public static final int MAX_PROGRESS = 255 * 6;
 
+    public static void drawOptionsIcon(int x, int y, int width, int height)
+    {
+        DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
+
+        float size = (((float) height) / 5F), xOffset = (((float) width) - size) / 2F;
+
+        helper.drawShape(new Quad(x + xOffset, y, size, size))
+                .drawShape(new Quad(x + xOffset, y + (size * 2), size, size))
+                .drawShape(new Quad(x + xOffset, y + (size * 4), size, size));
+    }
+
     public static void drawScrollbar(int x, int y, int width, int height, int scroll, int maxScroll, int listHeight)
     {
         drawScrollbar(x, y, width, height, scroll, maxScroll, listHeight, 1F);
