@@ -292,7 +292,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
         if (moving != -1)
         {
             if (this.isMovingInDeleteZone())
-                musicList.remove(moving);
+                removeMusic(moving);
             else
             {
 
@@ -307,6 +307,11 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
             moveXStart = -1;
             moveYStart = -1;
         }
+    }
+
+    public void removeMusic(int id)
+    {
+        musicList.remove(id);
     }
 
     @Override
