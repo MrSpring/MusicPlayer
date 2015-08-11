@@ -46,7 +46,7 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
     @Override
     public int getTopBarOffset()
     {
-        return 10;
+        return 20;
     }
 
     @Override

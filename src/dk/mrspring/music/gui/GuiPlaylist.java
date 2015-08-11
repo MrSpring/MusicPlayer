@@ -43,16 +43,21 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
         this.height = h;
     }
 
-    public static void drawMusic(int x, int y, int width, int height, Music music)
+    public static void drawMusic(int xBase, int y, int w, int height, Music music, int padding)
     {
+        int wPadding = padding * 2;
+        int coverSize = height - wPadding - 4;
+        int width = w - coverSize, x = xBase + coverSize + 3;
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
-        helper.drawButtonThingy(new Quad(x + 3, y + 3, width - 6, height - 6), 0F, true);
-        helper.drawText(getRenderString(music), new Vector(x + 6, y + (height / 2)), 0xFFFFFF, true, -1,
+        helper.drawButtonThingy(new Quad(xBase + padding, y + padding, w - wPadding, height - wPadding), 0F, true);
+        helper.drawText(getRenderString(music), new Vector(x + padding + 3, y + (height / 2)), 0xFFFFFF, true, -1,
                 DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
-        int w = 10;
-        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) - 1 - 4, w, 2));
-        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) - 1, w, 2));
-        helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) + 3, w, 2));
+        int dragW = 10;
+        helper.drawShape(new Quad(x + width - 15 - dragW, y + (height / 2) - 1 - 4, dragW, 2));
+        helper.drawShape(new Quad(x + width - 15 - dragW, y + (height / 2) - 1, dragW, 2));
+        helper.drawShape(new Quad(x + width - 15 - dragW, y + (height / 2) + 3, dragW, 2));
+        music.bindCover();
+        helper.drawTexturedShape(new Quad(xBase + padding + 2, y + padding + 2, coverSize, coverSize));
     }
 
     public static String getRenderString(Music music)
@@ -137,7 +142,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
         GLClippingPlanes.glEnableVerticalClipping(0, height);
 
-        int relMouseY = mouseY - y + scroll;
+        int relMouseY = mouseY + scroll;
 
         if (hasScroll())
         {
@@ -166,12 +171,12 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
                     double progress = Math.min(1, ((double) diff) / (double) _entryHeight);
                     double invertedProgress = (1D - progress);
                     GL11.glTranslatef(0, ((float) progress * _entryHeight), 0);
-                    drawMusic(0, 0, _entryWidth, _entryHeight, music);
+                    drawMusic(0, 0, _entryWidth, _entryHeight, music, 3);
                     GL11.glTranslatef(0, ((float) invertedProgress * _entryHeight) + _entryHeight, 0);
                     moved = true;
                 } else
                 {
-                    drawMusic(0, 0, _entryWidth, _entryHeight, music);
+                    drawMusic(0, 0, _entryWidth, _entryHeight, music, 3);
                     currentHeight += _entryHeight;
                     GL11.glTranslatef(0, _entryHeight, 0);
                 }
@@ -185,7 +190,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
             double oldZ = helper.getZIndex();
             helper.setZIndex(oldZ + 10);
             Music music = list.get(moving);
-            drawMusic(3, Math.max(y, mouseY - moveYStart), _entryWidth, _entryHeight, music);
+            drawMusic(0, Math.max(0, mouseY - moveYStart), _entryWidth, _entryHeight, music, 1);
             helper.setZIndex(oldZ);
         }
 
@@ -235,7 +240,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
                 {
                     this.moving = i;
                     moveXStart = mouseX - x;
-                    moveYStart = mouseY - y + scroll - (i * _entryHeight);
+                    moveYStart = mouseY + scroll - (i * _entryHeight);
                     break;
                 } else offset += _entryHeight;
             }
@@ -253,7 +258,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
             else
             {
 
-                int relMouseY = mouseY - y + scroll;
+                int relMouseY = mouseY + scroll;
                 int m = (relMouseY - 30 - moveYStart);
                 int i = m / _entryHeight + (m % _entryHeight > (_entryHeight / 2) ? 1 : 0);
                 i = Miscellaneous.clamp(i, 0, musicList.size() - 1);

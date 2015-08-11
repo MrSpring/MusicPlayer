@@ -210,6 +210,12 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
             super.mouseClicked(mouseX, mouseY - 30, mouseButton);
     }
 
+    /*@Override
+    protected void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        super.mouseReleased(mouseX, mouseY-30, state);
+    }*/
+
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
     {
