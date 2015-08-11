@@ -12,6 +12,7 @@ import dk.mrspring.music.player.Music;
 import dk.mrspring.music.player.Playlist;
 import dk.mrspring.music.util.GuiUtils;
 import dk.mrspring.music.util.Miscellaneous;
+import dk.mrspring.music.util.TranslateHelper;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -46,11 +47,18 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     {
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         helper.drawButtonThingy(new Quad(x + 3, y + 3, width - 6, height - 6), 0F, true);
-        helper.drawText(music.getName(), new Vector(x + 6, y + (height / 2)), 0xFFFFFF, true, -1, DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
+        helper.drawText(getRenderString(music), new Vector(x + 6, y + (height / 2)), 0xFFFFFF, true, -1,
+                DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
         int w = 10;
         helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) - 1 - 4, w, 2));
         helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) - 1, w, 2));
         helper.drawShape(new Quad(x + width - 10 - w, y + (height / 2) + 3, w, 2));
+    }
+
+    public static String getRenderString(Music music)
+    {
+        return TranslateHelper.translateFormat("gui.playlist_editor.list_entry",
+                music.getName(), music.getArtist());
     }
 
     public Playlist getPlaylist()
@@ -261,7 +269,12 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     @Override
     public void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceClick)
     {
-        this.isReadyToDelete = moving != -1 && mouseY > y + height;
+        this.isReadyToDelete = moving != -1 && isMouseInDeleteZone(mouseX, mouseY);
+    }
+
+    public boolean isMouseInDeleteZone(int mouseX, int mouseY)
+    {
+        return mouseY > y + height;
     }
 
     @Override

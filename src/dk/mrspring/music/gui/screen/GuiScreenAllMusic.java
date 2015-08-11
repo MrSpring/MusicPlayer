@@ -14,7 +14,6 @@ import dk.mrspring.music.gui.GuiSquareList;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
 import dk.mrspring.music.gui.interfaces.IResizable;
-import dk.mrspring.music.gui.menu.IMenuItem;
 import dk.mrspring.music.gui.screen.overlay.CardNewPlaylist;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
 import dk.mrspring.music.gui.screen.panel.*;
@@ -80,7 +79,7 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
         GuiSimpleButton back = (GuiSimpleButton) getGui("back");
         back.setY(height - 30 - 30 + 3);
         SidePanel sidePanel = (SidePanel) getGui("side_panel");
-        sidePanel.h=height-30-30;
+        sidePanel.h = height - 30 - 30;
     }
 
     public void openPanel(IPanel newPanel)
@@ -209,6 +208,12 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
             ((GuiCustomTextField) this.getGui("search_bar")).setFocus(true);
         else if (!getGui("side_panel").mouseDown(mouseX, mouseY - 30, mouseButton))
             super.mouseClicked(mouseX, mouseY - 30, mouseButton);
+    }
+
+    @Override
+    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
+    {
+        super.mouseClickMove(mouseX, mouseY - 30, clickedMouseButton, timeSinceLastClick);
     }
 
     @Override
