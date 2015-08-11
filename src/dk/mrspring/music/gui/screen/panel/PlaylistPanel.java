@@ -58,7 +58,7 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
             {
                 int textW = parent.getMinecraft().fontRendererObj.getStringWidth(getPlaylist().getName());
                 int textOffset = (width() + textW) / 2;
-                if (mouseX > x() + textOffset && mouseX < x() + textOffset + 10)
+                if (mouseX > x() + textOffset && mouseX < x() + textOffset + 16)
                 {
                     openMenu();
                     return true;
