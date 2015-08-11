@@ -1,6 +1,7 @@
 package dk.mrspring.music.gui;
 
 import com.mumfrey.liteloader.gl.GLClippingPlanes;
+import dk.mrspring.llcore.Color;
 import dk.mrspring.llcore.DrawingHelper;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
@@ -199,6 +200,42 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
         GL11.glPopMatrix();
 
         GL11.glPopMatrix();
+
+        if (LiteModMusicPlayer.config.show_playlist_move_tip)
+        {
+            double oldZ = helper.getZIndex();
+            helper.setZIndex(oldZ + 100);
+
+            int xOffset = 18;
+            int yOffset = 26;
+            int bubbleWidth = minecraft.fontRendererObj.getStringWidth("Click and drag here to move") + 10;
+            int arrowHeight = 5;
+            float alpha = 0.9F;
+            helper.drawShape(new Quad(x + width() - 12 - bubbleWidth, y + yOffset + arrowHeight - 1, bubbleWidth, 20 + 2).setColor(Color.BLACK).setAlpha(alpha));
+            helper.drawShape(new Quad(x + width() - 12, y + yOffset + arrowHeight, 1, 20).setColor(Color.BLACK).setAlpha(alpha));
+            helper.drawShape(new Quad(x + width() - 12 - bubbleWidth - 1, y + yOffset + arrowHeight, 1, 20).setColor(Color.BLACK).setAlpha(alpha));
+            for (int i = 0; i < arrowHeight; i++)
+            {
+                if (i == 0)
+                    helper.drawShape(new Quad(x + width() - xOffset - i, y + i + yOffset, 2 + (2 * i), 1).setColor(Color.BLACK).setAlpha(alpha));
+                else if (i == 1)
+                {
+                    helper.drawShape(new Quad(x + width() - xOffset - i, y + i + yOffset, 2 + (2 * i), 1).setColor(Color.BLACK).setAlpha(alpha));
+                    helper.drawShape(new Quad(x + width() - xOffset - i + 1, y + i + yOffset, 2 + (2 * i) - 2, 1));
+                } else
+                {
+                    helper.drawShape(new Quad(x + width() - xOffset - i, y + i + yOffset, 2 + (2 * i), 1).setColor(Color.BLACK).setAlpha(alpha));
+                    helper.drawShape(new Quad(x + width() - xOffset - i + 1, y + i + yOffset, 1, 1));
+                    helper.drawShape(new Quad(x + width() - xOffset + arrowHeight + 1 + (i - arrowHeight) - 1, y + i + yOffset, 1, 1));
+                }
+            }
+            helper.drawShape(new Quad(x + width() - 12 - bubbleWidth, y + yOffset + arrowHeight, bubbleWidth - arrowHeight - 4, 1));
+            helper.drawShape(new Quad(x + width() - 12 - bubbleWidth, y + yOffset + arrowHeight + 20 - 1, bubbleWidth, 1).setColor(Color.LT_GREY));
+            helper.drawShape(new Quad(x + width() - 12 - 1, y + yOffset + arrowHeight, 1, 20).setColor(Color.LT_GREY));
+            helper.drawShape(new Quad(x + width() - 12 - bubbleWidth, y + yOffset + arrowHeight, 1, 19));
+            helper.drawText("Click and drag here to move", new Vector(x + width() - 12 - 5, y + yOffset + arrowHeight + 5), 0xFFFFFF, -1, DrawingHelper.VerticalTextAlignment.RIGHT, DrawingHelper.HorizontalTextAlignment.TOP);
+            helper.setZIndex(oldZ);
+        }
     }
 
     private boolean hasScroll()
@@ -241,6 +278,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
                     this.moving = i;
                     moveXStart = mouseX - x;
                     moveYStart = mouseY + scroll - (i * _entryHeight);
+                    LiteModMusicPlayer.config.show_playlist_move_tip = false;
                     break;
                 } else offset += _entryHeight;
             }
@@ -285,7 +323,6 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     @Override
     public void handleKeyTyped(int keyCode, char character)
     {
-
     }
 
 

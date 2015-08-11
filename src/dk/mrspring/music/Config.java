@@ -41,6 +41,7 @@ public class Config
     public long double_click_time = 500;
     public int message_popup_time_per_char = 15;
     public boolean show_overlay_screen_back_button = false;
+    public boolean show_playlist_move_tip = true;
 
     public void validateConfig()
     {
