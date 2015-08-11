@@ -37,7 +37,9 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
     {
         super.draw(minecraft, mouseX, mouseY);
 
-        if (isMovingInDeleteZone() || (LiteModMusicPlayer.config.show_playlist_remove_tip && isMouseInDeleteZone(mouseX, mouseY)))
+        if (isMovingInDeleteZone() ||
+                (LiteModMusicPlayer.config.show_playlist_remove_tip &&
+                        (isMouseInDeleteZone(mouseX, mouseY) || isMoving())))
             target = 1D;
         else target = 0D;
         progress = Miscellaneous.smoothDamp(target, progress, 0.4D);

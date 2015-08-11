@@ -314,6 +314,11 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
         musicList.remove(id);
     }
 
+    public boolean isMoving()
+    {
+        return moving != -1;
+    }
+
     @Override
     public void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceClick)
     {
