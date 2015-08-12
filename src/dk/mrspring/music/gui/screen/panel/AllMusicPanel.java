@@ -55,6 +55,11 @@ public class AllMusicPanel extends GuiAllMusicList implements IPanel
     }
 
     @Override
+    public void preDraw(int mouseX, int mouseY)
+    {
+    }
+
+    @Override
     public int getBottomBarOffset()
     {
         return 0;

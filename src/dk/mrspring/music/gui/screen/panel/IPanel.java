@@ -9,13 +9,15 @@ import dk.mrspring.music.gui.interfaces.IResizable;
  */
 public interface IPanel extends IGui, IResizable
 {
-    public int getBottomBarOffset();
+    int getBottomBarOffset();
 
-    public int getTopBarOffset();
+    int getTopBarOffset();
 
-    public Color getBottomBarColor();
+    Color getBottomBarColor();
 
-    public Color getTopBarColor();
+    Color getTopBarColor();
 
-    public void setParent(IPanelContainer parent);
+    void setParent(IPanelContainer parent);
+
+    void preDraw(int mouseX, int mouseY);
 }

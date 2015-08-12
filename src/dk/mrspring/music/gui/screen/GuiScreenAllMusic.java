@@ -126,19 +126,10 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
         float iconSize = 30 - 18;
         helper.drawShape(new Quad(0, 0, width, height).setColor(Color.BLACK).setAlpha(0.5F));
         IPanel panel = (IPanel) getGui("panel");
-//        IResizable resizable = (IResizable) getGui("panel");
-//        double target = 0;
-//        if (resizable instanceof GuiPlaylist)
-//        {
-//            GuiPlaylist playlist = (GuiPlaylist) resizable;
-//            if (playlist.isMovingInDeleteZone())
-//                target = 1D;
-//            this.progress = Miscellaneous.smoothDamp(target, progress, 0.4);
-//            playlist.setHeight(height - getTopBarHeight() - getBottomBarHeight());
-//        } else this.progress = Miscellaneous.smoothDamp(target, progress, 0.4);
 
-//        this.setBottomBarHeight(30/* + (int) (25 * progress)*/);
-        this.setBottomBarColor(panel.getBottomBarColor()/*Color.morph(Color.BLACK, Color.RED, (float) progress)*/);
+        panel.preDraw(mouseX, mouseY - 30);
+
+        this.setBottomBarColor(panel.getBottomBarColor());
         this.setTopBarColor(panel.getTopBarColor());
 
         int panelWidth = ((SidePanel) this.getGui("side_panel")).w;

@@ -76,4 +76,10 @@ public class ArtistPanel extends GuiArtistList implements IPanel
     {
         this.parent = parent;
     }
+
+    @Override
+    public void preDraw(int mouseX, int mouseY)
+    {
+
+    }
 }

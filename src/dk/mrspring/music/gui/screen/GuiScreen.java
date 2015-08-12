@@ -31,7 +31,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     protected net.minecraft.client.gui.GuiScreen previousScreen;
     String title = "untitled", subtitle = "";
     boolean repeats = false;
-    private HashMap<String, IGui> guiHashMap;
+    public HashMap<String, IGui> guiHashMap;
     private boolean showTopBar = true;
     private boolean showBottomBar = true;
     private boolean drawCenteredTitle = true;

@@ -26,6 +26,12 @@ public class AllArtistsPanel extends GuiAllArtistsList implements IPanel
     }
 
     @Override
+    public void preDraw(int mouseX, int mouseY)
+    {
+
+    }
+
+    @Override
     public int getBottomBarOffset()
     {
         return 0;

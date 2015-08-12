@@ -35,7 +35,7 @@ gui.music.main.panel.album.title=Albums
 gui.music.main.panel.artist.title=Artists
 
 gui.playlist_editor.title=%1$s
-gui.playlist_editor.remove=Release to remove from %1$s
+gui.playlist_editor.remove=Release here to remove from %1$s
 gui.playlist_editor.list_entry=%1$s §7- %2$s
 
 gui.music_list.entry_text=%1$s\n%2$s\n%3$s

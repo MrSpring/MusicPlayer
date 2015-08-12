@@ -48,5 +48,11 @@ public class AllAlbumsPanel extends GuiAllAlbumsList implements IPanel
         this.parent = parent;
     }
 
+    @Override
+    public void preDraw(int mouseX, int mouseY)
+    {
+
+    }
+
     // TODO: onElementClicked right-click
 }
