@@ -201,7 +201,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
         GL11.glPopMatrix();
 
-        if (LiteModMusicPlayer.config.show_playlist_move_tip)
+        if (LiteModMusicPlayer.config.show_playlist_move_tip && list.size() > 0)
         {
             double oldZ = helper.getZIndex();
             helper.setZIndex(oldZ + 100);

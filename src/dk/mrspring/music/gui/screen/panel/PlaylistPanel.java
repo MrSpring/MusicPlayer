@@ -67,16 +67,6 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
             helper.drawCenteredText(TranslateHelper.translateFormat("gui.playlist_editor.remove",
                             getPlaylist().getName()),
                     new Vector(x() + (width() / 2), iconSize + ((float) (y() + height() + 2)) + ((extraSize * pg))));
-
-
-//        helper.drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(x() + (width() / 2), y() + height(), 30, 30));
-//        float bigIconExtra = 10;
-//        float iconSize = 20 + (float) (bigIconExtra * progress);
-//        float bottomBarOffset = (float) (25D * progress);
-//        LiteModMusicPlayer.core.getDrawingHelper().drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(((float) x()) + (((float) width()) / 2F) - (iconSize / 2F), ((float) (y() + height())) + (bottomBarOffset / 2F) + /*(iconSize / 2) -*/5F - (float) (progress * 6D), iconSize, iconSize));
-
-//        if (pg > 0.9F)
-//            LiteModMusicPlayer.core.getDrawingHelper().drawText(TranslateHelper.translateFormat("gui.playlist_editor.remove", getPlaylist().getName()), new Vector(x() + width() / 2, y() + height() - (bottomBarOffset / 2) + 3 + (iconSize / 2)), 0xFFFFFF, true, width() - 20, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.CENTER);
     }
 
     @Override
