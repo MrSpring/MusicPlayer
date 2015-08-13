@@ -57,7 +57,7 @@ public class GuiNumberField implements IGui
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         LiteModMusicPlayer.core.getDrawingHelper().drawButtonThingy(new Quad(x, y, w, h), focused ? 1 : 0, true, Color.BLACK, 0.85F, Color.BLACK, 0.85F);
 

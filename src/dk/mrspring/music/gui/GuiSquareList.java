@@ -71,7 +71,7 @@ public abstract class GuiSquareList<T> implements IGui, IMouseListener, IResizab
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         int width = getListWidth(), height = getListHeight();
 

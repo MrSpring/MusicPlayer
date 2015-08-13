@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
  */
 public interface IGui
 {
-    void draw(Minecraft minecraft, int mouseX, int mouseY);
+    void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks);
 
     void update();
 

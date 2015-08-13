@@ -53,7 +53,7 @@ public class CardRenamePlaylist extends Card
         }
 
         @Override
-        public void draw(Minecraft minecraft, int mouseX, int mouseY)
+        public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
         {
             int width = parent.getOverlayWidth();
             GL11.glPushMatrix();
@@ -71,7 +71,7 @@ public class CardRenamePlaylist extends Card
             DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
             double z = helper.getZIndex();
             helper.setZIndex(z + 10);
-            nameField.draw(minecraft, mouseX, mouseY);
+            nameField.draw(minecraft, mouseX, mouseY, partialTicks);
             helper.setZIndex(z);
         }
 
@@ -129,12 +129,12 @@ public class CardRenamePlaylist extends Card
         }
 
         @Override
-        public void draw(Minecraft minecraft, int mouseX, int mouseY)
+        public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
         {
             int width = parent.getMinecraft().fontRendererObj.getStringWidth("Create") + 6;
             button.setX(parent.getOverlayWidth() / 2 - (width / 2));
             button.setWidth(width);
-            button.draw(minecraft, mouseX, mouseY);
+            button.draw(minecraft, mouseX, mouseY, partialTicks);
         }
 
         @Override
@@ -186,7 +186,7 @@ public class CardRenamePlaylist extends Card
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
 
     }

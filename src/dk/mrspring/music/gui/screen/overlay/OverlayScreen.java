@@ -147,7 +147,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
                 this.drawCard(new Quad(0, 0, overlayWidth, cardHeight));
             int sideXOffset = (width - getOverlayWidth()) / 2;
             int topYOffset = height / 3;
-            card.draw(mc, mouseX - sideXOffset, mouseY - topYOffset - listHeight);
+            card.draw(mc, mouseX - sideXOffset, mouseY - topYOffset - listHeight, partialTicks);
             GL11.glPopMatrix();
 
             GL11.glTranslatef(0, cardHeight + 10, 0);
@@ -171,7 +171,7 @@ public class OverlayScreen extends net.minecraft.client.gui.GuiScreen implements
         {
             back.setX((width - getOverlayWidth()) / 2 - back.getWidth() - 5);
             back.setY(height / 3);
-            back.draw(mc, mouseX, mouseY);
+            back.draw(mc, mouseX, mouseY, partialTicks);
         }
 
         helper.setZIndex(oldZ);

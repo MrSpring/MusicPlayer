@@ -1,11 +1,9 @@
 package dk.mrspring.music.gui.screen.overlay;
 
 import dk.mrspring.llcore.DrawingHelper;
-import dk.mrspring.llcore.Quad;
 import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.overlay.MultilineTextRender;
-import dk.mrspring.music.util.ArtistInfoCall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.opengl.GL11;
@@ -42,7 +40,7 @@ public class CardBasicInfo extends Card
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         render.setWrapWidth(parent.getOverlayWidth()-4);
         render.setText(getText());

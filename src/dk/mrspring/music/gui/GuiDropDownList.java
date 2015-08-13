@@ -36,7 +36,7 @@ public class GuiDropDownList implements IGui // TODO: Rewrite
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         List<ListElement> rendering = new ArrayList<ListElement>(elements);
         ListElement selectedElement = rendering.remove(selected);

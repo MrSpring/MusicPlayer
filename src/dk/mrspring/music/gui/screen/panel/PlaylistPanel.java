@@ -42,13 +42,17 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
                         (isMouseInDeleteZone(mouseX, mouseY) || isMoving())))
             target = 1D;
         else target = 0D;
-        progress = Miscellaneous.smoothDamp(target, progress, 0.4D);
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(minecraft, mouseX, mouseY);
+        super.draw(minecraft, mouseX, mouseY, partialTicks);
+
+        double nextProgress = Miscellaneous.smoothDamp(target, progress, 0.4D);
+        double diff = nextProgress - progress;
+        nextProgress += diff * partialTicks;
+        System.out.println("pg: " + progress + ", diff: " + diff + ", nextPg: " + nextProgress);
 
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         String playlistName = getPlaylist().getName();
@@ -58,8 +62,8 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
         GuiUtils.drawOptionsIcon(x() + 3 + (width() + result.getLongestLine()) / 2, y() - top + 3, result.getTotalHeight(), result.getTotalHeight());
 
         float extraSize = 10F;
-        float pg = (float) progress;
-        float iconSize = 20 + (float) (extraSize * progress);
+        float pg = (float) nextProgress;
+        float iconSize = 20 + (extraSize * pg);
         helper.drawIcon(LiteModMusicPlayer.core.getIcon("trash_can"), new Quad(
                 ((float) (x() + (width() / 2))) - (iconSize / 2F),
                 ((float) (y() + height() + 5)) + (2 * pg), iconSize, iconSize));
@@ -73,6 +77,7 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
     public void update()
     {
         super.update();
+        progress = Miscellaneous.smoothDamp(target, progress, 0.4D);
     }
 
     @Override

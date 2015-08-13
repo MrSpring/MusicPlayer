@@ -121,7 +121,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 

@@ -5,7 +5,6 @@ import com.mumfrey.liteloader.core.LiteLoader;
 import dk.mrspring.llcore.LLCore;
 import dk.mrspring.llcore.Quad;
 import dk.mrspring.music.effect.EffectHandler;
-import dk.mrspring.music.effect.EffectMessage;
 import dk.mrspring.music.gui.screen.GuiScreen;
 import dk.mrspring.music.gui.screen.GuiScreenAllMusic;
 import dk.mrspring.music.gui.screen.overlay.OverlayScreen;
@@ -50,6 +49,7 @@ public class LiteModMusicPlayer implements Tickable
 
     public static boolean disableKeys = false;
     public static boolean showConsole = false;
+    public static boolean showedFolderSelector = false;
 
     AnyTimeKeyBind reloadConfig = new AnyTimeKeyBind(Keyboard.KEY_F5);
     AnyTimeKeyBind expandMiniPlayer = new AnyTimeKeyBind(Keyboard.KEY_P);
@@ -86,11 +86,17 @@ public class LiteModMusicPlayer implements Tickable
     @Override
     public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock)
     {
-        if (config.show_startup_dialog)
-        {
-//            config.show_startup_dialog = false;
-//            minecraft.displayGuiScreen(new GuiScreenFolderSelector(minecraft.currentScreen));
-        }
+//        if (!showedFolderSelector && musicHandler == null)
+//        {
+//            showedFolderSelector = true;
+//            minecraft.displayGuiScreen(new GuiScreenWelcome(minecraft.currentScreen));
+//            if (config.show_startup_dialog)
+//            {
+//                config.show_startup_dialog = false;
+//                minecraft.displayGuiScreen(new GuiScreenWelcome(minecraft.currentScreen)); // TODO: Show welcome screen, redirect to folder selector afterwards
+//            } else
+//                minecraft.displayGuiScreen(new GuiScreenFolderSelector(minecraft.currentScreen));
+//        }
 
         if (toggleConsole.isClicked())
             showConsole = !showConsole;
@@ -101,28 +107,34 @@ public class LiteModMusicPlayer implements Tickable
             log.draw(new Quad(5, 5, (res.getScaledWidth() - 10) / 3, (res.getScaledHeight() - 10) / 3));
         }
 
-        if (!disableKeys)
+        if (musicHandler != null)
         {
-            if (reloadConfig.isClicked())
-                loadConfigFile();
-            if (expandMiniPlayer.isClicked())
-                playerOverlay.toggleExpanded();
-            if (showNextUp.isClicked())
-                playerOverlay.showNext();
+            if (!disableKeys)
+            {
+                if (reloadConfig.isClicked())
+                    loadConfigFile();
+                if (expandMiniPlayer.isClicked())
+                    playerOverlay.toggleExpanded();
+                if (showNextUp.isClicked())
+                    playerOverlay.showNext();
 
-            if (previous.isClicked())
-                musicHandler.playPrevious();
-            if (playPause.isClicked())
-                musicHandler.toggle();
-            if (next.isClicked())
-                musicHandler.playNext();
+                if (previous.isClicked())
+                    musicHandler.playPrevious();
+                if (playPause.isClicked())
+                    musicHandler.toggle();
+                if (next.isClicked())
+                    musicHandler.playNext();
 
-            if (openMM.isClicked())
-                minecraft.displayGuiScreen(/*new GuiScreenFolderSelector(minecraft.currentScreen)*/new GuiScreenAllMusic(minecraft.currentScreen));
+                if (openMM.isClicked())
+                    minecraft.displayGuiScreen(/*new GuiScreenFolderSelector(minecraft.currentScreen)*/new GuiScreenAllMusic(minecraft.currentScreen));
+            }
+
+            if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen) && !(minecraft.currentScreen instanceof GuiScreenUpdater))
+                playerOverlay.draw(musicHandler, minecraft);
         }
 
-        if (!(minecraft.currentScreen instanceof GuiScreen) && !(minecraft.currentScreen instanceof OverlayScreen) && !(minecraft.currentScreen instanceof GuiScreenUpdater))
-            playerOverlay.draw(musicHandler, minecraft);
+        if (openMM.isClicked())
+            minecraft.displayGuiScreen(/*new GuiScreenWelcome(minecraft.currentScreen)*/new GuiScreenAllMusic(minecraft.currentScreen));
 
         effects.draw();
     }
@@ -242,7 +254,8 @@ public class LiteModMusicPlayer implements Tickable
         log = new ConsoleOutput(Minecraft.getMinecraft().fontRendererObj);
         log.zOffset = 1;
         log.addLine("Initialized Music Player mod successfully.");
-        musicHandler = new MusicHandler(config.auto_play, new File(System.getProperty("user.home"), "Music"));
+        if (config.hasValidMusicLocation())
+            musicHandler = new MusicHandler(config.auto_play, new File(config.music_location));
         loadPlaylist();
         playerOverlay = new PlayerOverlay();
         effects = new EffectHandler();
@@ -268,5 +281,11 @@ public class LiteModMusicPlayer implements Tickable
     public String getName()
     {
         return "MC Music Player";
+    }
+
+    public static void reloadMusicHandler(String openFolder)
+    {
+        if (musicHandler != null) musicHandler.stopCurrentPlayer();
+        musicHandler = new MusicHandler(config.auto_play, new File(openFolder));
     }
 }

@@ -51,7 +51,7 @@ public class GuiSlider implements IGui, IDelayedDraw
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         LiteModMusicPlayer.core.getDrawingHelper().drawButtonThingy(new Quad(x, y + 1, width, height - 2), ((float) alphaProgress) / 10, true);
         float sliderWidth = 10F, sliderHeight = height, sliderXPos = x, sliderYPos = y;

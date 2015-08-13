@@ -28,18 +28,18 @@ public class GuiFileNew extends GuiFileBase
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(minecraft, mouseX, mouseY);
+        super.draw(minecraft, mouseX, mouseY, partialTicks);
 
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 
-        this.nameField.draw(minecraft, mouseX, mouseY);
+        this.nameField.draw(minecraft, mouseX, mouseY, partialTicks);
 
-        this.createButton.draw(minecraft, mouseX, mouseY);
+        this.createButton.draw(minecraft, mouseX, mouseY, partialTicks);
         helper.drawIcon(LiteModMusicPlayer.core.getIcon("check_mark"), new Quad(createButton.getX() + ((float) createButton.getWidth() / 2) - 3, createButton.getY() + ((float) createButton.getHeight() / 2) - 3, 6, 6));
 
-        this.cancelButton.draw(minecraft, mouseX, mouseY);
+        this.cancelButton.draw(minecraft, mouseX, mouseY, partialTicks);
         helper.drawIcon(LiteModMusicPlayer.core.getIcon("cross"), new Quad(cancelButton.getX() + ((float) cancelButton.getWidth() / 2) - 3, cancelButton.getY() + ((float) cancelButton.getHeight() / 2) - 3, 6, 6));
     }
 

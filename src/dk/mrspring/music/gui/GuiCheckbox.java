@@ -27,13 +27,13 @@ public class GuiCheckbox implements IGui
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         button.setX(x);
         button.setY(y);
         button.setWidth(w);
         button.setHeight(h);
-        button.draw(minecraft, mouseX, mouseY);
+        button.draw(minecraft, mouseX, mouseY, partialTicks);
         if (isChecked())
             LiteModMusicPlayer.core.getDrawingHelper().drawIcon(LiteModMusicPlayer.core.getIcon("check_mark"), new Quad(x + 2, y + 2, w - 4, h - 4));
     }

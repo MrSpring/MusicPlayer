@@ -82,11 +82,11 @@ public class GuiArtistList extends GuiSquareList<Object>
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
-        typeList.draw(minecraft, mouseX, mouseY);
+        typeList.draw(minecraft, mouseX, mouseY, partialTicks);
         LiteModMusicPlayer.core.getDrawingHelper().drawText("Artist:\n\u00a7l\u00a7n"+artist.getArtistName(), new Vector(x+(width()/5*3), y+3),0xFFFFFF,true,-1, DrawingHelper.VerticalTextAlignment.CENTER, DrawingHelper.HorizontalTextAlignment.TOP);
-        super.draw(minecraft, mouseX, mouseY);
+        super.draw(minecraft, mouseX, mouseY, partialTicks);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class CardMusic extends Card
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
     }
 
@@ -204,9 +204,9 @@ public class CardMusic extends Card
         }*/
 
         @Override
-        public void draw(Minecraft minecraft, int mouseX, int mouseY)
+        public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
         {
-            super.draw(minecraft, mouseX, mouseY);
+            super.draw(minecraft, mouseX, mouseY, partialTicks);
 
             GL11.glPushMatrix();
             GL11.glTranslatef(0, super.getHeight(), 0);
@@ -353,7 +353,7 @@ public class CardMusic extends Card
         }
 
         @Override
-        public void draw(Minecraft minecraft, int mouseX, int mouseY)
+        public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
         {
             int maxWidth = parent.getOverlayWidth();
             int coverSize = maxWidth / 3;

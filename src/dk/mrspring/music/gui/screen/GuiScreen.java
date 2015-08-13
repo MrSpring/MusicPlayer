@@ -36,6 +36,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     private boolean showBottomBar = true;
     private boolean drawCenteredTitle = true;
     private boolean useDefaultDoneButton = true;
+    private boolean updatePrevious = false;
     private int topBarHeight = 30, bottomBarHeight = 30;
     private Color topBarColor = Color.BLACK, bottomBarColor = Color.BLACK;
     private int mouseXAtLastFrame = 0, mouseYAtLastFrame = 0;
@@ -96,6 +97,13 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         this.buttonList.clear();
         if (!bypassInit)
             this.initGui();
+    }
+
+    @Override
+    public void onResize(Minecraft mcIn, int p_175273_2_, int p_175273_3_)
+    {
+        super.onResize(mcIn, p_175273_2_, p_175273_3_);
+        if (updatePrevious && previousScreen != null) previousScreen.onResize(mcIn, p_175273_2_, p_175273_3_);
     }
 
     public void addGuiElement(String identifier, IGui gui)
@@ -201,6 +209,8 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
+        if (updatePrevious && previousScreen != null) previousScreen.drawScreen(-1000, -1000, partialTicks);
+
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         if (this.showTopBar)
         {
@@ -241,7 +251,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
 
             if (this.drawGui(identifier, element, mouseX, mouseY - mouseYOffset) && !identifier.equals("done_button"))
             {
-                element.draw(mc, currentMouseX, currentMouseY - mouseYOffset);
+                element.draw(mc, currentMouseX, currentMouseY - mouseYOffset, partialTicks);
                 if (element instanceof IDelayedDraw)
                 {
                     drawables.add(((IDelayedDraw) element).getDelayedDrawable());
@@ -256,7 +266,7 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
         }
 
         if (this.openMenu != null)
-            this.openMenu.draw(mc, mouseX, mouseY - mouseYOffset);
+            this.openMenu.draw(mc, mouseX, mouseY - mouseYOffset, partialTicks);
 
         this.mouseXAtLastFrame = mouseX;
         this.mouseYAtLastFrame = mouseY;
@@ -286,6 +296,8 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     public void updateScreen()
     {
         super.updateScreen();
+
+        if (updatePrevious && previousScreen != null) previousScreen.updateScreen();
 
         for (Map.Entry<String, IGui> entry : guiHashMap.entrySet())
         {
@@ -461,5 +473,11 @@ public class GuiScreen extends net.minecraft.client.gui.GuiScreen
     public void setBottomBarColor(Color bottomBarColor)
     {
         this.bottomBarColor = bottomBarColor;
+    }
+
+    public GuiScreen doPreviousScreen()
+    {
+        updatePrevious = true;
+        return this;
     }
 }

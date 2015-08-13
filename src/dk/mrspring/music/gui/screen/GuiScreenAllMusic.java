@@ -48,6 +48,12 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
     }
 
     @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
+    @Override
     public void initGui()
     {
         super.initGui();
@@ -265,7 +271,7 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
         }
 
         @Override
-        public void draw(Minecraft minecraft, int mouseX, int mY)
+        public void draw(Minecraft minecraft, int mouseX, int mY, float partialTicks)
         {
             int mouseY = mY + scroll;
             if (resizing)
@@ -284,7 +290,7 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
             DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 
             int yOffset = 4;
-            yOffset += drawButtons(this.buttons, yOffset, minecraft, mouseX, mouseY, 25);
+            yOffset += drawButtons(this.buttons, yOffset, minecraft, mouseX, mouseY, 25, partialTicks);
 
             if (this.playlists.length > 0)
             {
@@ -297,7 +303,7 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
 
                 yOffset += 8;
 
-                yOffset += drawButtons(this.playlists, yOffset, minecraft, mouseX, mouseY, 25);
+                yOffset += drawButtons(this.playlists, yOffset, minecraft, mouseX, mouseY, 25, partialTicks);
             }
 
             yOffset += 4;
@@ -310,7 +316,7 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
             newPlaylist.setWidth(w + 4);
             newPlaylist.setHeight(25);
             newPlaylist.setY(y + yOffset);
-            newPlaylist.draw(minecraft, mouseX, mouseY);
+            newPlaylist.draw(minecraft, mouseX, mouseY, partialTicks);
 
             prevListHeight = yOffset + newPlaylist.getHeight();
 
@@ -345,7 +351,7 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
             GL11.glPopMatrix();
         }
 
-        private int drawButtons(GuiSimpleButton[] buttons, int offset, Minecraft minecraft, int mouseX, int mouseY, int height)
+        private int drawButtons(GuiSimpleButton[] buttons, int offset, Minecraft minecraft, int mouseX, int mouseY, int height, float partialTicks)
         {
             int yOffset = 0;
             for (GuiSimpleButton button : buttons)
@@ -354,7 +360,7 @@ public class GuiScreenAllMusic extends GuiScreen implements IPanelContainer
                     button.setWidth(w + 4);
                     button.setHeight(height);
                     button.setY(y + yOffset + offset);
-                    button.draw(minecraft, mouseX, mouseY);
+                    button.draw(minecraft, mouseX, mouseY, partialTicks);
                     yOffset += height + 3;
                 }
             return yOffset;

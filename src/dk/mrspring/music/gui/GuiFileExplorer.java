@@ -1,7 +1,10 @@
 package dk.mrspring.music.gui;
 
 import com.mumfrey.liteloader.gl.GLClippingPlanes;
-import dk.mrspring.llcore.*;
+import dk.mrspring.llcore.DrawingHelper;
+import dk.mrspring.llcore.FileLoader;
+import dk.mrspring.llcore.Quad;
+import dk.mrspring.llcore.Vector;
 import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.gui.interfaces.IMouseListener;
@@ -110,7 +113,7 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         int width = w;
         listHeight = h;
@@ -121,7 +124,7 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
         {
             width -= 75;
             helper.drawVerticalLine(new Vector(x + width + 4 + 3, y + 6), h - 25 - 9, 1, true);
-            this.drawControls(minecraft, mouseX, mouseY, x + width + 11);
+            this.drawControls(minecraft, mouseX, mouseY, x + width + 11, partialTicks);
         }
 
         if (showPath)
@@ -149,7 +152,7 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
                     guiFile.setX(xOffset + x);
                     guiFile.setY(yOffset + y);
                     guiFile.setWidth(width + 5 - xOffset);
-                    guiFile.draw(minecraft, mouseX, mouseY);
+                    guiFile.draw(minecraft, mouseX, mouseY, partialTicks);
                 }
                 yOffset += guiFile.getHeight() + 5;
             }
@@ -165,39 +168,27 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
         GLClippingPlanes.glDisableClipping();
 
         if (totalHeight > listHeight)
-        {
-            double progress = ((double) scroll) / ((double) getMaxScroll());
-            int scrollbarRange = listHeight - 2 - 6;
-            double sizeProgress = ((double) listHeight) / ((double) getListHeight());
-            int scrollbarHeight = (int) (sizeProgress * ((double) scrollbarRange));
-            int scrollbarY = (int) (progress * (double) (scrollbarRange - scrollbarHeight));
-
-            float alpha = 0.5F;
-            helper.drawShape(new Quad(3, 4, 6, scrollbarRange).setColor(Color.BLACK).setAlpha(alpha));
-            helper.drawShape(new Quad(4, 3, 4, 1).setColor(Color.BLACK).setAlpha(alpha));
-            helper.drawShape(new Quad(4, listHeight - 4, 4, 1).setColor(Color.BLACK).setAlpha(alpha));
-            helper.drawShape(new Quad(4, scrollbarY + 4, 4, scrollbarHeight));
-        }
+            GuiUtils.drawScrollbar(0, 0, 7, listHeight, scroll, getMaxScroll(), getListHeight());
     }
 
-    private void drawControls(Minecraft minecraft, int mouseX, int mouseY, int xPos)
+    private void drawControls(Minecraft minecraft, int mouseX, int mouseY, int xPos, float partialTicks)
     {
         this.openFile.setX(xPos);
         this.openFile.setY(y + 3);
-        this.openFile.draw(minecraft, mouseX, mouseY);
+        this.openFile.draw(minecraft, mouseX, mouseY, partialTicks);
 
         this.refreshList.setX(xPos);
         this.refreshList.setY(y + 3 + 25);
         this.refreshList.setWidth(60);
-        this.refreshList.draw(minecraft, mouseX, mouseY);
+        this.refreshList.draw(minecraft, mouseX, mouseY, partialTicks);
 
         this.newFolder.setX(xPos);
         this.newFolder.setY(y + 3 + 50);
-        this.newFolder.draw(minecraft, mouseX, mouseY);
+        this.newFolder.draw(minecraft, mouseX, mouseY, partialTicks);
 
         this.upOne.setX(xPos);
         this.upOne.setY(y + 3 + 75);
-        this.upOne.draw(minecraft, mouseX, mouseY);
+        this.upOne.draw(minecraft, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -511,7 +502,12 @@ public class GuiFileExplorer implements IGui, IMouseListener // TODO: Rewrite
 
     public String getCurrentAbsolutePath()
     {
-        return new File(getCurrentPath()).getAbsolutePath();
+        return getCurrentFolder().getAbsolutePath();
+    }
+
+    public File getCurrentFolder()
+    {
+        return new File(getCurrentPath());
     }
 
     public interface IOnFileOpened

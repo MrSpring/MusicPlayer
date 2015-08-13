@@ -84,7 +84,7 @@ public class GuiMultiLineTextField implements IGui, IMouseListener
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         int xOffset = 0, yOffset = 0;
         if (lines * 9 > h)

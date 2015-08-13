@@ -6,6 +6,8 @@ import dk.mrspring.music.util.FileSorter;
 import dk.mrspring.music.util.Miscellaneous;
 import org.lwjgl.input.Keyboard;
 
+import java.io.File;
+
 /**
  * Created by Konrad on 26-04-2015.
  */
@@ -43,6 +45,7 @@ public class Config
     public boolean show_overlay_screen_back_button = false;
     public boolean show_playlist_move_tip = true;
     public boolean show_playlist_remove_tip = true;
+    public String music_location = new File(System.getProperty("user.home"), "music").getAbsolutePath();
 
     public void validateConfig()
     {
@@ -61,5 +64,12 @@ public class Config
         gui_mm_list_entry_size = Miscellaneous.clamp(gui_mm_list_entry_size, 0, 100);
         if (file_sort_type == null) file_sort_type = defaultConfig.file_sort_type;
         if (double_click_time < 0) double_click_time = 500;
+        if (!hasValidMusicLocation())
+            music_location = "";
+    }
+
+    public boolean hasValidMusicLocation()
+    {
+        return !music_location.isEmpty() && new File(music_location).exists();
     }
 }

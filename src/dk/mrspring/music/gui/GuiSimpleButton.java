@@ -87,7 +87,7 @@ public class GuiSimpleButton implements IGui
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         wasMouseHoveringLastFrame = GuiUtils.isMouseInBounds(mouseX, mouseY, this.x, this.y, this.width, this.height);
         if (wasMouseHoveringLastFrame)

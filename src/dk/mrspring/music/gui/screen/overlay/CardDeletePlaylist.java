@@ -30,7 +30,7 @@ public class CardDeletePlaylist extends Card
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
 
     }
@@ -59,7 +59,7 @@ public class CardDeletePlaylist extends Card
         }
 
         @Override
-        public void draw(Minecraft minecraft, int mouseX, int mouseY)
+        public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
         {
 //            int width = parent.getMinecraft().fontRendererObj.getStringWidth("Create") + 6;
             int third = parent.getOverlayWidth() / 3;
@@ -69,8 +69,8 @@ public class CardDeletePlaylist extends Card
             yes.setX(third / 2);
             no.setX((third / 2) + (2 * third));
 
-            yes.draw(minecraft, mouseX, mouseY);
-            no.draw(minecraft, mouseX, mouseY);
+            yes.draw(minecraft, mouseX, mouseY, partialTicks);
+            no.draw(minecraft, mouseX, mouseY, partialTicks);
         }
 
         @Override

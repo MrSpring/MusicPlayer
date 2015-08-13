@@ -60,7 +60,7 @@ public class Menu implements IGui
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         helper.setZIndex(10);

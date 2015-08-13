@@ -173,7 +173,7 @@ public class GuiFile extends GuiFileBase
         } else minecraft.fontRendererObj.drawString(this.getShortFileName(), x + 4, nameY, 0xFFFFFF, true);
     }
 
-    private void renderBigList(Minecraft minecraft, int mouseX, int mouseY)
+    private void renderBigList(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         float iconSize = LiteModMusicPlayer.config.explorer_icon_size;
 
@@ -181,7 +181,7 @@ public class GuiFile extends GuiFileBase
         button.setHeight(h);
         button.setX(x);
         button.setY(y);
-        button.draw(minecraft, mouseX, mouseY);
+        button.draw(minecraft, mouseX, mouseY, partialTicks);
 
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
 
@@ -206,7 +206,7 @@ public class GuiFile extends GuiFileBase
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
         //DrawingHelper.drawButtonThingy(x, y, w, h, Color.BLACK, 0.25F, Color.WHITE, 1F);
 //        button.draw(minecraft, mouseX, mouseY);
@@ -218,7 +218,7 @@ public class GuiFile extends GuiFileBase
                 renderSquare(minecraft);
                 break;
             case LONG_GRID:
-                renderBigList(minecraft, mouseX, mouseY);
+                renderBigList(minecraft, mouseX, mouseY, partialTicks);
                 break;
             case LIST:
                 renderList(minecraft);

@@ -1,9 +1,10 @@
 package dk.mrspring.music.gui.screen;
 
+import dk.mrspring.music.LiteModMusicPlayer;
 import dk.mrspring.music.gui.GuiFileExplorer;
 import dk.mrspring.music.gui.GuiSimpleButton;
+import dk.mrspring.music.gui.interfaces.IGui;
 import dk.mrspring.music.util.GuiUtils;
-import net.minecraft.client.Minecraft;
 
 /**
  * Created by Konrad on 27-06-2015.
@@ -22,31 +23,29 @@ public class GuiScreenFolderSelector extends GuiScreen
     {
         super.initGui();
 
-        addGuiElement("explorer", new GuiFileExplorer(0, 0, width, height - getTopBarHeight() - 8 /*- getBottomBarHeight()*/, System.getProperty("user.home")).setShowBackground(false));
+        this.doPreviousScreen();
+
+        addGuiElement("explorer", new GuiFileExplorer(0, 0, width, height - getTopBarHeight() - 8, System.getProperty("user.home")).setShowBackground(false));
         addGuiElement("select_folder", new GuiSimpleButton(width - 5 - 100, height - getTopBarHeight() - getBottomBarHeight() + 5, 100, getBottomBarHeight() - 10, "gui.explorer.use_folder"));
     }
 
     @Override
-    public void onResize(Minecraft mcIn, int p_175273_2_, int p_175273_3_)
+    public void guiClicked(String identifier, IGui gui, int mouseX, int mouseY, int mouseButton)
     {
-        super.onResize(mcIn, p_175273_2_, p_175273_3_);
-        previousScreen.onResize(mcIn, p_175273_2_, p_175273_3_);
+        super.guiClicked(identifier, gui, mouseX, mouseY, mouseButton);
+        if (identifier.equals("select_folder"))
+        {
+            String openFolder = ((GuiFileExplorer) getGui("explorer")).getCurrentAbsolutePath();
+            LiteModMusicPlayer.config.music_location = openFolder;
+            LiteModMusicPlayer.reloadMusicHandler(openFolder);
+        }
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        previousScreen.drawScreen(-1000, -1000, partialTicks);
         GuiUtils.drawRainbowSquare(progress, 0, 0, width, height);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
-    }
-
-
-    @Override
-    public void updateScreen()
-    {
-        super.updateScreen();
-        GuiUtils.increaseProgress(progress, 2);
     }
 }

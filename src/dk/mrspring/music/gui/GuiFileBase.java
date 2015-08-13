@@ -21,7 +21,7 @@ public class GuiFileBase implements IGui
     }
 
     @Override
-    public void draw(Minecraft minecraft, int mouseX, int mouseY)
+    public void draw(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
     {
 
     }
