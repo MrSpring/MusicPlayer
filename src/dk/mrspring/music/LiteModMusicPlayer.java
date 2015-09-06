@@ -17,7 +17,7 @@ import dk.mrspring.music.util.Icons;
 import dk.mrspring.music.util.JsonUtils;
 import dk.mrspring.music.util.filter.FileTypeFilter;
 import dk.mrspring.updater.core.UpdateChecker;
-import dk.mrspring.updator.gui.GuiScreenUpdater;
+import dk.mrspring.updater.gui.GuiScreenUpdater;
 import javafx.embed.swing.JFXPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;

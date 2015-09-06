@@ -30,6 +30,8 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     int moving = -1;
     int moveXStart = -1, moveYStart = -1;
     boolean isReadyToDelete = false;
+    DeleteMethod deleteMethod = DeleteMethod.MOVE_LEFT;
+    public double target = 0D, progress = target;
     private int _entryWidth = 70;
     private int _entryHeight = 35;
     private int _scrollBarWidth = 7;
@@ -44,21 +46,30 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
         this.height = h;
     }
 
-    public static void drawMusic(int xBase, int y, int w, int height, Music music, int padding)
+    public static void drawMusic(int xBase, int y, int w, int height, Music music, int padding, boolean text)
     {
         int wPadding = padding * 2;
         int coverSize = height - wPadding - 4;
         int width = w - coverSize, x = xBase + coverSize + 3;
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         helper.drawButtonThingy(new Quad(xBase + padding, y + padding, w - wPadding, height - wPadding), 0F, true);
-        helper.drawText(getRenderString(music), new Vector(x + padding + 3, y + (height / 2)), 0xFFFFFF, true, -1,
-                DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
+        if (text)
+            helper.drawText(getRenderString(music), new Vector(x + padding + 3, y + (height / 2)), 0xFFFFFF, true, -1,
+                    DrawingHelper.VerticalTextAlignment.LEFT, DrawingHelper.HorizontalTextAlignment.CENTER);
         int dragW = 10;
         helper.drawShape(new Quad(x + width - 15 - dragW, y + (height / 2) - 1 - 4, dragW, 2));
         helper.drawShape(new Quad(x + width - 15 - dragW, y + (height / 2) - 1, dragW, 2));
         helper.drawShape(new Quad(x + width - 15 - dragW, y + (height / 2) + 3, dragW, 2));
         music.bindCover();
         helper.drawTexturedShape(new Quad(xBase + padding + 2, y + padding + 2, coverSize, coverSize));
+    }
+
+    public void drawHoveringMusic(int xBase, int y, int w, int height, Music music, int padding)
+    {
+        double iProgress = 1D - progress;
+        System.out.println(iProgress + ", " + progress);
+        int removedWidth = (int) (((double) (w - height)) * iProgress);
+        drawMusic(xBase + removedWidth, y, width - removedWidth, height, music, padding, iProgress < 0.9D);
     }
 
     public static String getRenderString(Music music)
@@ -172,12 +183,12 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
                     double progress = Math.min(1, ((double) diff) / (double) _entryHeight);
                     double invertedProgress = (1D - progress);
                     GL11.glTranslatef(0, ((float) progress * _entryHeight), 0);
-                    drawMusic(0, 0, _entryWidth, _entryHeight, music, 3);
+                    drawMusic(0, 0, _entryWidth, _entryHeight, music, 3, false);
                     GL11.glTranslatef(0, ((float) invertedProgress * _entryHeight) + _entryHeight, 0);
                     moved = true;
                 } else
                 {
-                    drawMusic(0, 0, _entryWidth, _entryHeight, music, 3);
+                    drawMusic(0, 0, _entryWidth, _entryHeight, music, 3, false);
                     currentHeight += _entryHeight;
                     GL11.glTranslatef(0, _entryHeight, 0);
                 }
@@ -186,12 +197,13 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
         GL11.glPopMatrix();
 
-        if (moving != -1 && mouseY < y + height)
+        if (moving != -1 && !isMouseInDeleteZone(mouseX, mouseY)/*mouseY < y + height*/)
         {
             double oldZ = helper.getZIndex();
             helper.setZIndex(oldZ + 10);
             Music music = list.get(moving);
-            drawMusic(0, Math.max(0, mouseY - moveYStart), _entryWidth, _entryHeight, music, 1);
+            int drawMouseX = calcMouseXDrag(mouseX);
+            drawHoveringMusic(drawMouseX, Math.max(0, mouseY - moveYStart), _entryWidth, _entryHeight, music, 1);
             helper.setZIndex(oldZ);
         }
 
@@ -238,6 +250,42 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
         }
     }
 
+    private int calcMouseXDrag(int mouseX)
+    {
+        int returning = 0;
+        if (deleteMethod != DeleteMethod.MOVE_LEFT) return 0;
+        int mouseXOffset = mouseX - x();
+        int lmx = mouseX - x();
+        returning = lmx - moveXStart;
+        int offset = -(mouseXOffset - width());
+//        System.out.println(offset);
+        if (offset <= 60) returning = (lmx - moveXStart) / 3;
+        if (offset > 50 && offset <= 60)
+        {
+            int diff = -(width() - mouseXOffset - 60);
+            double lProg = ((double) diff) / 10;
+            double lReturning = returning;
+            returning = lmx - moveXStart - ((int) (lProg * (lReturning * 2)));
+        }
+        /*if (mouseXOffset > width() - 100)
+        {
+        *//*if (mouseXOffset > width() - 70) *//*
+            returning = (lmx - moveXStart) / 2;
+        *//*else*//*
+            if (mouseXOffset > width() - 70)
+            {
+                int diff = width() - mouseXOffset - 70;
+                double lProg = ((double) diff) / 30;
+                int remaining = returning * 2;
+
+                System.out.println(mouseXOffset*//*returning*//*);
+//            returning = lmx - moveXStart;
+            }
+        }*/
+//        System.out.println(returning);
+        return Math.min(returning, 0);
+    }
+
     private boolean hasScroll()
     {
         return getListHeight() > this.height;
@@ -263,6 +311,7 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     {
         if (moving == -1)
             isReadyToDelete = false;
+        progress = Miscellaneous.smoothDamp(target, progress, 0.4D);
     }
 
     @Override
@@ -327,7 +376,14 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
 
     public boolean isMouseInDeleteZone(int mouseX, int mouseY)
     {
-        return mouseY > y + height;
+        switch (deleteMethod)
+        {
+            case MOVE_LEFT:
+                return mouseX <= x;
+            case MOVE_DOWN:
+            default:
+                return mouseY > y + height;
+        }
     }
 
     @Override
@@ -357,5 +413,11 @@ public class GuiPlaylist implements IGui, IMouseListener, IResizable
     public boolean isMovingInDeleteZone()
     {
         return this.isReadyToDelete;
+    }
+
+    public enum DeleteMethod
+    {
+        MOVE_DOWN,
+        MOVE_LEFT
     }
 }

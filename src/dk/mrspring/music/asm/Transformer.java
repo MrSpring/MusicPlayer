@@ -6,7 +6,7 @@ import com.mumfrey.liteloader.transformers.event.EventInfo;
 import com.mumfrey.liteloader.transformers.event.EventInjectionTransformer;
 import com.mumfrey.liteloader.transformers.event.MethodInfo;
 import com.mumfrey.liteloader.transformers.event.inject.MethodHead;
-import dk.mrspring.updator.gui.GuiMainMenuHandler;
+import dk.mrspring.updater.gui.GuiMainMenuHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 

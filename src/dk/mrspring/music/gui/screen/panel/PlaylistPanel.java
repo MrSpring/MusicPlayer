@@ -19,8 +19,6 @@ import net.minecraft.client.Minecraft;
  */
 public class PlaylistPanel extends GuiPlaylist implements IPanel
 {
-    double target = 0D;
-    double progress = 0D;
     IPanelContainer parent;
 
     public PlaylistPanel(Playlist music)
@@ -52,7 +50,6 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
         double nextProgress = Miscellaneous.smoothDamp(target, progress, 0.4D);
         double diff = nextProgress - progress;
         nextProgress += diff * partialTicks;
-        System.out.println("pg: " + progress + ", diff: " + diff + ", nextPg: " + nextProgress);
 
         DrawingHelper helper = LiteModMusicPlayer.core.getDrawingHelper();
         String playlistName = getPlaylist().getName();
@@ -71,13 +68,6 @@ public class PlaylistPanel extends GuiPlaylist implements IPanel
             helper.drawCenteredText(TranslateHelper.translateFormat("gui.playlist_editor.remove",
                             getPlaylist().getName()),
                     new Vector(x() + (width() / 2), iconSize + ((float) (y() + height() + 2)) + ((extraSize * pg))));
-    }
-
-    @Override
-    public void update()
-    {
-        super.update();
-        progress = Miscellaneous.smoothDamp(target, progress, 0.4D);
     }
 
     @Override
